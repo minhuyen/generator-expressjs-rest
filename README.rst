@@ -2,6 +2,8 @@
 Cookiecutter Expressjs
 ======================
 
+[![Build Status](https://travis-ci.org/minhuyen/cookiecutter-expressjs.svg?branch=master)](https://travis-ci.org/minhuyen/cookiecutter-expressjs)
+
 Quickstart
 ----------
 
