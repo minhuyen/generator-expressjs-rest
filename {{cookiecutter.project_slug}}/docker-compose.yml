@@ -1,0 +1,27 @@
+version: '2'
+
+volumes:
+  mongo_data: {}
+
+services:
+  node:
+    # restart: always
+    build:
+      context: .
+      dockerfile: ./compose/node/Dockerfile_dev
+    ports:
+      - '3000:3000'
+    environment:
+      DATABASE_URL: "mongodb://mongo:27017/{{cookiecutter.project_slug}}"
+    volumes:
+      - .:/home/app/{{cookiecutter.project_slug}}
+      - /home/app/{{cookiecutter.project_slug}}/node_modules
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo:3
+    command: mongod --smallfiles
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - '127.0.0.1:27017:27017'

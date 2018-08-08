@@ -1,0 +1,7 @@
+FROM node:6.12.0-onbuild
+
+RUN npm install -g serve@6.5.3
+
+RUN chown -R node:node /usr/src/*
+
+USER node

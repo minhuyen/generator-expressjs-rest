@@ -1,0 +1,14 @@
+FROM node:6.9.5
+
+RUN useradd --user-group --create-home --shell /bin/false app
+RUN npm install -g nodemon
+ENV HOME=/home/app
+
+COPY package.json npm-shrinkwrap.json $HOME/{{cookiecutter.project_slug}}/
+RUN chown -R app:app $HOME/*
+
+USER app
+WORKDIR $HOME/{{cookiecutter.project_slug}}
+RUN npm install
+
+CMD ["nodemon", "-e", "yaml,js", "app.js"]

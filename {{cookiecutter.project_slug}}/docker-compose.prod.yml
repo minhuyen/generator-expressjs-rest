@@ -1,0 +1,41 @@
+version: '2'
+
+volumes:
+  mongo_data: {}
+  mongo_backup: {}
+
+services:
+  node:
+    restart: always
+    build:
+      context: .
+      dockerfile: ./compose/node/Dockerfile
+    # command: bash
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: "mongodb://mongo:27017/{{cookiecutter.project_slug}}"
+      TWILIO_API_KEY: "AG9bW3vTiYZ1QGGs0PcqU5ZB2aK7DVP6"
+    ports:
+      - '3000:3000'
+    depends_on:
+      - mongo
+    # tty: true
+  mongo:
+    restart: always
+    image: mongo:3
+    command: mongod --smallfiles
+    volumes:
+      - mongo_data:/data/db
+      - mongo_backup:/data/backup
+#    ports:
+#      - '27017:27017'
+  nginx:
+    restart: always
+    build: ./compose/nginx
+    volumes_from:
+      - node
+    depends_on:
+      - node
+    ports:
+      - "80:80"
+      - "443:443"
