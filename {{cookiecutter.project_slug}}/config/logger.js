@@ -1,9 +1,9 @@
-var winston 	= require('winston');
-const fs 		= require('fs');
-var path 		= require('path')
+var winston = require('winston');
+const fs = require('fs');
+var path = require('path')
 var PROJECT_ROOT = path.join(__dirname, '..')
-const env 		= process.env.NODE_ENV || 'development';
-const logDir 	= 'log';
+const env = process.env.NODE_ENV || 'development';
+const logDir = 'log';
 
 winston.level = 'debug';
 
@@ -14,35 +14,35 @@ if (!fs.existsSync(logDir)) {
 
 const tsFormat = () => (new Date()).toLocaleTimeString();
 const logger = new (winston.Logger)({
-	transports: [
-		// colorize the output to the console
-  	new (winston.transports.Console)({ 
-  		colorize: true,
-  		handleExceptions: true,
+  transports: [
+    // colorize the output to the console
+    new (winston.transports.Console)({
+      colorize: true,
+      handleExceptions: true,
       humanReadableUnhandledException: true,
-  		json: false,
-  		timestamp: tsFormat, 
-  	}),
+      json: false,
+      timestamp: tsFormat,
+    }),
     new (require('winston-daily-rotate-file'))({
-  		filename: `${logDir}/-results.log`,
-  		timestamp: tsFormat,
-			datePattern: 'yyyy-MM-dd',
-			prepend: true,
-			handleExceptions: true,
-    	humanReadableUnhandledException: true,
-			level: env === 'development' ? 'verbose' : 'info'
-  	})
-	],
-	exceptionHandlers: [
-		new (require('winston-daily-rotate-file'))({
-  		filename: `${logDir}/-errors.log`,
-  		timestamp: tsFormat,
-			datePattern: 'yyyy-MM-dd',
-			prepend: true,
-			level: env === 'development' ? 'verbose' : 'info'
+      filename: `${logDir}/-results.log`,
+      timestamp: tsFormat,
+      datePattern: 'yyyy-MM-dd',
+      prepend: true,
+      handleExceptions: true,
+      humanReadableUnhandledException: true,
+      level: env === 'development' ? 'verbose' : 'info'
     })
-	],
-	exitOnError: false
+  ],
+  exceptionHandlers: [
+    new (require('winston-daily-rotate-file'))({
+      filename: `${logDir}/-errors.log`,
+      timestamp: tsFormat,
+      datePattern: 'yyyy-MM-dd',
+      prepend: true,
+      level: env === 'development' ? 'verbose' : 'info'
+    })
+  ],
+  exitOnError: false
 });
 
 // this allows winston to handle output from express' morgan middleware
@@ -56,19 +56,19 @@ logger.stream = {
 // code and still possible to replace winston in the future.
 
 module.exports.debug = module.exports.log = function () {
-  	logger.debug.apply(logger, formatLogArguments(arguments))
+  logger.debug.apply(logger, formatLogArguments(arguments))
 }
 
 module.exports.info = function () {
-  	logger.info.apply(logger, formatLogArguments(arguments))
+  logger.info.apply(logger, formatLogArguments(arguments))
 }
 
 module.exports.warn = function () {
-  	logger.warn.apply(logger, formatLogArguments(arguments))
+  logger.warn.apply(logger, formatLogArguments(arguments))
 }
 
 module.exports.error = function () {
-  	logger.error.apply(logger, formatLogArguments(arguments))
+  logger.error.apply(logger, formatLogArguments(arguments))
 }
 
 module.exports.stream = logger.stream
@@ -76,7 +76,7 @@ module.exports.stream = logger.stream
 /**
  * Attempts to add file and line number info to the given log arguments.
  */
-function formatLogArguments (args) {
+function formatLogArguments(args) {
   args = Array.prototype.slice.call(args)
 
   var stackInfo = getStackInfo(1)
@@ -98,7 +98,7 @@ function formatLogArguments (args) {
 /**
  * Parses and returns info about the call stack at the given index.
  */
-function getStackInfo (stackIndex) {
+function getStackInfo(stackIndex) {
   // get call stack, and analyze it
   // get all file, method, and line numbers
   var stacklist = (new Error()).stack.split('\n').slice(3)
