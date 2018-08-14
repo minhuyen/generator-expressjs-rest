@@ -2,7 +2,9 @@
 Cookiecutter Expressjs
 ======================
 
-[![Build Status](https://travis-ci.org/minhuyen/cookiecutter-expressjs.svg?branch=master)](https://travis-ci.org/minhuyen/cookiecutter-expressjs)
+.. image:: https://travis-ci.org/minhuyen/cookiecutter-expressjs.svg?branch=master
+    :target: https://travis-ci.org/minhuyen/cookiecutter-expressjs?branch=master
+    :alt: Build Status
 
 Quickstart
 ----------
