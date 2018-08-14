@@ -6,9 +6,8 @@ var JwtStrategy = require('passport-jwt').Strategy,
     GoogleStrategy = require('passport-google-oauth').OAuth2Strategy,
     FacebookTokenStrategy = require('passport-facebook-token');
 
-
 // load up the user model
-var User = require('../models/users');
+var User = require('../app/users/user.model');
 var config = require('./database');
 // load the auth variables
 var configAuth = require('./auth');
