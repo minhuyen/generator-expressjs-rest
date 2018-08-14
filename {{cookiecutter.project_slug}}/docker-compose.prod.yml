@@ -14,7 +14,6 @@ services:
     environment:
       NODE_ENV: production
       DATABASE_URL: "mongodb://mongo:27017/{{cookiecutter.project_slug}}"
-      TWILIO_API_KEY: "AG9bW3vTiYZ1QGGs0PcqU5ZB2aK7DVP6"
     ports:
       - '3000:3000'
     depends_on:
