@@ -15,4 +15,4 @@ cookiecutter ../../ --no-input --overwrite-if-exists use_docker=y
 cd expressjs_boilerplate
 
 # run the project's tests
-docker-compose node npm test
+docker-compose node npm run test
