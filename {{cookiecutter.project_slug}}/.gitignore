@@ -1,4 +1,5 @@
 log/*
+!log/README.md
 babel_cache
 back_up
 node_modules
