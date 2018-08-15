@@ -1,4 +1,4 @@
-log
+log/*
 babel_cache
 back_up
 node_modules
