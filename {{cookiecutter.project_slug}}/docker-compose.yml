@@ -19,7 +19,7 @@ services:
     depends_on:
       - mongo
   mongo:
-    image: mongo:3
+    image: mongo:3.4
     command: mongod --smallfiles
     volumes:
       - mongo_data:/data/db
