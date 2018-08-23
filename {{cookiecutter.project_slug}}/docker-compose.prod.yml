@@ -21,7 +21,7 @@ services:
     # tty: true
   mongo:
     restart: always
-    image: mongo:3
+    image: mongo:3.4
     command: mongod --smallfiles
     volumes:
       - mongo_data:/data/db
