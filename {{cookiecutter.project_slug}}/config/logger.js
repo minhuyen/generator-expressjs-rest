@@ -3,7 +3,7 @@ const fs = require('fs');
 var path = require('path')
 var PROJECT_ROOT = path.join(__dirname, '..')
 const env = process.env.NODE_ENV || 'development';
-const logDir = 'log';
+const logDir = 'logs';
 
 winston.level = 'debug';
 
