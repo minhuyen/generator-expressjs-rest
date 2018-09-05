@@ -2,7 +2,7 @@ version: '2'
 
 volumes:
   mongo_data: {}
-  node_logs: {}
+  # node_logs: {}
 
 services:
   node:
@@ -17,7 +17,7 @@ services:
     volumes:
       - .:/home/app/{{cookiecutter.project_slug}}
       - /home/app/{{cookiecutter.project_slug}}/node_modules
-      - node_logs:/home/app/{{cookiecutter.project_slug}}/logs 
+      # - node_logs:/home/app/{{cookiecutter.project_slug}}/logs 
     depends_on:
       - mongo
   mongo:
