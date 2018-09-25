@@ -3,14 +3,17 @@ var mongoose = require('mongoose');
 var validate = require('mongoose-validator');
 var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt');
-var utils = require('../../helpers/lib/utils');
-var constant = require('../../helpers/lib/constant');
+var constant = require('../../config/constant');
 var mongoosePaginate = require('mongoose-paginate');
 
 var emailValidate = [validate({validator: 'isEmail', message: 'invalid email!'})]
 
 var UserSchema = new Schema({
-  full_name: {
+  first_name: {
+    type: String,
+    required: true
+  },
+  last_name: {
     type: String,
     required: true
   },
@@ -23,13 +26,49 @@ var UserSchema = new Schema({
     validate: emailValidate,
     required: true
   },
+  facebook: {
+    id: {
+      type: String,
+      required: false
+    },
+    token: {
+      type: String,
+      required: false
+    }
+  },
+  google: {
+    id: {
+      type: String,
+      required: false
+    },
+    token: {
+      type: String,
+      required: false
+    }
+  },
   avatar: {
     type: String,
     required: false
   },
+  photo_id: {
+    type: String
+  },
+  address: String,
+  location: { //[ <longitude> , <latitude> ]
+    type: {type: String, required: false, default: "Point"},
+    coordinates: {
+      type: [Number],
+      index: '2d'
+    }
+  },
   password: {
     type: String,
     required: false
+  },
+  status: {
+    type: Number,
+    min: 0,
+    max: 2
   },
   role: {
     type: String,
@@ -42,13 +81,12 @@ var UserSchema = new Schema({
   }
 });
 
-
 UserSchema.pre('save', function (next) {
   var user = this;
   if (this.isModified('password')) {
-    // if (user.facebook.id || user.google.id) {
-    //   next();
-    // }
+    if (user.facebook.id || user.google.id) {
+      next();
+    }
     bcrypt.genSalt(10, function (err, salt) {
       if (err) {
         return next(err);
@@ -66,13 +104,6 @@ UserSchema.pre('save', function (next) {
   }
 });
 
-// UserSchema.post('save', function(doc){
-// 	var user = this;
-// 	var token = utils.generateToken(user, config.secret);
-//   	user.token = 'Bearer ' + token;
-//   	user.save();
-// });
-
 UserSchema.methods.comparePassword = function (passw, cb) {
   bcrypt.compare(passw, this.password, function (err, isMatch) {
     if (err) {
@@ -85,7 +116,19 @@ UserSchema.methods.comparePassword = function (passw, cb) {
 UserSchema.methods.isAdmin = function () {
   return this.role === constant.ADMIN;
 }
-UserSchema.plugin(mongoosePaginate);
 
+UserSchema.methods.isInactive = function () {
+  return this.status === constant.USER_STATUS.IN_ACTIVE;
+}
+
+UserSchema.methods.isActive = function () {
+  return this.status === constant.USER_STATUS.ACTIVE;
+}
+
+UserSchema.methods.isPending = function () {
+  return this.status === constant.USER_STATUS.PENDING;
+}
+
+UserSchema.plugin(mongoosePaginate);
 module.exports = mongoose.model('Users', UserSchema);
 
