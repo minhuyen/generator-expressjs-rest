@@ -5,5 +5,6 @@ module.exports = {
   signup: user.signup,
   getUserLoggedInfo: user.getUserLoggedInfo,
   patch: user.patch,
-  changePassword: user.changePassword
+  changePassword: user.changePassword,
+  loginSocial: user.loginSocial
 }
