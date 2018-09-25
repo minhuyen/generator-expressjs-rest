@@ -79,7 +79,7 @@ app.get('/auth/google/callback',
   });
 
 // more routes for our API will happen here
-let auth = require('./app/users/auth.route');
+let auth = require('./app/auth/auth.route');
 let user = require('./app/users/user.route');
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
