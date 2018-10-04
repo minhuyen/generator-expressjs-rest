@@ -50,9 +50,6 @@ var UserSchema = new Schema({
     type: String,
     required: false
   },
-  photo_id: {
-    type: String
-  },
   address: String,
   location: { //[ <longitude> , <latitude> ]
     type: {type: String, required: false, default: "Point"},
@@ -64,11 +61,6 @@ var UserSchema = new Schema({
   password: {
     type: String,
     required: false
-  },
-  status: {
-    type: Number,
-    min: 0,
-    max: 2
   },
   role: {
     type: String,
@@ -115,18 +107,6 @@ UserSchema.methods.comparePassword = function (passw, cb) {
 
 UserSchema.methods.isAdmin = function () {
   return this.role === constant.ADMIN;
-}
-
-UserSchema.methods.isInactive = function () {
-  return this.status === constant.USER_STATUS.IN_ACTIVE;
-}
-
-UserSchema.methods.isActive = function () {
-  return this.status === constant.USER_STATUS.ACTIVE;
-}
-
-UserSchema.methods.isPending = function () {
-  return this.status === constant.USER_STATUS.PENDING;
 }
 
 UserSchema.plugin(mongoosePaginate);
