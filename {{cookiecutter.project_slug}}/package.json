@@ -45,7 +45,7 @@
   },
   "scripts": {
     "start": "SET NODE_ENV=dev && node server.js",
-    "test": "mocha tests --timeout 5000ms",
+    "test": "mocha tests --timeout 5000ms --exit",
     "migrate": "DEBUG=true mm",
     "build": "NODE_ENV=develop webpack --display-error-details -w"
   },
