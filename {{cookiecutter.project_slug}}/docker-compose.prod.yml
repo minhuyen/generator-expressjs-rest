@@ -1,8 +1,9 @@
-version: '2'
+version: '3'
 
 volumes:
   mongo_data: {}
   mongo_backup: {}
+  node_logs: {}
 
 services:
   node:
@@ -14,6 +15,9 @@ services:
     environment:
       NODE_ENV: production
       DATABASE_URL: "mongodb://mongo:27017/{{cookiecutter.project_slug}}"
+    volumes:
+      - /home/app/{{cookiecutter.project_slug}}/node_modules
+      - node_logs:/home/app/{{cookiecutter.project_slug}}/logs 
     ports:
       - '3000:3000'
     depends_on:

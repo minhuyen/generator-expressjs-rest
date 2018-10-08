@@ -36,9 +36,9 @@ describe('Auth', function() {
   describe('/POST /auth/signup', function() {
     it('it should register user by email ', function(done) {
       let user = {
-        // first_name: 'robin',
-        // last_name: 'hood',
-        full_name: 'test test',
+        first_name: 'robin',
+        last_name: 'hood',
+        // full_name: 'test test',
         email: 'robin111@local.com',
         password: 'robin@test',
       }
