@@ -17,7 +17,7 @@ var base_api = "/api/v1";
 var fs = require('fs');
 var cors = require('cors') // call the cors to fix access control bug.
 
-var logger = require("./config/logger");
+var logger = require("./middlewares/logger");
 
 logger.info('Hello distributed log files!');
 logger.info('Hello again distributed logs');
@@ -53,7 +53,7 @@ app.use(passport.initialize());
 app.use(paginate.middleware(10, 50)); // limit=10,  maxLimit=50
 
 // pass passport for configuration
-require('./config/passport')(passport);
+require('./middlewares/passport')(passport);
 
 // ROUTES FOR OUR API
 // =============================================================================
