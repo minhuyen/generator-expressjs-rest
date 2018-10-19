@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var validate = require('mongoose-validator');
 var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt');
-var constant = require('../../config/constant');
+var config = require('../../config/index');
 var mongoosePaginate = require('mongoose-paginate');
 
 var emailValidate = [validate({validator: 'isEmail', message: 'invalid email!'})]
@@ -106,7 +106,7 @@ UserSchema.methods.comparePassword = function (passw, cb) {
 };
 
 UserSchema.methods.isAdmin = function () {
-  return this.role === constant.ADMIN;
+  return this.role === config.app.ROLE.ADMIN;
 }
 
 UserSchema.plugin(mongoosePaginate);

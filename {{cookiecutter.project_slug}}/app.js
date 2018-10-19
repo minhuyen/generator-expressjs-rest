@@ -9,7 +9,7 @@ var helmet = require('helmet');
 var passport = require('passport');
 var path = require('path');
 var paginate = require('express-paginate');
-var config = require('./config/database'); // get db config file
+var config = require('./config/index'); // get db config file
 
 // var User        = require('./models/user'); // get the mongoose model
 var port = process.env.PORT || 3000;
@@ -25,7 +25,7 @@ logger.debug('Now my debug messages are written to console!');
 
 // connect to database
 mongoose.Promise = require('bluebird'); //global.Promise;
-mongoose.connect(config.database);
+mongoose.connect(config.mongodb.url);
 
 app.use(cors());
 app.use(expressValidator());
