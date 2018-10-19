@@ -8,9 +8,9 @@ var JwtStrategy = require('passport-jwt').Strategy,
 
 // load up the user model
 var User = require('../app/users/user.model');
-var config = require('./database');
+var config = require('../config/database');
 // load the auth variables
-var configAuth = require('./auth');
+var configAuth = require('../config/auth');
 var logger = require('./logger');
 var util = require('util');
 var _ = require('lodash');
