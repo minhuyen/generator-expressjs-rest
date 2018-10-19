@@ -1,7 +1,7 @@
 "use strict";
 let Users = require('./user.model'),
   HTTPStatus = require('../../helpers/lib/http_status'),
-  config = require('../../config/database'), // get db config file
+  config = require('../../config/index'), // get db config file
   utils = require('../../helpers/lib/utils');
 
 let bcrypt = require('bcrypt');
@@ -57,7 +57,7 @@ const signup = function (req, res) {
               })
             }
             else {
-              let token = utils.generateToken(user, config.secret);
+              let token = utils.generateToken(user, config.mongodb.secret);
 
               return sendJSONResponse(res, HTTPStatus.CREATED, {
                 success: true,
@@ -97,7 +97,7 @@ const login = function (req, res) {
         user.comparePassword(req.body.password, function (err, isMatch) {
           if (isMatch && !err) {
             // if user is found and password is right create a token
-            var token = utils.generateToken(user, config.secret);
+            var token = utils.generateToken(user, config.mongodb.secret);
 
             // return the information including token as JSON
             return sendJSONResponse(res, HTTPStatus.OK, {
@@ -120,7 +120,7 @@ const login = function (req, res) {
 
 const loginSocial = function (req, res) {
   var user = req.user;
-  var token = utils.generateToken(user, config.secret);
+  var token = utils.generateToken(user, config.mongodb.secret);
 
   user.save(function (err, data) {
     if (err) {

@@ -6,7 +6,7 @@ var Mockgoose = require('mockgoose').Mockgoose;
 var mockgoose = new Mockgoose(mongoose);
 // let User = require('app/users/user.model');
 let User = require('../app/users/user.model');
-var config = require('../config/database');
+var config = require('../config/index');
 
 // Require the dev dependencies 
 let chai = require('chai');
