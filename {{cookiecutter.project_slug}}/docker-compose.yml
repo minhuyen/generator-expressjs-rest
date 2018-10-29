@@ -13,14 +13,14 @@ services:
     ports:
       - '3000:3000'
     environment:
-      DATABASE_URL: "mongodb://mongo:27017/improve-boilerplate"
+      DATABASE_URL: "mongodb://mongo:27017/{{cookiecutter.project_slug}}"
       FACEBOOK_CLIENT_ID: 'your-client-id'
       FACEBOOK_CLIENT_SECRET: 'your-client-secret'
       GOOGLE_CLIENT_ID: 'your-client-id'
       GOOGLE_CLIENT_SECRET: 'your-client-secret'
     volumes:
-      - .:/home/app/improve-boilerplate
-      - /home/app/improve-boilerplate/node_modules
+      - .:/home/app/{{cookiecutter.project_slug}}
+      - /home/app/{{cookiecutter.project_slug}}/node_modules
     depends_on:
       - mongo
   mongo:
