@@ -1,4 +1,4 @@
-let user = require('./user.ctrl').default
+let user = require('./user.ctrl')
 
 module.exports = {
   login: user.login,

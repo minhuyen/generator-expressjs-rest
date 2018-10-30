@@ -256,7 +256,7 @@ const changePassword = function (req, res) {
   })
 };
 
-exports.default = {
+module.exports = {
   signup,
   login,
   getUserLoggedInfo,
