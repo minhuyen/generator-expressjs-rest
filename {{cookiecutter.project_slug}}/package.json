@@ -1,13 +1,19 @@
 {
-  "name": "boilterplate",
+  "name": "dating-app",
   "version": "1.0.0",
-  "description": "",
+  "description": "New Dating App",
   "main": "index.js",
+  "engines": {
+    "node": "8.12.0",
+    "npm": "6.4.1"
+  },
   "dependencies": {
     "async": "https://registry.npmjs.org/async/-/async-1.5.2.tgz",
     "bcrypt": "^1.0.2",
     "bluebird": "https://registry.npmjs.org/bluebird/-/bluebird-2.10.2.tgz",
     "body-parser": "^1.17.0",
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
     "cors": "^2.8.3",
     "debug": "https://registry.npmjs.org/debug/-/debug-2.6.1.tgz",
     "ejs": "^2.5.6",
@@ -19,9 +25,12 @@
     "faker": "^4.1.0",
     "geolib": "^2.0.22",
     "helmet": "^3.5.0",
+    "http-server": "^0.9.0",
     "http-status": "^1.0.1",
     "jwt-simple": "^0.5.1",
     "lodash": "https://registry.npmjs.org/lodash/-/lodash-4.17.4.tgz",
+    "mocha": "^3.2.0",
+    "mockgoose": "^7.0.5",
     "mongodb-migrations": "^0.8.5",
     "mongoose": "^4.5.10",
     "mongoose-paginate": "^5.0.3",
@@ -36,20 +45,24 @@
     "randomstring": "^1.1.5",
     "request": "^2.87.0",
     "winston": "^2.3.1",
-    "winston-daily-rotate-file": "^1.4.6",
-    "chai": "^3.5.0",
-    "chai-http": "^3.0.0",
-    "http-server": "^0.9.0",
-    "mocha": "^3.2.0",
-    "mockgoose": "^7.0.5"
+    "winston-daily-rotate-file": "^1.4.6"
   },
   "scripts": {
     "start": "SET NODE_ENV=dev && node server.js",
     "test": "mocha tests --timeout 5000ms --exit",
     "migrate": "DEBUG=true mm",
-    "build": "NODE_ENV=develop webpack --display-error-details -w"
+    "build": "NODE_ENV=develop webpack --display-error-details -w",
+    "postinstall": "cd client && npm install && npm run build",
+    "__heroku-postbuild": "cd client && npm install && npm run build"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^5.6.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-react": "^7.11.1"
+  }
 }

@@ -1,20 +1,20 @@
-FROM node:8.12.0
+FROM node:8.12.0-alpine
 
-RUN useradd --user-group --create-home --shell /bin/false app &&\
-  npm install -g pm2
+RUN addgroup -S app && adduser -S app -G app
+RUN npm install -g pm2
 
 ENV HOME=/home/app
 
-COPY package.json npm-shrinkwrap.json $HOME/{{cookiecutter.project_slug}}/
+COPY package.json package-lock.json $HOME/dating/
 RUN chown -R app:app $HOME/*
 
 USER app
-WORKDIR $HOME/{{cookiecutter.project_slug}}
+WORKDIR $HOME/dating
 RUN npm install
 
 
 USER root
-COPY . $HOME/{{cookiecutter.project_slug}}
+COPY . $HOME/dating
 RUN chown -R app:app $HOME/*
 USER app
 

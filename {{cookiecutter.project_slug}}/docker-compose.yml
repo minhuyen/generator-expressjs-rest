@@ -12,20 +12,28 @@ services:
       dockerfile: ./compose/node/Dockerfile_dev
     ports:
       - '3000:3000'
-    environment:
-      DATABASE_URL: "mongodb://mongo:27017/{{cookiecutter.project_slug}}"
-      FACEBOOK_CLIENT_ID: 'your-client-id'
-      FACEBOOK_CLIENT_SECRET: 'your-client-secret'
-      GOOGLE_CLIENT_ID: 'your-client-id'
-      GOOGLE_CLIENT_SECRET: 'your-client-secret'
+    env_file:
+      - .env
     volumes:
-      - .:/home/app/{{cookiecutter.project_slug}}
-      - /home/app/{{cookiecutter.project_slug}}/node_modules
+      - .:/home/app/dating
+      - /home/app/dating/node_modules
     depends_on:
       - mongo
+  client:
+    build:
+      context: ./client
+      dockerfile: ../compose/client/Dockerfile
+    ports:
+      - '3001:3000'
+    env_file:
+      - .env
+    volumes:
+      - ./client:/home/app/client
+      - /home/app/client/node_modules
+
   mongo:
     image: mongo:3.4
-    command: mongod --smallfiles
+    command: mongod --storageEngine wiredTiger
     volumes:
       - mongo_data:/data/db
     ports:
