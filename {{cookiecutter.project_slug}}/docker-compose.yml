@@ -15,8 +15,8 @@ services:
     env_file:
       - .env
     volumes:
-      - .:/home/app/dating
-      - /home/app/dating/node_modules
+      - .:/home/app/{{cookiecutter.project_slug}}
+      - /home/app/{{cookiecutter.project_slug}}/node_modules
     depends_on:
       - mongo
   client:

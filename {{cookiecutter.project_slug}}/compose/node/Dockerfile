@@ -12,19 +12,21 @@ RUN apk add --update \
 
 ENV HOME=/home/app
 
-COPY package.json package-lock.json $HOME/dating/
+COPY package.json package-lock.json $HOME/{{cookiecutter.project_slug}}/
 
 RUN chown -R app:app $HOME/*
 
 USER app
 
-WORKDIR $HOME/dating
+WORKDIR $HOME/{{cookiecutter.project_slug}}
 
 RUN npm install
 
+RUN npm rebuild bcrypt --build-from-source
+
 USER root
 
-COPY . $HOME/dating
+COPY . $HOME/{{cookiecutter.project_slug}}
 
 RUN chown -R app:app $HOME/*
 
