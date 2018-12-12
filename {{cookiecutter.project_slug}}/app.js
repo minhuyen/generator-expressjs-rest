@@ -81,10 +81,32 @@ app.get('/auth/google/callback',
 // more routes for our API will happen here
 let auth = require('./app/auth/auth.route');
 let user = require('./app/users/user.route');
+//end import routes
+
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
 app.use(base_api + '/auth', auth);
 app.use(base_api + '/users', user);
+//end config routes
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  var err = new Error('Wrong Link');
+  err.status = 404;
+  next(err);
+});
+
+// production error handler
+app.use(function (err, req, res, next) {
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  res.status(err.status || 500);
+  res.json({
+    success: false,
+    message: err.message
+  });
+});
 // START THE SERVER
 // =============================================================================
 app.listen(port);
