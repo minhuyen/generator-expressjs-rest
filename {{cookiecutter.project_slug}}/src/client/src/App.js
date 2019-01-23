@@ -6,8 +6,6 @@ import NotFound from "./NotFound";
 import authProvider from "./authProvider";
 import restProvider from "./restProvider";
 import { UserList, UserEdit } from "./users";
-import { CategoryList, CategoryCreate, CategoryEdit } from "./categories";
-import { RecipeList, RecipeCreate, RecipeEdit } from "./recipes";
 
 const httpClient = (url, options = {}) => {
   if (options.headers) {
@@ -31,21 +29,6 @@ const App = () => (
     catchAll={NotFound}
   >
     <Resource name="users" list={UserList} edit={UserEdit} icon={UserIcon} />
-    <Resource
-      name="collections"
-      list={CategoryList}
-      edit={CategoryEdit}
-      create={CategoryCreate}
-      icon={UserIcon}
-    />
-
-    <Resource
-      name="recipes"
-      list={RecipeList}
-      edit={RecipeEdit}
-      create={RecipeCreate}
-      icon={UserIcon}
-    />
   </Admin>
 );
 
