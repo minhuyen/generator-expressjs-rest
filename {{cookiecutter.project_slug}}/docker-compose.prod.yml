@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 volumes:
   mongo_data: {}
@@ -12,30 +12,25 @@ services:
       context: .
       dockerfile: ./compose/node/Dockerfile
     # command: bash
-    environment:
-      NODE_ENV: production
-      DATABASE_URL: "mongodb://mongo:27017/{{cookiecutter.project_slug}}"
-      FACEBOOK_CLIENT_ID: 'your-client-id'
-      FACEBOOK_CLIENT_SECRET: 'your-client-secret'
-      GOOGLE_CLIENT_ID: 'your-client-id'
-      GOOGLE_CLIENT_SECRET: 'your-client-secret'
+    env_file:
+      - .env
     volumes:
       - /home/app/{{cookiecutter.project_slug}}/node_modules
       - node_logs:/home/app/{{cookiecutter.project_slug}}/logs
     ports:
-      - '3000:3000'
+      - "3000:3000"
     depends_on:
       - mongo
     # tty: true
   mongo:
     restart: always
-    image: mongo:3.4
-    command: mongod --smallfiles
+    image: mongo:3.6
+    command: mongod --storageEngine wiredTiger
     volumes:
       - mongo_data:/data/db
       - mongo_backup:/data/backup
-#    ports:
-#      - '27017:27017'
+  #    ports:
+  #      - '27017:27017'
   nginx:
     restart: always
     build: ./compose/nginx

@@ -1,0 +1,13 @@
+{
+  "verbose": false,
+  "ignore": [
+    "test/*",
+    "fixtures/*",
+    "node_modules/*",
+    "package*.json",
+    "logs/*",
+    "dist/*",
+    "src/client/*"
+  ],
+  "ext": "js css html"
+}
