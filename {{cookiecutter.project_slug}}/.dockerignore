@@ -1,6 +1,6 @@
-.*
-!.coveragerc
-!.env
-!.pylintrc
+.env
 logs/*
 !logs/README.md
+node_modules/
+npm-debug.log
+.git

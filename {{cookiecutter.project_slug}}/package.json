@@ -5,16 +5,16 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha --require babel-register ./src/api/**/*.test.js",
     "start": "nodemon --exec babel-node src/index.js",
-    "build": "npm clean && babel src --copy-files --out-dir dist --ignore src/client",
+    "build": "npm run clean && babel src --copy-files --out-dir dist --ignore src/client",
     "heroku-postbuild": "cd client && npm install && npm run build",
     "serve": "node dist/index.js",
     "clean": "rimraf dist"
   },
   "author": "Uyen Do",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/meal-planner/mealplanner-backend#readme",
+  "homepage": "https://bitbucket.org/minhuyen/{{cookiecutter.project_slug}}#readme",
   "dependencies": {
     "api-query-params": "^4.9.0",
     "aws-sdk": "^2.387.0",
@@ -47,6 +47,7 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "concurrently": "^4.1.0",
+    "mocha": "^5.2.0",
     "nodemon": "^1.18.9",
     "rimraf": "^2.6.3"
   }

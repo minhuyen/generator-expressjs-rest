@@ -1,8 +1,8 @@
 logs/*
 !logs/README.md
-babel_cache
-back_up
 node_modules
 uploads/*
-public
+./public
 .idea/
+dist
+.env

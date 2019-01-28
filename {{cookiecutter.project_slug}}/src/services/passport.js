@@ -25,7 +25,7 @@ passport.deserializeUser(function(id, done) {
 // JWT
 const jwtOpts = {};
 jwtOpts.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme('Bearer');
-jwtOpts.secretOrKey = process.env.JWT_SECRET;
+jwtOpts.secretOrKey = config.jwt.secret;
 passport.use(
   new StrategyJwt(jwtOpts, function(payload, done) {
     User.findOne({ _id: payload.uid })

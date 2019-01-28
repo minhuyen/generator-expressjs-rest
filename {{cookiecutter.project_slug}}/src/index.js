@@ -13,6 +13,7 @@ import config from './config';
 const app = express();
 const port = process.env.PORT || 3000;
 const rootApi = '/api/v1';
+const ROOT_FOLDER = '/home/app/{{cookiecutter.project_slug}}/src';
 // Security
 app.use(helmet());
 
@@ -37,12 +38,19 @@ mongoose.connect(
   { useNewUrlParser: true, useCreateIndex: true }
 );
 
+app.use(express.static(path.join(ROOT_FOLDER, 'client/build')));
 app.use('/static', express.static(path.join(__dirname, 'public')));
 app.get('/', (req, res) =>
   res.json({ message: 'Welcome to Meal Planner API!' })
 );
 
 app.use(rootApi, api);
+
+// The "catchall" handler: for any request that doesn't
+// match one above, send back React's index.html file.
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(ROOT_FOLDER, 'client/build/index.html'));
+});
 
 app.use(function(req, res, next) {
   res.status(404).send('Page not found!');

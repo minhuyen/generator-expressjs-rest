@@ -19,7 +19,7 @@ services:
     volumes:
       - .:/home/app/{{cookiecutter.project_slug}}
       - /home/app/{{cookiecutter.project_slug}}
-      - client_build:/home/app/{{cookiecutter.project_slug}}/client/build
+      - client_build:/home/app/{{cookiecutter.project_slug}}/src/client/build
     depends_on:
       - mongo
 
