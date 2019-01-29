@@ -38,6 +38,8 @@ services:
 
   mongo:
     image: mongo:3.6
+    env_file:
+      - .env
     command: mongod --storageEngine wiredTiger
     volumes:
       - mongo_data:/data/db
