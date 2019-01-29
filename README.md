@@ -29,4 +29,5 @@ To get up and running on local, simply do the following:
 	$ cd your-project-name
 	# build docker images
 	$ docker-compose build
+	$ docker-compose run --rm client npm run build
 	$ docker-compose up
