@@ -33,10 +33,14 @@ app.use(bodyParser.json());
 app.use(passport.initialize());
 
 // database
-mongoose.connect(
-  config.mongodb.url,
-  { useNewUrlParser: true, useCreateIndex: true }
-);
+let dbOptions = {
+  user: process.env.MONGO_INITDB_ROOT_USERNAME,
+  pass: process.env.MONGO_INITDB_ROOT_PASSWORD,
+  useMongoClient: true,
+  useNewUrlParser: true,
+  useCreateIndex: true
+};
+mongoose.connect(config.mongodb.url, dbOptions);
 
 app.use(express.static(path.join(ROOT_FOLDER, 'client/build')));
 app.use('/static', express.static(path.join(__dirname, 'public')));
