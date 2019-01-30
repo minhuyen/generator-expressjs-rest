@@ -27,6 +27,7 @@ To get up and running on local, simply do the following:
     $ pip install cookiecutter
 	$ cookiecutter https://github.com/minhuyen/cookiecutter-expressjs.git
 	$ cd your-project-name
+	$ mv .env.example .env
 	# build docker images
 	$ docker-compose build
 	$ docker-compose run --rm client npm run build
