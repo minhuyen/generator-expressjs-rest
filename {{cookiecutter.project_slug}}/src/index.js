@@ -37,7 +37,6 @@ app.use(passport.initialize());
 let dbOptions = {
   user: process.env.MONGO_INITDB_ROOT_USERNAME,
   pass: process.env.MONGO_INITDB_ROOT_PASSWORD,
-  useMongoClient: true,
   useNewUrlParser: true,
   useCreateIndex: true
 };
