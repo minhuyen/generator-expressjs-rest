@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 const roles = ['user', 'admin'];
 

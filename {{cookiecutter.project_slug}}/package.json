@@ -18,7 +18,7 @@
   "dependencies": {
     "api-query-params": "^4.9.0",
     "aws-sdk": "^2.387.0",
-    "bcrypt": "^3.0.3",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "compression": "^1.7.3",
     "debug": "^4.1.1",
