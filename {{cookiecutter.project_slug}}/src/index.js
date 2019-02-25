@@ -5,6 +5,8 @@ import compression from 'compression';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import passport from 'passport';
+import swaggerUi from 'swagger-ui-express';
+import swaggerJSDoc from 'swagger-jsdoc';
 import logger from './services/logger';
 import mongoose from './services/mongoose';
 import api from './api';
@@ -45,7 +47,29 @@ mongoose.connect(config.mongodb.url, dbOptions);
 app.use(express.static(path.join(SRC_FOLDER, 'client/build')));
 app.use('/static', express.static(path.join(__dirname, 'public')));
 app.get('/', (req, res) =>
-  res.json({ message: 'Welcome to Meal Planner API!' })
+  res.json({ message: 'Welcome to {{cookiecutter.project_slug}} API!' })
+);
+
+const swaggerDefinition = {
+  // openapi: '3.0.0', // Specification (optional, defaults to swagger: '2.0')
+  info: {
+    title: 'Hello World', // Title (required)
+    version: '1.0.0' // Version (required)
+  },
+  basePath: '/api/v1' // Base path (optional)
+};
+
+const options = {
+  swaggerDefinition,
+  apis: [SRC_FOLDER + '/api/**/*.js'] // <-- not in the definition, but in the options
+};
+
+const swaggerSpec = swaggerJSDoc(options);
+
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, { explorer: true })
 );
 
 app.use(rootApi, api);

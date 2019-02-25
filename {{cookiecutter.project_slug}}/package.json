@@ -39,6 +39,8 @@
     "passport-google-token": "^0.1.2",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
+    "swagger-jsdoc": "^3.2.7",
+    "swagger-ui-express": "^4.0.2",
     "util": "^0.11.1",
     "winston": "^3.1.0",
     "winston-daily-rotate-file": "^3.5.2"
