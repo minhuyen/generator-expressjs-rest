@@ -9,6 +9,7 @@ import util from 'util';
 import User from '../api/users/model';
 import logger from './logger';
 import config from '../config';
+import { errorResponse } from "./response";
 
 // used to serialize the user for the session
 passport.serializeUser(function(user, done) {
@@ -183,6 +184,20 @@ passport.use(
 );
 
 export const authLocal = passport.authenticate('local', { session: false });
-export const authJwt = passport.authenticate('jwt', { session: false });
+export const authJwt = (req, res, next) => {
+  passport.authenticate('jwt', { session: false }, (err, user, info) => {
+    if (err) { return next(err); }
+    if (!user) {
+      return errorResponse(res, 401, {
+        code: 401,
+        message: 'Unauthorized',
+      })
+    }
+    req.logIn(user, function(err) {
+      if (err) { return next(err); }
+      return next()
+    });
+  })(req, res, next)
+};
 export const authFacbookToken = passport.authenticate('facebook-token');
 export const authGoogleToken = passport.authenticate('google-token');
