@@ -53,10 +53,18 @@ app.get('/', (req, res) =>
 const swaggerDefinition = {
   // openapi: '3.0.0', // Specification (optional, defaults to swagger: '2.0')
   info: {
-    title: 'Hello World', // Title (required)
+    title: '{{cookiecutter.project_slug}}', // Title (required)
     version: '1.0.0' // Version (required)
   },
-  basePath: '/api/v1' // Base path (optional)
+  basePath: '/api/v1', // Base path (optional)
+  schemes: ['http', 'https'],
+  securityDefinitions: {
+    Bearer: {
+      type: "apiKey",
+      name: "Authorization",
+      in: "header"
+    }
+  }
 };
 
 const options = {
@@ -66,10 +74,15 @@ const options = {
 
 const swaggerSpec = swaggerJSDoc(options);
 
+const swOptions = {
+  explorer: true,
+  customCss: '.swagger-ui .opblock-body pre span {color: #DCD427 !important} .swagger-ui .opblock-body pre {color: #DCD427} .swagger-ui textarea.curl {color: #DCD427} .swagger-ui .response-col_description__inner div.markdown, .swagger-ui .response-col_description__inner div.renderedMarkdown {color: #DCD427}'
+}
+
 app.use(
   '/api-docs',
   swaggerUi.serve,
-  swaggerUi.setup(swaggerSpec, { explorer: true })
+  swaggerUi.setup(swaggerSpec, swOptions)
 );
 
 app.use(rootApi, api);

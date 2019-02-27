@@ -5,55 +5,6 @@ import logger from '../../services/logger';
 import { sign } from '../../services/jwt';
 import { successResponse, errorResponse } from '../../services/response';
 
-/**
- * @swagger
- *
- * definitions:
- *   NewUser:
- *     type: object
- *     required:
- *       - username
- *       - password
- *     properties:
- *       username:
- *         type: string
- *       password:
- *         type: string
- *         format: password
- *   User:
- *     allOf:
- *       - $ref: '#/definitions/NewUser'
- *       - required:
- *         - id
- *       - properties:
- *         id:
- *           type: integer
- *           format: int64
- */
-
-/**
- * @swagger
- *
- * /auth/signup:
- *   post:
- *     tags: [auth]
- *     description: Creates a user
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: data
- *         description: User object
- *         in:  body
- *         required: true
- *         type: string
- *         schema:
- *           $ref: '#/definitions/NewUser'
- *     responses:
- *       200:
- *         description: users
- *         schema:
- *           $ref: '#/definitions/User'
- */
 export const signup = (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -79,31 +30,6 @@ export const signup = (req, res) => {
     });
 };
 
-/**
- * @swagger
- *
- * /auth/login:
- *   post:
- *     tags: [auth]
- *     description: Login to the application
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: data
- *         description: login infor
- *         required: true
- *         in: body
- *         schema:
- *           type: object
- *           properties:
- *             email:
- *               type: string
- *             password:
- *               type: string
- *     responses:
- *       200:
- *         description: login
- */
 export const login = function(req, res) {
   const user = req.user;
   const token = sign(user._id);
