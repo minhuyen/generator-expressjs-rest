@@ -183,7 +183,21 @@ passport.use(
   )
 );
 
-export const authLocal = passport.authenticate('local', { session: false });
+export const authLocal = (req, res, next) => {
+  passport.authenticate('local', { session: false }, (err, user, info) => {
+    if (err) { return next(err); }
+    if (!user) {
+      return errorResponse(res, 401, {
+        code: 401,
+        message: 'Invalid Email or Password',
+      })
+    }
+    req.logIn(user, function(err) {
+      if (err) { return next(err); }
+      return next()
+    });
+  })(req, res, next);
+};
 export const authJwt = (req, res, next) => {
   passport.authenticate('jwt', { session: false }, (err, user, info) => {
     if (err) { return next(err); }
