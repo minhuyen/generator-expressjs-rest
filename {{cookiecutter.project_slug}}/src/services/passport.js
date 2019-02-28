@@ -6,7 +6,7 @@ import LocalStrategy from 'passport-local';
 import _ from 'lodash';
 import util from 'util';
 
-import User from '../api/users/model';
+import User from '../api/users/users.model';
 import logger from './logger';
 import config from '../config';
 import { errorResponse } from "./response";

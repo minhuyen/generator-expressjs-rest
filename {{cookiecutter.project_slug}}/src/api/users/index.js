@@ -1,6 +1,6 @@
 import express from 'express';
 import { authJwt } from '../../services/passport';
-import { findAll, findOne, deleteUser, updateAvatar } from './controller';
+import { findAll, findOne, deleteUser, updateAvatar } from './users.controller';
 
 const router = express.Router();
 

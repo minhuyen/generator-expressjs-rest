@@ -5,7 +5,7 @@ import { validationResult } from 'express-validator/check';
 
 import logger from '../../services/logger';
 import { avatarUpload as cpUpload } from '../../services/s3';
-import User from './model';
+import User from './users.model';
 
 export const findAll = (req, res) => {
   const { filter, skip, limit, sort } = aqp(req.query);
