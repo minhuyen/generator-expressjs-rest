@@ -1,4 +1,4 @@
-import User from '../users/model';
+import User from '../users/users.model';
 import { validationResult } from 'express-validator/check';
 import httpStatus from 'http-status';
 import logger from '../../services/logger';

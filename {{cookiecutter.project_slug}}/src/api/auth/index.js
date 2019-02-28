@@ -1,5 +1,5 @@
 import express from 'express';
-import { signup, login } from './controller';
+import { signup, login } from './auth.controller';
 import { signupValidation } from './validation';
 import {
   authFacbookToken,
