@@ -11,7 +11,7 @@ import logger from './services/logger';
 import mongoose from './services/mongoose';
 import api from './api';
 import config from './config';
-import { errorResponse } from "./services/response";
+import { errorResponse } from './services/response';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -61,9 +61,9 @@ const swaggerDefinition = {
   schemes: ['http', 'https'],
   securityDefinitions: {
     Bearer: {
-      type: "apiKey",
-      name: "Authorization",
-      in: "header"
+      type: 'apiKey',
+      name: 'Authorization',
+      in: 'header'
     }
   }
 };
@@ -77,14 +77,11 @@ const swaggerSpec = swaggerJSDoc(options);
 
 const swOptions = {
   explorer: true,
-  customCss: '.swagger-ui .opblock-body pre span {color: #DCD427 !important} .swagger-ui .opblock-body pre {color: #DCD427} .swagger-ui textarea.curl {color: #DCD427} .swagger-ui .response-col_description__inner div.markdown, .swagger-ui .response-col_description__inner div.renderedMarkdown {color: #DCD427}'
-}
+  customCss:
+    '.swagger-ui .opblock-body pre span {color: #DCD427 !important} .swagger-ui .opblock-body pre {color: #DCD427} .swagger-ui textarea.curl {color: #DCD427} .swagger-ui .response-col_description__inner div.markdown, .swagger-ui .response-col_description__inner div.renderedMarkdown {color: #DCD427}'
+};
 
-app.use(
-  '/api-docs',
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerSpec, swOptions)
-);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, swOptions));
 
 app.use(rootApi, api);
 
@@ -94,19 +91,19 @@ app.get('/admin', (req, res) => {
   res.sendFile(path.join(SRC_FOLDER, 'client/build/index.html'));
 });
 
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
   errorResponse(res, 404, {
     code: 404,
     message: 'Page Not Found'
-  })
+  });
 });
 
-app.use(function (err, req, res, next) {
+app.use(function(err, req, res, next) {
   logger.error(err.stack);
   errorResponse(res, 500, {
     code: 500,
     message: 'Something broke!'
-  })
+  });
 });
 
 app.listen(port, () => logger.info(`Example app listening on port ${port}!`));

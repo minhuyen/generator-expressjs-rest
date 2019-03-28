@@ -8,12 +8,14 @@ import { avatarUpload as cpUpload } from '../../services/s3';
 import User from './users.model';
 
 export const findAll = (req, res) => {
-  const { filter, skip, limit, sort } = aqp(req.query);
+  const { filter, skip, limit, sort } = aqp(req.query, {
+    skipKey: 'page'
+  });
   logger.info('===========findAll===========', filter);
   User.paginate(
     filter,
     {
-      skip: skip || 0,
+      page: skip || 1,
       limit: limit || 25,
       sort: sort,
       select: '-password -services -token'

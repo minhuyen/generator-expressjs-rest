@@ -67,7 +67,7 @@ const convertDataRequestToHTTP = (apiUrl, type, resource, params) => {
       const query = {
         ...fetchUtils.flattenObject(params.filter),
         sort: order === "DESC" ? `-${_field}` : _field,
-        skip: (page - 1) * perPage,
+        page: page,
         limit: perPage
       };
       url = `${apiUrl}/${resource}?${stringify(query)}`;
