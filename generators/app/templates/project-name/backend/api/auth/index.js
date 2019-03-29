@@ -16,10 +16,16 @@ const router = express.Router();
  *   NewUser:
  *     type: object
  *     required:
- *       - username
  *       - password
+ *       - first_name
+ *       - last_name
+ *       - email
  *     properties:
- *       username:
+ *       first_name:
+ *         type: string
+ *       last_name:
+ *         type: string
+ *       email:
  *         type: string
  *       password:
  *         type: string
