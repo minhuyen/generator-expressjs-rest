@@ -15,8 +15,8 @@ services:
     env_file:
       - .env
     volumes:
-      - /home/app/{{cookiecutter.project_slug}}/node_modules
-      - node_logs:/home/app/{{cookiecutter.project_slug}}/logs
+      - /home/app/<%=project_slug%>/node_modules
+      - node_logs:/home/app/<%=project_slug%>/logs
     ports:
       - "3000:3000"
     depends_on:
@@ -26,13 +26,13 @@ services:
     restart: always
     image: mongo:3.6
     env_file:
-    - .env
+      - .env
     command: mongod --storageEngine wiredTiger
     volumes:
       - mongo_data:/data/db
       - mongo_backup:/data/backup
-#    ports:
-#      - '27017:27017'
+  #    ports:
+  #      - '27017:27017'
   nginx:
     restart: always
     build: ./compose/nginx

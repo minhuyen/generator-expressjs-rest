@@ -227,3 +227,6 @@ pip-selfcheck.json
 .idea/
 
 .pytest_cache/
+
+# Nodejs
+node_modules

@@ -8,15 +8,15 @@ RUN npm config set unsafe-perm true && npm install -g pm2
 
 ENV HOME=/home/app
 
-COPY package.json package-lock.json $HOME/{{cookiecutter.project_slug}}/
+COPY package.json package-lock.json $HOME/<%=project_slug%>/
 RUN chown -R app:app $HOME/*
 
 USER app
-WORKDIR $HOME/{{cookiecutter.project_slug}}
+WORKDIR $HOME/<%=project_slug%>
 RUN npm install
 
 USER root
-COPY . $HOME/{{cookiecutter.project_slug}}
+COPY . $HOME/<%=project_slug%>
 RUN chown -R app:app $HOME/*
 USER app
 

@@ -14,10 +14,10 @@ services:
     # command: bash
     environment:
       NODE_ENV: production
-      DATABASE_URL: "mongodb://mongo:27017/{{cookiecutter.project_slug}}"
+      DATABASE_URL: "mongodb://mongo:27017/<%=project_slug%>"
     volumes:
-      - /home/app/{{cookiecutter.project_slug}}/node_modules
-      - node_logs:/home/app/{{cookiecutter.project_slug}}/logs
+      - /home/app/<%=project_slug%>/node_modules
+      - node_logs:/home/app/<%=project_slug%>/logs
     ports:
       - "3000:3000"
     depends_on:

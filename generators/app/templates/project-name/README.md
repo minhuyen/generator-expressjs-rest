@@ -1,6 +1,6 @@
-# {{cookiecutter.project_slug}}
+# <%=project_slug%>
 
-{{cookiecutter.project_slug}}
+<%=project_slug%>
 
 ### Prerequisites
 
@@ -11,7 +11,7 @@
 
 To get up and running on local, simply do the following:
 
-    $ cd {{cookiecutter.project_slug}}
+    $ cd <%=project_slug%>
     # build docker images
     $ docker-compose build
     $ docker-compose up
@@ -20,7 +20,7 @@ To get up and running on local, simply do the following:
 
 ssh to server
 
-    $ cd ~/{{cookiecutter.project_slug}}
+    $ cd ~/<%=project_slug%>
     $ git pull origin develop
     $ docker-compose -f docker-compose.dev.yml build
     $ docker-compose -f docker-compose.dev.yml up -d

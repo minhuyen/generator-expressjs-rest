@@ -48,13 +48,13 @@ mongoose.connect(config.mongodb.url, dbOptions);
 app.use(express.static(path.join(SRC_FOLDER, 'client/build')));
 app.use('/static', express.static(path.join(__dirname, 'public')));
 app.get('/', (req, res) =>
-  res.json({ message: 'Welcome to {{cookiecutter.project_slug}} API!' })
+  res.json({ message: 'Welcome to <%=project_slug%> API!' })
 );
 
 const swaggerDefinition = {
   // openapi: '3.0.0', // Specification (optional, defaults to swagger: '2.0')
   info: {
-    title: '{{cookiecutter.project_slug}}', // Title (required)
+    title: '<%=project_slug%>', // Title (required)
     version: '1.0.0' // Version (required)
   },
   basePath: '/api/v1', // Base path (optional)

@@ -1,7 +1,7 @@
 {
-  "name": "{{cookiecutter.project_slug}}",
+  "name": "<%=project_slug%>",
   "version": "0.1.0",
-  "description": "{{cookiecutter.project_slug}}",
+  "description": "<%=project_slug%>",
   "main": "index.js",
   "private": true,
   "scripts": {
@@ -14,7 +14,7 @@
   },
   "author": "Uyen Do",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/minhuyen/{{cookiecutter.project_slug}}#readme",
+  "homepage": "https://bitbucket.org/minhuyen/<%=project_slug%>#readme",
   "dependencies": {
     "api-query-params": "^4.9.0",
     "aws-sdk": "^2.387.0",
