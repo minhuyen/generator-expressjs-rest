@@ -2,13 +2,13 @@ version: "3"
 
 volumes:
   mongo_data: {}
-  client_build: {}
+  frontend: {}
 
 services:
   node:
     # restart: always
     build:
-      context: .
+      context: ./backend
       dockerfile: ./compose/node/Dockerfile_dev
     # command: nodemon --inspect=0.0.0.0:9229 --nolazy app.js
     ports:
@@ -17,24 +17,24 @@ services:
     env_file:
       - .env
     volumes:
-      - .:/home/app/<%=project_slug%>
+      - ./backend:/home/app/<%=project_slug%>
       - /home/app/<%=project_slug%>/node_modules
-      - client_build:/home/app/<%=project_slug%>/src/client/build
+      - frontend:/home/app/<%=project_slug%>/src/client/build
     depends_on:
       - mongo
 
   client:
     build:
-      context: ./src/client
-      dockerfile: ../../compose/client/Dockerfile
+      context: ./frontend
+      dockerfile: ./compose/client/Dockerfile
     ports:
       - "3001:3000"
     env_file:
       - .env
     volumes:
-      - ./src/client:/home/app/client
+      - ./frontend:/home/app/client
       - /home/app/client/node_modules
-      - client_build:/home/app/client/build
+      - frontend:/home/app/client/build
 
   mongo:
     image: mongo:3.6

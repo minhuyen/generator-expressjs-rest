@@ -34,7 +34,9 @@ module.exports = class extends Generator {
     this.fs.copyTpl(
       this.templatePath("project-name"),
       this.destinationPath(projectName),
-      { project_slug: projectName }
+      { project_slug: projectName }, 
+      {}, 
+      { globOptions: {dot: true} } //https://github.com/SBoudrias/mem-fs-editor/issues/86
     );
   }
 };
