@@ -16,8 +16,8 @@ import { errorResponse } from './services/response';
 const app = express();
 const port = process.env.PORT || 3000;
 const rootApi = '/api/v1';
-const ROOT_FOLDER = path.join(__dirname, '..');
-const SRC_FOLDER = path.join(ROOT_FOLDER, 'src');
+const ROOT_FOLDER = path.join(__dirname, '.');
+const SRC_FOLDER = path.join(ROOT_FOLDER, '.');
 // Security
 app.use(helmet());
 
@@ -70,7 +70,7 @@ const swaggerDefinition = {
 
 const options = {
   swaggerDefinition,
-  apis: [SRC_FOLDER + '/api/**/*.js'] // <-- not in the definition, but in the options
+  apis: ['api/**/*.js'] // <-- not in the definition, but in the options
 };
 
 const swaggerSpec = swaggerJSDoc(options);
