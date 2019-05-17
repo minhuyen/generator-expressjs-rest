@@ -1,0 +1,31 @@
+{
+  "name": "generator-express-api",
+  "version": "1.0.0",
+  "description": "yo template for an ExpressJS application",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "files": [
+    "generators"
+  ],
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://minhuyen@github.com/minhuyen/cookiecutter-expressjs.git"
+  },
+  "author": "Uyen Do",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/minhuyen/cookiecutter-expressjs/issues"
+  },
+  "homepage": "https://github.com/minhuyen/cookiecutter-expressjs#readme",
+  "dependencies": {
+    "yeoman-generator": "^3.2.0"
+  }
+}

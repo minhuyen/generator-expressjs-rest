@@ -1,0 +1,41 @@
+version: "3"
+
+volumes:
+  mongo_data: {}
+  mongo_backup: {}
+  node_logs: {}
+  media_data: {}
+
+services:
+  node:
+    restart: always
+    build:
+      context: .
+      dockerfile: ./compose/node/Dockerfile
+    # command: bash
+    env_file:
+      - .env
+    volumes:
+      - /home/app/<%=project_slug%>/node_modules
+      - node_logs:/home/app/<%=project_slug%>/logs
+      - media_data:/home/app/<%=project_slug%>/uploads
+    depends_on:
+      - mongo
+    # tty: true
+  mongo:
+    restart: always
+    image: mongo:3.6
+    env_file:
+      - .env
+    command: mongod --storageEngine wiredTiger
+    volumes:
+      - mongo_data:/data/db
+      - mongo_backup:/data/backup
+  nginx:
+    restart: always
+    build: ./compose/nginx
+    depends_on:
+      - node
+    ports:
+      - "80:80"
+      - "443:443"
