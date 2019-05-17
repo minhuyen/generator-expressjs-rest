@@ -19,7 +19,7 @@ script:
   - sh tests/test_docker.sh
 
 install:
-  - npm install -g yeoman
+  - npm install -g yo
 
 notifications:
   email:
