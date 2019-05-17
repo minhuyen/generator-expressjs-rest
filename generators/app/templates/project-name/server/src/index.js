@@ -8,7 +8,11 @@ import bodyParser from 'body-parser';
 import passport from 'passport';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
-import { errorHandle, notFoundHandle, logErrors } from './helpers/errors';
+import {
+  errorHandle,
+  notFoundHandle,
+  logErrors
+} from './helpers/handle-errors';
 import logger from './services/logger';
 import mongoose from './services/mongoose';
 import api from './api';

@@ -1,5 +1,5 @@
 import express from 'express';
-import { authJwt } from '../../services/passport';
+import { isAuth } from '../../middlewares/auth';
 import { imageUpload } from '../../services/s3';
 import { upload } from './uploads.controller';
 
@@ -31,6 +31,6 @@ const router = express.Router();
  *       400:
  *          $ref: '#/responses/Error'
  */
-router.post('/', authJwt, imageUpload, upload);
+router.post('/', isAuth, imageUpload, upload);
 
 export default router;
