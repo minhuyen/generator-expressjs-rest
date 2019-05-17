@@ -8,11 +8,13 @@ import bodyParser from 'body-parser';
 import passport from 'passport';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
+import { errorHandle, notFoundHandle, logErrors } from './helpers/errors';
 import logger from './services/logger';
 import mongoose from './services/mongoose';
 import api from './api';
 import config from './config';
-import { errorResponse } from './services/response';
+
+require('./services/passport');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -93,20 +95,9 @@ app.get('/admin', (req, res) => {
   res.sendFile(path.join(ROOT_FOLDER, 'build', 'index.html'));
 });
 
-app.use(function(req, res, next) {
-  errorResponse(res, 404, {
-    code: 404,
-    message: 'Page Not Found'
-  });
-});
-
-app.use(function(err, req, res, next) {
-  logger.error(err.stack);
-  errorResponse(res, 500, {
-    code: 500,
-    message: 'Something broke!'
-  });
-});
+app.use(notFoundHandle);
+app.use(logErrors);
+app.use(errorHandle);
 
 app.listen(port, () => logger.info(`Example app listening on port ${port}!`));
 

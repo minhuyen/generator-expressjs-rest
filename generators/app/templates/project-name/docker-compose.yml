@@ -8,7 +8,7 @@ services:
   node:
     # restart: always
     build:
-      context: ./backend
+      context: ./server
       dockerfile: ./compose/node/Dockerfile_dev
     # command: nodemon --inspect=0.0.0.0:9229 --nolazy app.js
     ports:
@@ -25,7 +25,7 @@ services:
 
   client:
     build:
-      context: ./frontend
+      context: ./client
       dockerfile: ./compose/client/Dockerfile
     ports:
       - "3001:3000"
