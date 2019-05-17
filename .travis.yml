@@ -15,11 +15,13 @@ before_install:
   - docker-compose -v
   - docker -v
 
-script:
-  - sh tests/test_docker.sh
+# script:
+#   - sh tests/test_docker.sh
 
 install:
   - npm install -g yo
+  - npm install
+  - npm run test
 
 notifications:
   email:
