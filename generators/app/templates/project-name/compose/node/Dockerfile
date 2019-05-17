@@ -15,13 +15,6 @@ USER app
 WORKDIR $HOME/<%=project_slug%>
 RUN npm install
 
-USER root
-COPY . $HOME/<%=project_slug%>
-RUN chown -R app:app $HOME/*
-USER app
-
-RUN cd src/client && npm install 
-
-RUN cd src/client && npm run build
+COPY --chown=app:app . .
 
 CMD ["pm2", "start", "--no-daemon", "processes.json"]

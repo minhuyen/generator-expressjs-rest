@@ -1,26 +1,68 @@
-import { check } from 'express-validator/check';
+import Joi from '@hapi/joi';
 
-export const signupValidation = [
-  check('first_name')
-    .not()
-    .isEmpty()
-    .withMessage('First name should not be empty !'),
-  check('email')
-    .not()
-    .isEmpty()
-    .withMessage('Email should not be empty!'),
-  check('email')
-    .isEmail()
-    .withMessage('Email is invalid!'),
-  check('password')
-    .not()
-    .isEmpty()
-    .withMessage('Password should not be empty'),
-  check('password')
-    .isLength({ min: 6 })
-    .withMessage('Password should has 6 character as least!'),
-  check('last_name')
-    .not()
-    .isEmpty()
-    .withMessage('Last name should not be empty !')
-];
+// password and confirmPassword must contain the same value
+export const signupValidationSchema = Joi.object({
+  email: Joi.string()
+    .email()
+    .lowercase()
+    .required(),
+  firstName: Joi.string().required(),
+  lastName: Joi.string().required(),
+  password: Joi.string()
+    .min(6)
+    .required()
+    .strict(),
+  confirmPassword: Joi.string()
+    .valid(Joi.ref('password'))
+    .required()
+    .strict()
+});
+
+export const loginValidationSchema = Joi.object({
+  username: Joi.string()
+    .regex(/(0[0-9])+([0-9]{8})\b$/)
+    .required(),
+  password: Joi.string()
+    .min(6)
+    .max(255)
+    .required()
+});
+
+export const registerUserNameSchema = Joi.object({
+  username: Joi.string()
+    .regex(/(0[0-9])+([0-9]{8})\b$/)
+    .required()
+});
+
+export const verifyValidationSchema = Joi.object({
+  username: Joi.string()
+    .regex(/(0[0-9])+([0-9]{8})\b$/)
+    .required(),
+  code: Joi.string()
+    .length(6)
+    .regex(/\d/)
+    .required()
+});
+
+export const createPasswordSchema = Joi.object({
+  password: Joi.string()
+    .min(6)
+    .max(255)
+    .required(),
+  confirmPassword: Joi.string()
+    .required()
+    .valid(Joi.ref('password'))
+});
+
+export const changePasswordSchema = Joi.object({
+  password: Joi.string()
+    .min(6)
+    .max(255)
+    .required(),
+  newPassword: Joi.string()
+    .required()
+    .invalid(Joi.ref('password')),
+  confirmNewPassword: Joi.string()
+    .required()
+    .valid(Joi.ref('newPassword'))
+});

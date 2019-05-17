@@ -1,6 +1,7 @@
 import express from 'express';
+import { celebrate } from 'celebrate';
 import { signup, login } from './auth.controller';
-import { signupValidation } from './validation';
+import { signupValidationSchema } from './auth.validation';
 import {
   authFacbookToken,
   authLocal,
@@ -12,7 +13,31 @@ const router = express.Router();
 /**
  * @swagger
  *
+ * responses:
+ *  Error:
+ *    description: Bad request
+ *    schema:
+ *      $ref: '#/definitions/Error'
+ *  Unauthorized:
+ *    description: Unauthorized
+ *    schema:
+ *      $ref: '#/definitions/Error'
+ *  NotFound:
+ *    description: The specified resource was not found
+ *    schema:
+ *      $ref: '#/definitions/Error'
+ *
  * definitions:
+ *  Error:
+ *    type: object
+ *    required:
+ *      - code
+ *      - message
+ *    properties:
+ *      code:
+ *        type: string
+ *      message:
+ *        type: string
  *   NewUser:
  *     type: object
  *     required:
@@ -36,7 +61,7 @@ const router = express.Router();
  *       - required:
  *         - id
  *       - properties:
- *         id:
+ *          id:
  *           type: integer
  *           format: int64
  */
@@ -60,11 +85,19 @@ const router = express.Router();
  *           $ref: '#/definitions/NewUser'
  *     responses:
  *       200:
- *         description: users
+ *         description: OK
  *         schema:
  *           $ref: '#/definitions/User'
+ *       400:
+ *         $ref: '#/responses/Error'
  */
-router.post('/signup', signupValidation, signup);
+router.post(
+  '/signup',
+  celebrate({
+    body: signupValidationSchema
+  }),
+  signup
+);
 
 /**
  * @swagger

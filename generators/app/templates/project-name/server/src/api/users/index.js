@@ -11,15 +11,15 @@ const router = express.Router();
  *   get:
  *     tags: [users]
  *     description: List users
+ *     security:
+ *       - BearerAuth: []
  *     produces:
  *       - application/json
  *     responses:
  *       200:
- *         description: successful operation
+ *         description: OK
  *         schema:
- *           $ref: '#/definitions/NewUser'
- *     security:
- *       - Bearer: []
+ *           $ref: '#/definitions/User'
  */
 router.get('/', authJwt, findAll);
 
@@ -30,6 +30,8 @@ router.get('/', authJwt, findAll);
  *   get:
  *     tags: [users]
  *     description: Get User by ID
+ *     security:
+ *       - BearerAuth: []
  *     produces:
  *       - application/json
  *     parameters:
@@ -39,12 +41,14 @@ router.get('/', authJwt, findAll);
  *         required: true
  *         type: string
  *     responses:
- *       200:
- *         description: successful operation
+ *      200:
+ *         description: OK
  *         schema:
- *           $ref: '#/definitions/NewUser'
- *     security:
- *       - Bearer: []
+ *           $ref: '#/definitions/User'
+ *      400:
+ *        $ref: '#/responses/Error'
+ *      401:
+ *        $ref: '#/responses/Unauthorized'
  */
 router.get('/:id', authJwt, findOne);
 router.delete('/:id', authJwt, deleteUser);
