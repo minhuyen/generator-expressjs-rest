@@ -9,7 +9,7 @@ import util from 'util';
 import User from '../api/users/users.model';
 import logger from './logger';
 import config from '../config';
-import { errorResponse } from "./response";
+import { errorResponse } from '../helpers/response';
 
 // used to serialize the user for the session
 passport.serializeUser(function(user, done) {
@@ -185,33 +185,41 @@ passport.use(
 
 export const authLocal = (req, res, next) => {
   passport.authenticate('local', { session: false }, (err, user, info) => {
-    if (err) { return next(err); }
+    if (err) {
+      return next(err);
+    }
     if (!user) {
       return errorResponse(res, 401, {
         code: 401,
-        message: 'Invalid Email or Password',
-      })
+        message: 'Invalid Email or Password'
+      });
     }
     req.logIn(user, function(err) {
-      if (err) { return next(err); }
-      return next()
+      if (err) {
+        return next(err);
+      }
+      return next();
     });
   })(req, res, next);
 };
 export const authJwt = (req, res, next) => {
   passport.authenticate('jwt', { session: false }, (err, user, info) => {
-    if (err) { return next(err); }
+    if (err) {
+      return next(err);
+    }
     if (!user) {
       return errorResponse(res, 401, {
         code: 401,
-        message: 'Unauthorized',
-      })
+        message: 'Unauthorized'
+      });
     }
     req.logIn(user, function(err) {
-      if (err) { return next(err); }
-      return next()
+      if (err) {
+        return next(err);
+      }
+      return next();
     });
-  })(req, res, next)
+  })(req, res, next);
 };
 export const authFacbookToken = passport.authenticate('facebook-token');
 export const authGoogleToken = passport.authenticate('google-token');

@@ -1,5 +1,5 @@
 import httpStatus from 'http-status';
-import { successResponse } from '../../services/response';
+import * as Response from '../../helpers/response';
 
 export const upload = (req, res) => {
   let image = '';
@@ -8,5 +8,5 @@ export const upload = (req, res) => {
     image = req.file.location;
   }
 
-  successResponse(res, httpStatus.CREATED, { image: image });
+  Response.sucess(res, { image: image }, httpStatus.CREATED);
 };
