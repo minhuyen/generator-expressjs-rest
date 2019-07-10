@@ -55,6 +55,10 @@ docker-compose up
 
 ## Deploy
 
+## Directory structure
+
+### Overview
+
 ```bash
 src/
 ├─ api/
