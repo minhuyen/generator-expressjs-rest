@@ -1,6 +1,6 @@
-# Cookiecutter Expressjs
+# Generator Express Api
 
-[![Build Status](https://travis-ci.org/minhuyen/generate-expressjs-api.svg?branch=develop)](https://travis-ci.org/minhuyen/generate-expressjs-api)
+[![Build Status](https://travis-ci.org/minhuyen/generator-express-api.svg?branch=develop)](https://travis-ci.org/minhuyen/generator-express-api)
 
 ## Features
 
@@ -26,7 +26,7 @@ Fist, install [Yeoman](http://yeoman.io) and generator-express-api using [npm](h
 
 ```bash
 npm install -g yo
-npm install -g generator-express-api
+npm install -g @fasteam/generator-express-api
 ```
 
 ## Generators
