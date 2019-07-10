@@ -1,6 +1,6 @@
 # Cookiecutter Expressjs
 
-[![Build Status](https://travis-ci.org/minhuyen/cookiecutter-expressjs.svg?branch=develop)](https://travis-ci.org/minhuyen/cookiecutter-expressjs)
+[![Build Status](https://travis-ci.org/minhuyen/generate-expressjs-api.svg?branch=develop)](https://travis-ci.org/minhuyen/generate-expressjs-api)
 
 ## Features
 
