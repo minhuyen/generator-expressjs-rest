@@ -32,11 +32,11 @@ module.exports = class extends Generator {
     this.log("cool feature", this.answers.cool); // user answer `cool` used
     const projectName = this.answers.name;
     this.fs.copyTpl(
-      this.templatePath("project-name"),
+      this.templatePath(),
       this.destinationPath(projectName),
-      { project_slug: projectName }, 
-      {}, 
-      { globOptions: {dot: true} } //https://github.com/SBoudrias/mem-fs-editor/issues/86
+      { project_slug: projectName },
+      {},
+      { globOptions: { dot: true } } //https://github.com/SBoudrias/mem-fs-editor/issues/86
     );
   }
 };
