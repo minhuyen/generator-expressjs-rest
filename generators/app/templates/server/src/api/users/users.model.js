@@ -2,7 +2,10 @@ import mongoose, { Schema } from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate';
 import bcrypt from 'bcryptjs';
 
-const roles = ['user', 'admin'];
+const ROLES = {
+  USER: 'user',
+  ADMIN: 'admin'
+};
 
 const UserSchema = new Schema(
   {
@@ -28,8 +31,8 @@ const UserSchema = new Schema(
     },
     role: {
       type: String,
-      enum: roles,
-      default: 'user'
+      enum: Object.values(ROLES),
+      default: ROLES.USER
     },
     services: {
       facebook: {

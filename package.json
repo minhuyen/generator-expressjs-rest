@@ -1,5 +1,5 @@
 {
-  "name": "generator-express-api",
+  "name": "@fasteam/generator-express-api",
   "version": "1.0.0",
   "description": "yo template for an ExpressJS application",
   "main": "index.js",
@@ -17,15 +17,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://minhuyen@github.com/minhuyen/cookiecutter-expressjs.git"
+    "url": "git+https://minhuyen@github.com/minhuyen/generate-expressjs-api.git"
   },
   "author": "Uyen Do",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/minhuyen/cookiecutter-expressjs/issues"
+    "url": "https://github.com/minhuyen/generate-expressjs-api/issues"
   },
-  "homepage": "https://github.com/minhuyen/cookiecutter-expressjs#readme",
+  "homepage": "https://github.com/minhuyen/generate-expressjs-api#readme",
   "dependencies": {
+    "npm": "^6.9.0",
     "yeoman-generator": "^3.2.0"
   }
 }
