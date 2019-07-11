@@ -17,8 +17,6 @@
 
 - [Docker (at least 1.10)](https://www.docker.com/)
 - [Docker-compose (at least 1.6)](https://docs.docker.com/compose/install/)
-- [python](https://www.python.org/)
-- [pip](https://pip.pypa.io/en/stable/installing/)
 
 ## Installation
 
