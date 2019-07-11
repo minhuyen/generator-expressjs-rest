@@ -3,9 +3,10 @@ sudo: required
 services:
   - docker
 
-language: python
+language: node_js
 
-python: 3.6
+node_js:
+  - "10.15.0"
 
 env:
   - TOX_ENV=py36
@@ -14,11 +15,13 @@ before_install:
   - docker-compose -v
   - docker -v
 
-script:
-  - sh tests/test_docker.sh
+# script:
+#   - sh tests/test_docker.sh
 
 install:
-  - pip install tox
+  - npm install -g yo
+  - npm install
+  - npm run test
 
 notifications:
   email:

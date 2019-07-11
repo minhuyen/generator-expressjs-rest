@@ -6,7 +6,7 @@ import {
   authFacbookToken,
   authLocal,
   authGoogleToken
-} from '../../services/passport';
+} from '../../middlewares/auth';
 
 const router = express.Router();
 
