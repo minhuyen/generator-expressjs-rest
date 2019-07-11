@@ -1,4 +1,4 @@
-# Generator Express Api
+# Generator Expressjs Rest
 
 [![Build Status](https://travis-ci.org/minhuyen/generator-express-api.svg?branch=develop)](https://travis-ci.org/minhuyen/generator-express-api)
 
@@ -20,7 +20,7 @@
 
 ## Installation
 
-Fist, install [Yeoman](http://yeoman.io) and generator-express-api using [npm](https://www.npmjs.com/) (we assume you have pre-installed [node.js](https://nodejs.org/)).
+Fist, install [Yeoman](http://yeoman.io) and generator-expressjs-rest using [npm](https://www.npmjs.com/) (we assume you have pre-installed [node.js](https://nodejs.org/)).
 
 ```bash
 npm install -g yo
