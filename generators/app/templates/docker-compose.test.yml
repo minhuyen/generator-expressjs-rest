@@ -9,8 +9,8 @@ services:
   node:
     restart: always
     build:
-      context: .
-      dockerfile: ./compose/node/Dockerfile
+      context: ./server
+      dockerfile: ../compose/node/Dockerfile
     # command: bash
     environment:
       NODE_ENV: production

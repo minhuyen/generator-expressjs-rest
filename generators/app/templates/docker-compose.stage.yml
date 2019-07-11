@@ -10,8 +10,8 @@ services:
   node:
     restart: always
     build:
-      context: .
-      dockerfile: ./compose/node/Dockerfile
+      context: ./server
+      dockerfile: ../compose/node/Dockerfile
     # command: bash
     env_file:
       - .env
