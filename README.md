@@ -24,7 +24,7 @@ Fist, install [Yeoman](http://yeoman.io) and generator-express-api using [npm](h
 
 ```bash
 npm install -g yo
-npm install -g @fasteam/generator-express-api
+npm install -g generator-expressjs-rest
 ```
 
 ## Generators
@@ -32,8 +32,8 @@ npm install -g @fasteam/generator-express-api
 Then, you can use `yo` to generate your project.
 
 ```bash
-yo express-api # generate a new project
-yo express-api:api # generate a new api endpoint inside your project
+yo expressjs-rest # generate a new project
+yo expressjs-rest:api # generate a new api endpoint inside your project
 ```
 
 ## Commands
