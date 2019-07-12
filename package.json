@@ -1,6 +1,6 @@
 {
   "name": "generator-expressjs-rest",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "yo template for an ExpressJS application",
   "main": "index.js",
   "directories": {
@@ -27,6 +27,6 @@
   "homepage": "https://github.com/minhuyen/generate-expressjs-api#readme",
   "dependencies": {
     "npm": "^6.10.0",
-    "yeoman-generator": "^3.2.0"
+    "yeoman-generator": "^4.0.1"
   }
 }
