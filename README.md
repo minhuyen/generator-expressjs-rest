@@ -1,6 +1,6 @@
 # Generator Expressjs Rest
 
-[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Coverage percentage][coveralls-image]][coveralls-url]
+[![Build Status](https://travis-ci.org/minhuyen/generator-expressjs-rest.svg?branch=master)](https://travis-ci.org/minhuyen/generator-expressjs-rest)
 
 ## Features
 
