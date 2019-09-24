@@ -6,7 +6,13 @@ const config = {};
 
 config.mongodb = {
   url: process.env.DATABASE_URL,
-  secret: 'randomStringSport'
+  secret: 'randomStringSport',
+  options: {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    user: process.env.MONGO_INITDB_ROOT_USERNAME,
+    pass: process.env.MONGO_INITDB_ROOT_PASSWORD
+  }
 };
 
 config.facebook = {

@@ -3,7 +3,7 @@ import { celebrate } from 'celebrate';
 import { signup, login } from './auth.controller';
 import { signupValidationSchema } from './auth.validation';
 import {
-  authFacbookToken,
+  authFacebookToken,
   authLocal,
   authGoogleToken
 } from '../../middlewares/auth';
@@ -125,7 +125,7 @@ router.post(
  *         description: login
  */
 router.post('/login', authLocal, login);
-router.post('/facebook', authFacbookToken, login);
+router.post('/facebook', authFacebookToken, login);
 router.post('/google', authGoogleToken, login);
 
 export default router;

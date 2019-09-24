@@ -1,5 +1,5 @@
 import express from 'express';
-import { isAuth } from '../../middlewares/auth';
+import AuthService from '../../middlewares/auth';
 import { findAll, findOne, deleteUser, updateAvatar } from './users.controller';
 
 const router = express.Router();
@@ -21,7 +21,7 @@ const router = express.Router();
  *         schema:
  *           $ref: '#/definitions/User'
  */
-router.get('/', isAuth, findAll);
+router.get('/', AuthService.required, findAll);
 
 /**
  * @swagger
@@ -50,8 +50,8 @@ router.get('/', isAuth, findAll);
  *      401:
  *        $ref: '#/responses/Unauthorized'
  */
-router.get('/:id', isAuth, findOne);
-router.delete('/:id', isAuth, deleteUser);
-router.put('/:id/avatar', isAuth, updateAvatar);
+router.get('/:id', AuthService.required, findOne);
+router.delete('/:id', AuthService.required, deleteUser);
+router.put('/:id/avatar', AuthService.required, updateAvatar);
 
 export default router;
