@@ -1,6 +1,6 @@
 # Generator Expressjs Rest
 
-[![Build Status](https://travis-ci.org/minhuyen/generator-express-api.svg?branch=develop)](https://travis-ci.org/minhuyen/generator-express-api)
+[![Build Status](https://travis-ci.org/minhuyen/generator-expressjs-rest.svg?branch=master)](https://travis-ci.org/minhuyen/generator-expressjs-rest)
 
 ## Features
 

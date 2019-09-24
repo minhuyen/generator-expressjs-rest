@@ -6,7 +6,7 @@ services:
 language: node_js
 
 node_js:
-  - "10.15.0"
+  - "10.16.0"
 
 env:
   - TOX_ENV=py36
