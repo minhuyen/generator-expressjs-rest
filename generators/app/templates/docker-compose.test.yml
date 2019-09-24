@@ -9,7 +9,7 @@ services:
   node:
     restart: always
     build:
-      context: ./server
+      context: ./backend
       dockerfile: ../compose/node/Dockerfile
     # command: bash
     environment:
