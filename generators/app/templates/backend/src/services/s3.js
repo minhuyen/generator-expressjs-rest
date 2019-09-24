@@ -1,5 +1,7 @@
 import mime from 'mime';
 import crypto from 'crypto';
+import path from 'path';
+import fs from 'fs';
 import multer from 'multer';
 import multerS3 from 'multer-s3';
 import aws from 'aws-sdk';
@@ -29,7 +31,25 @@ const s3Storage = multerS3({
   }
 });
 
-const upload = multer({ storage: s3Storage });
+const localStorage = multer.diskStorage({
+  destination: function(req, file, callback) {
+    const uploadFolder = path.join(__dirname, '..', '..', 'uploads');
+    if (!fs.existsSync(uploadFolder)) {
+      fs.mkdirSync(uploadFolder);
+    }
+    callback(null, uploadFolder);
+  },
+  filename: function(req, file, cb) {
+    crypto.pseudoRandomBytes(16, function(err, raw) {
+      cb(
+        null,
+        raw.toString('hex') + Date.now() + '.' + mime.extension(file.mimetype)
+      );
+    });
+  }
+});
+
+const upload = multer({ storage: localStorage });
 
 export const avatarUpload = upload.single('avatar');
 

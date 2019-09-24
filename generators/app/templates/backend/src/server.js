@@ -44,13 +44,7 @@ app.use(bodyParser.json());
 app.use(passport.initialize());
 
 // database
-let dbOptions = {
-  user: process.env.MONGO_INITDB_ROOT_USERNAME,
-  pass: process.env.MONGO_INITDB_ROOT_PASSWORD,
-  useNewUrlParser: true,
-  useCreateIndex: true
-};
-mongoose.connect(config.mongodb.url, dbOptions);
+mongoose.connect(config.mongodb.url, config.mongodb.options);
 
 app.use(express.static(path.join(ROOT_FOLDER, 'build'), { index: false }));
 app.use('/static', express.static(path.join(SRC_FOLDER, 'public')));

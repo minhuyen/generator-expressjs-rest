@@ -1,9 +1,9 @@
 sudo: required
 
+language: node_js
+
 services:
   - docker
-
-language: node_js
 
 node_js:
   - "10.16.0"
@@ -15,13 +15,14 @@ before_install:
   - docker-compose -v
   - docker -v
 
-# script:
-#   - sh tests/test_docker.sh
+script:
+  # - sh tests/test_docker.sh
+  - npm run test
 
 install:
   - npm install -g yo
   - npm install
-  - npm run test
+  - npm link
 
 notifications:
   email:

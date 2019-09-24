@@ -1,7 +1,7 @@
 import express from 'express';
-import { isAuth } from '../../middlewares/auth';
+import AuthService from '../../middlewares/auth';
 import { imageUpload } from '../../services/s3';
-import { upload } from './uploads.controller';
+import { upload, deleteFile } from './uploads.controller';
 
 const router = express.Router();
 
@@ -11,7 +11,7 @@ const router = express.Router();
  * /uploads:
  *   post:
  *     tags: [uploads]
- *     description: upload a file
+ *     description: upload a file. Fill url will be http://server/media/filename
  *     consumes:
  *       - multipart/form-data
  *     parameters:
@@ -25,12 +25,44 @@ const router = express.Router();
  *         schema:
  *           type: object
  *           properties:
- *            image:
- *              type: string
- *              description: the image url
+ *            data:
+ *              type: array
+ *              items:
+ *                type: object
+ *                properties:
+ *                  url:
+ *                    type: string
+ *                  thumbnail:
+ *                    type: string
  *       400:
  *          $ref: '#/responses/Error'
  */
-router.post('/', isAuth, imageUpload, upload);
+router.post('/', AuthService.required, imageUpload, upload);
+
+/**
+ * @swagger
+ *
+ * /uploads/{filename}:
+ *   delete:
+ *     tags: [uploads]
+ *     description: upload a file
+ *     parameters:
+ *       - name: filename
+ *         in: path
+ *         description: file name
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: OK
+ *         schema:
+ *           type: object
+ *           properties:
+ *            message:
+ *              type: string
+ *       400:
+ *          $ref: '#/responses/Error'
+ */
+router.delete('/:filename', AuthService.required, deleteFile);
 
 export default router;
