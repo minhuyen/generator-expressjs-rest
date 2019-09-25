@@ -28,7 +28,7 @@ const router = express.Router();
  *      $ref: '#/definitions/Error'
  *
  * definitions:
- *  Error:
+ *   Error:
  *    type: object
  *    required:
  *      - code

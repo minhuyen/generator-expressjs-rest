@@ -2,7 +2,7 @@ import User from '../users/users.model';
 import httpStatus from 'http-status';
 import logger from '../../services/logger';
 import { sign } from '../../services/jwt';
-import * as Response from '../../helpers/response';
+import Response from '../../helpers/response';
 
 export const signup = (req, res) => {
   User.create(req.body)
