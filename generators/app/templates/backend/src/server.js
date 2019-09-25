@@ -72,7 +72,7 @@ const swaggerDefinition = {
 
 const options = {
   swaggerDefinition,
-  apis: ['api/**/*.js'] // <-- not in the definition, but in the options
+  apis: ['src/api/**/*.js'] // <-- not in the definition, but in the options
 };
 
 const swaggerSpec = swaggerJSDoc(options);
