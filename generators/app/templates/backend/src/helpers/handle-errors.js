@@ -1,15 +1,15 @@
 import { isCelebrate } from 'celebrate';
+import httpStatus from 'http-status';
+import { logger } from '../services';
 import Response from './response';
 
-export const errorHandle = (err, req, res, next) => {
-  if (!isCelebrate(err)) {
-    console.log('=======err=========', err);
-    return Response.error(res, {
-      code: err.name,
-      message: err.message
-    });
-  } else {
-    const { joi } = err;
+export const errorHandle = (error, req, res, next) => {
+  if (typeof error === 'string') {
+    // custom application error
+    return Response.error(res, { message: error });
+  } else if (isCelebrate(error)) {
+    logger.error('isCelebrate %s', isCelebrate(error));
+    const { joi } = error;
     return Response.error(res, {
       message: 'Invalid request data. Please review request and try again.',
       code: joi.name,
@@ -18,7 +18,29 @@ export const errorHandle = (err, req, res, next) => {
         type
       }))
     });
+  } else if (error.name === 'CastError' && error.kind === 'ObjectId') {
+    return Response.error(res, {
+      // code: error.name,
+      message: 'malformatted id'
+    });
+  } else if (error.name === 'ValidationError') {
+    return Response.error(res, {
+      message: error.message
+    });
+  } else if (error.name === 'Error') {
+    return Response.error(res, {
+      message: error.message
+    });
   }
+  // default to 500 server error
+  logger.error('%o', error);
+  return Response.error(
+    res,
+    {
+      message: error.message
+    },
+    httpStatus.INTERNAL_SERVER_ERROR
+  );
 };
 
 export const logErrors = (err, req, res, next) => {
