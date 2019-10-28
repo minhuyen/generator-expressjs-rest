@@ -8,11 +8,11 @@ volumes:
 
 services:
   node:
-    restart: always
+    restart: on-failure
+    # container_name: awesome_server
     build:
-      context: ./backend
-      dockerfile: ../compose/node/Dockerfile
-    # command: bash
+      context: .
+      dockerfile: Dockerfile
     env_file:
       - .env
     volumes:

@@ -26,6 +26,7 @@ module.exports = class extends Generator {
         message: "Would you like to enable the Cool feature?"
       }
     ]);
+    this.config.save()
   }
 
   writing() {
