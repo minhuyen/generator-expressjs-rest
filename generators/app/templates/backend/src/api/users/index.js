@@ -1,6 +1,7 @@
 import express from 'express';
 import AuthService from '../../middlewares/auth';
 import UserController from './users.controller';
+import User from './users.model';
 
 const userController = new UserController(User, 'User');
 
