@@ -33,37 +33,6 @@ export default (apiUrl, httpClient = fetchUtils.fetchJson) => {
    * @returns {Promise} the Promise for a data response
    */
   return (type, resource, params) => {
-    /**
-     * Split GET_MANY, UPDATE_MANY and DELETE_MANY requests into multiple promises,
-     * since they're not supported by default.
-     */
-
-    switch (type) {
-      case UPDATE_MANY:
-        return Promise.all(
-          params.ids.map(id =>
-            httpClient(`${apiUrl}/${resource}/${id}`, {
-              method: "PUT",
-              body: JSON.stringify(params.data)
-            })
-          )
-        ).then(responses => ({
-          data: responses.map(response => response.json)
-        }));
-      case DELETE_MANY:
-        return Promise.all(
-          params.ids.map(id =>
-            httpClient(`${apiUrl}/${resource}/${id}`, {
-              method: "DELETE"
-            })
-          )
-        ).then(responses => ({
-          data: responses.map(response => response.json)
-        }));
-      default:
-        break;
-    }
-
     const { url, options } = convertDataRequestToHTTP(
       apiUrl,
       type,
@@ -117,13 +86,30 @@ const convertDataRequestToHTTP = (apiUrl, type, resource, params) => {
       options.method = "PUT";
       options.body = JSON.stringify(params.data);
       break;
+    case UPDATE_MANY: {
+      const query = {
+        filter: JSON.stringify({ _id: params.ids })
+      };
+      url = `${apiUrl}/${resource}?${stringify(query)}`;
+      options.method = "PATCH";
+      options.body = JSON.stringify(params.data);
+      break;
+    }
     case DELETE:
       url = `${apiUrl}/${resource}/${params.id}`;
       options.method = "DELETE";
       break;
+    case DELETE_MANY: {
+      const query = {
+        filter: JSON.stringify({ _id: params.ids })
+      };
+      url = `${apiUrl}/${resource}?${stringify(query)}`;
+      options.method = "DELETE";
+      break;
+    }
     case GET_MANY: {
       const query = {
-        filter: JSON.stringify({ _id: { $in: params.ids } })
+        filter: JSON.stringify({ _id: params.ids })
       };
       url = `${apiUrl}/${resource}?${stringify(query)}`;
       break;
@@ -131,11 +117,9 @@ const convertDataRequestToHTTP = (apiUrl, type, resource, params) => {
     case GET_MANY_REFERENCE: {
       const { page, perPage } = params.pagination;
       const { field, order } = params.sort;
-      let _field = field === "id" ? "_id" : field;
       const query = {
-        sort: order === "DESC" ? `-${_field}` : _field,
-        page: page,
-        limit: perPage,
+        sort: JSON.stringify([field, order]),
+        range: JSON.stringify([(page - 1) * perPage, page * perPage - 1]),
         filter: JSON.stringify({
           ...params.filter,
           [params.target]: params.id
@@ -170,10 +154,10 @@ const convertHTTPResponse = (response, type, resource, params) => {
     case UPDATE:
     case DELETE:
     case GET_ONE:
-      return { data: { ...json, id: json._id } };
+      return { data: { ...json.data, id: json.data._id } };
     case CREATE:
-      return { data: { ...params.data, id: json._id } };
+      return { data: { ...params.data, id: json.data._id } };
     default:
-      return { data: json };
+      return { data: json.data };
   }
 };
