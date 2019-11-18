@@ -6,8 +6,6 @@ import compression from 'compression';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import passport from 'passport';
-import swaggerUi from 'swagger-ui-express';
-import swaggerJSDoc from 'swagger-jsdoc';
 import {
   errorHandle,
   notFoundHandle,
@@ -21,7 +19,7 @@ require('./services/passport');
 
 const app = express();
 const rootApi = '/api/v1';
-const ROOT_FOLDER = path.join(__dirname, '.');
+const ROOT_FOLDER = path.join(__dirname, '..');
 const SRC_FOLDER = path.join(ROOT_FOLDER, 'src');
 // Security
 app.use(helmet());

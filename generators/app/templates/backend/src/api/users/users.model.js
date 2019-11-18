@@ -1,5 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate';
+import mongooseUniqueValidator from 'mongoose-unique-validator';
 import bcrypt from 'bcryptjs';
 
 const ROLES = {
@@ -54,36 +55,28 @@ const UserSchema = new Schema(
   }
 );
 
-UserSchema.pre('save', function(next) {
-  const user = this;
+UserSchema.pre('save', async function() {
+  const password = this.password;
   if (this.isModified('password')) {
-    if (
-      (user.facebook && user.facebook.id) ||
-      (user.google && user.google.id)
-    ) {
-      next();
-    }
-    bcrypt.genSalt(10, function(err, salt) {
-      if (err) {
-        return next(err);
-      }
-      bcrypt.hash(user.password, salt, function(err, hash) {
-        if (err) {
-          return next(err);
-        }
-        user.password = hash;
-        next();
-      });
-    });
-  } else {
-    return next();
+    const saltRounds = 101;
+    const passwordHash = await bcrypt.hash(password, saltRounds);
+    this.password = passwordHash;
   }
 });
 
-UserSchema.methods.verifyPassword = function(passw) {
-  return bcrypt.compareSync(passw, this.password);
+UserSchema.methods.verifyPassword = function(password) {
+  return bcrypt.compareSync(password, this.password);
 };
 
 UserSchema.plugin(mongoosePaginate);
+UserSchema.plugin(mongooseUniqueValidator);
+
+UserSchema.methods.toJSON = function() {
+  const obj = this.toObject();
+  delete obj.password;
+  delete obj.password_reset_token;
+  delete obj.password_reset_expires;
+  return obj;
+};
 
 export default mongoose.model('User', UserSchema);

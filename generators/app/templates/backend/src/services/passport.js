@@ -9,7 +9,6 @@ import util from 'util';
 import User from '../api/users/users.model';
 import logger from './logger';
 import config from '../config';
-import { errorResponse } from '../helpers/response';
 
 // used to serialize the user for the session
 passport.serializeUser(function(user, done) {

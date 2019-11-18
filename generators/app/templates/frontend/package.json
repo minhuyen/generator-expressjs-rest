@@ -5,7 +5,7 @@
   "dependencies": {
     "ra-input-rich-text": "^2.9.3",
     "react": "^16.8.6",
-    "react-admin": "^2.9.4",
+    "react-admin": "^2.9.8",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1"
   },

@@ -17,8 +17,8 @@ export default (loginUrlApi, noAccessPage = "/login") => {
           }
           return response.json();
         })
-        .then(({ token }) => {
-          localStorage.setItem("token", token);
+        .then(({ data }) => {
+          localStorage.setItem("token", data.token);
         });
     }
     // called when the user clicks on the logout button
