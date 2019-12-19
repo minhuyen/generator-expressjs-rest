@@ -34,7 +34,7 @@
   },
   "homepage": "https://github.com/minhuyen/generate-expressjs-api#readme",
   "dependencies": {
-    "npm": "^6.10.0",
+    "npm": "^6.13.4",
     "yeoman-generator": "^4.0.1"
   },
   "devDependencies": {
