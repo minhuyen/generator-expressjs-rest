@@ -8,7 +8,7 @@ RUN npm config set unsafe-perm true && npm install -g pm2
 
 ENV HOME=/home/app
 
-COPY package.json package-lock.json $HOME/<%=project_slug%>/
+COPY package*.json $HOME/<%=project_slug%>/
 RUN chown -R app:app $HOME/*
 
 USER app
