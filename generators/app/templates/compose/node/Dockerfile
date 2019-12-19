@@ -1,4 +1,4 @@
-FROM node:10-alpine
+FROM node:10.16.3-alpine
 
 ENV NPM_CONFIG_PRODUCTION false
 

@@ -4,14 +4,14 @@ import config from '../config';
 
 const options = {
   token: {
-    key: path.join('cert', 'AuthKey_75Q2LF3ZYT.p8'),
+    // key: path.join('cert', 'AuthKey_75Q2LF3ZYT.p8'),
     keyId: config.apn.keyId,
     teamId: config.apn.teamId
   },
   production: config.apn.production === 'true' ? true : false
 };
 
-class PushToken {
+export default class PushToken {
   constructor() {
     this.apnProvider = new apn.Provider(options);
   }
@@ -42,5 +42,3 @@ class PushToken {
     return await this.apnProvider.send(note, deviceToken);
   }
 }
-
-export default new PushToken();

@@ -1,7 +1,7 @@
 import User from '../users/users.model';
 import { logger, jwt, MailService } from '../../services';
 import { utils } from '../../helpers';
-import deviceTokenService from '../deviceTokens/deviceToken.service';
+// import deviceTokenService from '../deviceTokens/deviceToken.service';
 
 const signup = async data => {
   const user = await User.create(data);
@@ -19,8 +19,8 @@ const login = user => {
 };
 
 const logout = async token => {
-  const result = await deviceTokenService.deleteDeviceTokenByToken(token);
-  return result;
+  // const result = await deviceTokenService.deleteDeviceTokenByToken(token);
+  return "";
 };
 
 const checkEmailIsValid = async email => {
