@@ -40,12 +40,12 @@ RUN npm config set unsafe-perm true && npm install -g pm2
 
 ENV HOME=/home/app
 
-COPY backend/package*.json $HOME/private-phone-number/
+COPY backend/package*.json $HOME/<%=project_slug%>/
 RUN chown -R app:app $HOME/*
 
 USER app
 
-WORKDIR $HOME/private-phone-number
+WORKDIR $HOME/<%=project_slug%>
 
 COPY --from=builder /home/node/app/build/ ./build/
 
