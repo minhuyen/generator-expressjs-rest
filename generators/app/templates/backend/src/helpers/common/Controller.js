@@ -1,10 +1,10 @@
 import httpStatus from 'http-status';
 import aqp from 'api-query-params';
-import Response from './response';
+import Response from '../response';
 
-class CRUDController {
-  constructor(model, name) {
-    this._model = model;
+class Controller {
+  constructor(service, name) {
+    this.service = service;
     this._name = name;
     this.findAll = this.findAll.bind(this);
     this.create = this.create.bind(this);
@@ -17,14 +17,14 @@ class CRUDController {
   async create(req, res, next) {
     try {
       const data = req.body;
-      const result = await this._model.create(data);
+      const result = await this.service.create(data);
       return Response.success(res, result);
     } catch (exception) {
       next(exception);
     }
   }
 
-  async get_queryset(req) {
+  get_queryset(req) {
     let params = aqp(req.query, {
       skipKey: 'page'
     });
@@ -32,17 +32,9 @@ class CRUDController {
   }
 
   async findAll(req, res, next) {
-    console.log('==========findAll==========', this._model.collection.name);
     try {
-      const { filter, skip, limit, sort, population } = await this.get_queryset(
-        req
-      );
-      const result = await this._model.paginate(filter, {
-        page: skip || 1,
-        limit: limit || 25,
-        sort: sort || '-createdAt',
-        populate: population
-      });
+      const query = this.get_queryset(req);
+      const result = await this.service.findAll(query);
       return Response.success(res, result);
     } catch (exception) {
       next(exception);
@@ -51,7 +43,7 @@ class CRUDController {
 
   async findOne(req, res, next) {
     try {
-      const result = await this._model.findById(req.params.id);
+      const result = await this.service.findById(req.params.id);
       if (!result) {
         return Response.error(
           res,
@@ -70,13 +62,19 @@ class CRUDController {
 
   async update(req, res, next) {
     try {
-      const result = await this._model.findByIdAndUpdate(
-        req.params.id,
-        req.body,
-        {
-          new: true
-        }
-      );
+      const result = await this.service.update(req.params.id, req.body, {
+        new: true
+      });
+      if (!result) {
+        return Response.error(
+          res,
+          {
+            code: `${this._name.toUpperCase()}_NOT_FOUND`,
+            message: `${this._name} does not found with id ${req.params.id}`
+          },
+          httpStatus.NOT_FOUND
+        );
+      }
       return Response.success(res, result);
     } catch (exception) {
       next(exception);
@@ -85,7 +83,17 @@ class CRUDController {
 
   async remove(req, res, next) {
     try {
-      const result = await this._model.findByIdAndRemove(req.params.id);
+      const result = await this.service.remove(req.params.id);
+      if (!result) {
+        return Response.error(
+          res,
+          {
+            code: `${this._name.toUpperCase()}_NOT_FOUND`,
+            message: `${this._name} does not found with id ${req.params.id}`
+          },
+          httpStatus.NOT_FOUND
+        );
+      }
       return Response.success(res, result);
     } catch (exception) {
       next(exception);
@@ -93,4 +101,4 @@ class CRUDController {
   }
 }
 
-export default CRUDController;
+export default Controller;

@@ -17,7 +17,7 @@ export default class AuthService {
       'jwt',
       { session: false },
       (err, user, info) => {
-        console.log('=======info==========', info);
+        // console.log('=======info==========', info);
         if (err) {
           return next(err);
         }
@@ -52,7 +52,7 @@ export default class AuthService {
         return Response.error(
           res,
           {
-            message: 'Bạn không có quyền truy cập vào trang này',
+            message: 'You are not authorized to access this page!',
             code: 'Unauthorized'
           },
           401
@@ -72,9 +72,36 @@ export default class AuthService {
       next();
     }
   }
+
+  static isAdmin() {
+    return AuthService.roles('admin');
+  }
 }
 
-export const authLocal = passport.authenticate('local', { session: false });
+// export const authLocal = passport.authenticate('local', { session: false });
+export const authLocal = (req, res, next) => {
+  passport.authenticate('local', { session: false }, (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      return Response.error(
+        res,
+        {
+          code: 'Unauthorized',
+          message: 'Your email or password is incorrect'
+        },
+        401
+      );
+    }
+    req.logIn(user, function(err) {
+      if (err) {
+        return next(err);
+      }
+      return next();
+    });
+  })(req, res, next);
+};
 export const authJwt = passport.authenticate('jwt', { session: false });
 export const authFacebookToken = passport.authenticate('facebook-token');
 export const authGoogleToken = passport.authenticate('google-token');

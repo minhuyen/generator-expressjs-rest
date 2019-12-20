@@ -1,9 +1,15 @@
 import express from 'express';
+import { celebrate } from 'celebrate';
 import AuthService from '../../middlewares/auth';
-import UserController from './users.controller';
-import User from './users.model';
+import userController from './users.controller';
+import { schemas } from '../../helpers';
+import {
+  paginateUserValidateSchema,
+  searchValidateSchema,
+  addTipUserValidateSchema
+} from './user.validation';
 
-const userController = new UserController(User, 'User');
+const { objectIdSchema, paginateValidationSchema } = schemas;
 
 const router = express.Router();
 
@@ -13,18 +19,43 @@ const router = express.Router();
  * /users:
  *   get:
  *     tags: [users]
- *     description: List users
- *     security:
- *       - BearerAuth: []
+ *     description: get all users
  *     produces:
  *       - application/json
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - $ref: '#/parameters/pageParam'
+ *       - $ref: '#/parameters/limitParam'
  *     responses:
- *       200:
+ *        200:
  *         description: OK
  *         schema:
- *           $ref: '#/definitions/User'
+ *           type: object
+ *           properties:
+ *              page:
+ *                type: integer
+ *                format: int32
+ *              pages:
+ *                type: integer
+ *                format: int32
+ *              limit:
+ *                type: integer
+ *                format: int32
+ *              total:
+ *                type: integer
+ *                format: int32
+ *              data:
+ *                $ref: '#/definitions/ArrayOfUsers'
+ *        401:
+ *          $ref: '#/responses/Unauthorized'
  */
-router.get('/', AuthService.required, userController.findAll);
+router.get(
+  '/',
+  AuthService.required,
+  celebrate({ query: paginateUserValidateSchema }),
+  userController.findAll
+);
 
 /**
  * @swagger
@@ -53,9 +84,84 @@ router.get('/', AuthService.required, userController.findAll);
  *      401:
  *        $ref: '#/responses/Unauthorized'
  */
-router.get('/:id', AuthService.required, userController.findOne);
-router.delete('/:id', AuthService.required, userController.remove);
-router.put('/:id', AuthService.required, userController.update);
-router.put('/:id/avatar', AuthService.required, userController.updateAvatar);
+router.get(
+  '/:id',
+  AuthService.required,
+  celebrate({ params: objectIdSchema }),
+  userController.findOne
+);
+/**
+ * @swagger
+ *
+ * /users/{id}:
+ *   delete:
+ *     tags: [users]
+ *     description: delete a user
+ *     security:
+ *       - BearerAuth: []
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: users id
+ *         required: true
+ *         type: string
+ *     responses:
+ *      200:
+ *         description: OK
+ *         schema:
+ *           $ref: '#/definitions/User'
+ *      400:
+ *        $ref: '#/responses/Error'
+ *      401:
+ *        $ref: '#/responses/Unauthorized'
+ */
+router.delete(
+  '/:id',
+  AuthService.required,
+  AuthService.isAdmin(),
+  celebrate({ params: objectIdSchema }),
+  userController.remove
+);
+/**
+ * @swagger
+ *
+ * /users/{id}:
+ *   put:
+ *     tags: [users]
+ *     description: update a user
+ *     security:
+ *       - BearerAuth: []
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: user id
+ *         required: true
+ *         type: string
+ *       - name: data
+ *         in: body
+ *         required: true
+ *         schema:
+ *          $ref: '#/definitions/User'
+ *     responses:
+ *      200:
+ *         description: OK
+ *         schema:
+ *           $ref: '#/definitions/User'
+ *      400:
+ *        $ref: '#/responses/Error'
+ *      401:
+ *        $ref: '#/responses/Unauthorized'
+ */
+router.put(
+  '/:id',
+  AuthService.required,
+  AuthService.isAdmin(),
+  celebrate({ params: objectIdSchema }),
+  userController.update
+);
 
 export default router;

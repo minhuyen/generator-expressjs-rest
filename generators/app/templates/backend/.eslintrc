@@ -6,19 +6,37 @@
     "node": true,
     "mocha": true
   },
-  "extends": "eslint:recommended",
+  "extends": [
+    "plugin:prettier/recommended",
+    "eslint:recommended"
+  ],
+  "plugins": [
+    "prettier"
+  ],
   "parserOptions": {
-    "ecmaVersion": 2017,
-    "sourceType": "module",
-    "ecmaFeatures": {
-      "experimentalObjectRestSpread": true
-    }
+    "ecmaVersion": 9,
+    "sourceType": "module"
+    // "ecmaFeatures": {
+    //   "experimentalObjectRestSpread": true
+    // }
   },
   "rules": {
-    "indent": ["error", 2],
-    "linebreak-style": ["error", "unix"],
-    "quotes": ["error", "single"],
-    "semi": ["error", "always"],
+    "indent": [
+      "error",
+      2
+    ],
+    "linebreak-style": [
+      "error",
+      "unix"
+    ],
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "semi": [
+      "error",
+      "always"
+    ],
     "no-console": "off"
   }
 }
