@@ -48,6 +48,12 @@ const UserSchema = new Schema(
     avatar: {
       type: String,
       required: false
+    },
+    resetPasswordToken: {
+      type: String
+    },
+    resetPasswordExpires: {
+      type: Date
     }
   },
   {
@@ -74,8 +80,8 @@ UserSchema.plugin(mongooseUniqueValidator);
 UserSchema.methods.toJSON = function() {
   const obj = this.toObject();
   delete obj.password;
-  delete obj.password_reset_token;
-  delete obj.password_reset_expires;
+  delete obj.resetPasswordToken;
+  delete obj.resetPasswordExpires;
   return obj;
 };
 
