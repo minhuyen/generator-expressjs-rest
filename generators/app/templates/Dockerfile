@@ -53,4 +53,6 @@ RUN npm install
 
 COPY --chown=app:app backend .
 
+RUN npm run build
+
 CMD ["pm2", "start", "--no-daemon", "processes.json"]

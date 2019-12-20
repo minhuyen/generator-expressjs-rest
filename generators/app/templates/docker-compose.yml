@@ -3,6 +3,12 @@ version: "3"
 volumes:
   mongo_data: {}
   frontend: {}
+  node_modules:
+  client_modules:
+
+networks:
+  app-network:
+    driver: bridge
 
 services:
   node:
@@ -18,10 +24,12 @@ services:
       - .env
     volumes:
       - ./backend:/home/app/<%=project_slug%>
-      - /home/app/<%=project_slug%>/node_modules
+      - node_modules:/home/app/<%=project_slug%>/node_modules
       - frontend:/home/app/<%=project_slug%>/src/client/build
     depends_on:
       - mongo
+    networks:
+      - app-network
 
   client:
     build:
@@ -33,11 +41,13 @@ services:
       - .env
     volumes:
       - ./frontend:/home/app/client
-      - /home/app/client/node_modules
+      - client_modules:/home/app/client/node_modules
       - frontend:/home/app/client/build
+    networks:
+      - app-network
 
   mongo:
-    image: mongo:3.6
+    image: mongo:4.2
     env_file:
       - .env
     command: mongod --storageEngine wiredTiger
@@ -45,3 +55,6 @@ services:
       - mongo_data:/data/db
     ports:
       - "27017:27017"
+    networks:
+      - app-network
+

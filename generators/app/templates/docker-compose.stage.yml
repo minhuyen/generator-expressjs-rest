@@ -5,32 +5,43 @@ volumes:
   mongo_backup: {}
   node_logs: {}
   media_data: {}
+  node_modules:
+
+networks:
+  app-network:
+    driver: bridge
 
 services:
   node:
     restart: always
     build:
-      context: ./backend
-      dockerfile: ../compose/node/Dockerfile
+      context: .
+      dockerfile: Dockerfile
     # command: bash
     env_file:
       - .env
     volumes:
-      - /home/app/<%=project_slug%>/node_modules
+      - node_modules:/home/app/<%=project_slug%>/node_modules
       - node_logs:/home/app/<%=project_slug%>/logs
       - media_data:/home/app/<%=project_slug%>/uploads
     depends_on:
       - mongo
+    networks:
+      - app-network
+
     # tty: true
   mongo:
     restart: always
-    image: mongo:3.6
+    image: mongo:4.2
     env_file:
       - .env
     command: mongod --storageEngine wiredTiger
     volumes:
       - mongo_data:/data/db
       - mongo_backup:/data/backup
+    networks:
+      - app-network
+
   nginx:
     restart: always
     build: ./compose/nginx
@@ -39,3 +50,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    networks:
+      - app-network
+
