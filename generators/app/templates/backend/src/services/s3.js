@@ -54,3 +54,4 @@ const upload = multer({ storage: localStorage });
 export const avatarUpload = upload.single('avatar');
 
 export const imageUpload = upload.single('image');
+export const photosUpload = upload.array('photos', 12);

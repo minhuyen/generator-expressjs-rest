@@ -29,7 +29,7 @@ jwtOpts.secretOrKey = config.jwt.secret;
 passport.use(
   new StrategyJwt(jwtOpts, function(payload, done) {
     User.findOne({ _id: payload.uid })
-      .select('-password -services -token')
+      .select('-services -token')
       .exec(function(err, user) {
         if (err) {
           return done(err, false);

@@ -34,3 +34,9 @@ export const getToken = req => {
   }
   return token;
 };
+
+export default {
+  sign,
+  verify,
+  getToken
+};

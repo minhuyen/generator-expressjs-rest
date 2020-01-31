@@ -64,7 +64,7 @@ const UserSchema = new Schema(
 UserSchema.pre('save', async function() {
   const password = this.password;
   if (this.isModified('password')) {
-    const saltRounds = 101;
+    const saltRounds = 10;
     const passwordHash = await bcrypt.hash(password, saltRounds);
     this.password = passwordHash;
   }

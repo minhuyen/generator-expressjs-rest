@@ -1,7 +1,7 @@
 import express from 'express';
 import AuthService from '../../middlewares/auth';
-import { imageUpload } from '../../services/s3';
-import { upload, deleteFile } from './uploads.controller';
+import { imageUpload, photosUpload } from '../../services/s3';
+import { upload, deleteFile, multiUpload } from './uploads.controller';
 
 const router = express.Router();
 
@@ -16,7 +16,39 @@ const router = express.Router();
  *       - multipart/form-data
  *     parameters:
  *       - in: formData
- *         name: file
+ *         name: image
+ *         type: file
+ *         description: The file to upload.
+ *     responses:
+ *       200:
+ *         description: OK
+ *         schema:
+ *           type: object
+ *           properties:
+ *            data:
+ *              type: object
+ *              properties:
+ *                url:
+ *                  type: string
+ *                thumbnail:
+ *                  type: string
+ *
+ *       400:
+ *          $ref: '#/responses/Error'
+ */
+router.post('/', imageUpload, upload);
+/**
+ * @swagger
+ *
+ * /uploads/multi:
+ *   post:
+ *     tags: [uploads]
+ *     description: upload multi file
+ *     consumes:
+ *       - multipart/form-data
+ *     parameters:
+ *       - in: formData
+ *         name: photos
  *         type: file
  *         description: The file to upload.
  *     responses:
@@ -37,8 +69,7 @@ const router = express.Router();
  *       400:
  *          $ref: '#/responses/Error'
  */
-router.post('/', AuthService.required, imageUpload, upload);
-
+router.post('/multi', photosUpload, multiUpload);
 /**
  * @swagger
  *

@@ -8,11 +8,17 @@ export const upload = (req, res) => {
   let image = '';
 
   if (req.file) {
-    console.log('file:  ', req.file);
     image = req.file.filename;
   }
 
-  Response.success(res, { image: image }, httpStatus.CREATED);
+  Response.success(res, { url: `/media/${image}` }, httpStatus.CREATED);
+};
+
+export const multiUpload = (req, res) => {
+  const images = req.files.map(file => {
+    return { url: `/media/${file.filename}` };
+  });
+  Response.success(res, images, httpStatus.CREATED);
 };
 
 export const deleteFile = async (req, res) => {
