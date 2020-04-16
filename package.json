@@ -1,6 +1,6 @@
 {
   "name": "generator-expressjs-rest",
-  "version": "1.1.2",
+  "version": "1.2.1",
   "description": "yo template for an ExpressJS application",
   "main": "index.js",
   "directories": {
@@ -22,8 +22,8 @@
   ],
   "scripts": {
     "test": "NODE_ENV=test mocha  --exit ./tests",
-    "patch": "npm version patch && npm publish",
-    "minor": "npm version minor && npm publish",
+    "patch": "npm version patch && npm publish --access public",
+    "minor": "npm version minor && npm publish --access public"
   },
   "repository": {
     "type": "git",

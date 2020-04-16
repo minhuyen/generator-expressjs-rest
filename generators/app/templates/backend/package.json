@@ -17,7 +17,6 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/minhuyen/<%=project_slug%>#readme",
   "dependencies": {
-    "@hapi/joi": "^16.1.8",
     "api-query-params": "^4.9.0",
     "apn": "^2.2.0",
     "aws-sdk": "^2.387.0",
