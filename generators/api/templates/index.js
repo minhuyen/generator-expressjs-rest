@@ -5,16 +5,14 @@ import {
   findOne,
   create,
   update,
-  remove,
-  updateRegion,
-  importCountryPrice,
-} from './<%=name%>.controller';
+  remove
+} from './<%=camelName%>.controller';
 import AuthService from '../../middlewares/auth';
 import {
   createValidationSchema,
   updateValidationSchema,
   customPaginateValidateSchema,
-} from './<%=name%>.validation';
+} from './<%=camelName%>.validation';
 
 const router = express.Router();
 /**
@@ -24,46 +22,27 @@ const router = express.Router();
  *   <%=name%>:
  *     type: object
  *     required:
- *       - country_name
- *       - country_code
- *       - country_number
- *       - country_flag
+ *       - field1
+ *       - field2
  *     properties:
- *       country_name:
+ *       field1:
  *         type: string
- *       country_code:
+ *       field2:
  *         type: string
- *       country_number:
- *         type: string
- *       country_flag:
- *         type: string
- *       regions:
- *         type: array
- *         items:
- *            type: object
- *            properties:
- *              name:
- *                type: string
- *              code:
- *                type: string
- *       number_type:
- *            type: array
- *            items:
- *              type: string
  *
- *   ArrayOfCountries:
+ *   ArrayOf<%=names%>:
  *      type: array
  *      items:
- *        $ref: '#/definitions/Country'
+ *        $ref: '#/definitions/<%=name%>'
  */
 
 /**
  * @swagger
  *
- * /countries:
+ * /<%=camelNames%>:
  *   post:
- *     tags: [countries]
- *     description: create a country
+ *     tags: [<%=camelNames%>]
+ *     description: create a <%=camelName%>
  *     security:
  *       - BearerAuth: []
  *     produces:
@@ -73,13 +52,13 @@ const router = express.Router();
  *         in: body
  *         required: true
  *         schema:
- *          $ref: '#/definitions/Country'
+ *          $ref: '#/definitions/<%=name%>'
  *
  *     responses:
  *      200:
  *         description: OK
  *         schema:
- *           $ref: '#/definitions/Country'
+ *           $ref: '#/definitions/<%=name%>'
  *      400:
  *        $ref: '#/responses/Error'
  *      401:
@@ -95,10 +74,10 @@ router.post(
 /**
  * @swagger
  *
- * /countries:
+ * /<%=camelNames%>:
  *   put:
- *     tags: [countries]
- *     description: create a country
+ *     tags: [<%=camelNames%>]
+ *     description: create a <%=camelName%>
  *     security:
  *       - BearerAuth: []
  *     produces:
@@ -108,13 +87,13 @@ router.post(
  *         in: body
  *         required: true
  *         schema:
- *          $ref: '#/definitions/Country'
+ *          $ref: '#/definitions/<%=name%>'
  *
  *     responses:
  *      200:
  *         description: OK
  *         schema:
- *           $ref: '#/definitions/Country'
+ *           $ref: '#/definitions/<%=name%>'
  *      400:
  *        $ref: '#/responses/Error'
  *      401:
@@ -131,10 +110,10 @@ router.put(
 /**
  * @swagger
  *
- * /countries:
+ * /<%=camelNames%>:
  *   get:
- *     tags: [countries]
- *     description: get all countries
+ *     tags: [<%=camelNames%>]
+ *     description: get all <%=camelNames%>
  *     produces:
  *       - application/json
  *     parameters:
@@ -159,7 +138,7 @@ router.put(
  *                type: integer
  *                format: int32
  *              data:
- *                $ref: '#/definitions/ArrayOfCountries'
+ *                $ref: '#/definitions/ArrayOf<%=names%>'
  *        401:
  *          $ref: '#/responses/Unauthorized'
  */
@@ -173,23 +152,23 @@ router.get(
 /**
  * @swagger
  *
- * /countries/{id}:
+ * /<%=camelNames%>/{id}:
  *   get:
- *     tags: [countries]
- *     description: get detail country
+ *     tags: [<%=camelNames%>]
+ *     description: get detail <%=camelName%>
  *     produces:
  *       - application/json
  *     parameters:
  *       - name: id
  *         in: path
- *         description: country id
+ *         description: <%=camelName%> id
  *         required: true
  *         type: string
  *     responses:
  *      200:
  *         description: OK
  *         schema:
- *           $ref: '#/definitions/Country'
+ *           $ref: '#/definitions/<%=name%>'
  *      400:
  *        $ref: '#/responses/Error'
  *      401:
@@ -200,10 +179,10 @@ router.get('/:id', findOne);
 /**
  * @swagger
  *
- * /countries/{id}:
+ * /<%=camelNames%>/{id}:
  *   delete:
- *     tags: [countries]
- *     description: delete a country
+ *     tags: [<%=camelNames%>]
+ *     description: delete a <%=camelName%>
  *     security:
  *       - BearerAuth: []
  *     produces:
@@ -211,14 +190,14 @@ router.get('/:id', findOne);
  *     parameters:
  *       - name: id
  *         in: path
- *         description: countries id
+ *         description: <%=camelNames%> id
  *         required: true
  *         type: string
  *     responses:
  *      200:
  *         description: OK
  *         schema:
- *           $ref: '#/definitions/Country'
+ *           $ref: '#/definitions/<%=name%>'
  *      400:
  *        $ref: '#/responses/Error'
  *      401:

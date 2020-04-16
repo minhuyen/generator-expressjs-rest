@@ -36,6 +36,7 @@
   "dependencies": {
     "lodash": "^4.17.15",
     "npm": "^6.14.4",
+    "pluralize": "^8.0.0",
     "yeoman-generator": "^4.8.2"
   },
   "devDependencies": {

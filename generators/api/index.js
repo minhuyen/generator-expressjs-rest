@@ -1,8 +1,9 @@
 "use strict";
 
-var Generator = require("yeoman-generator");
-var _ = require("lodash");
-var path = require('path');
+const Generator = require("yeoman-generator");
+const pluralize = require('pluralize');
+const _ = require("lodash");
+const path = require('path');
 
 module.exports = class extends Generator {
   // The name `constructor` is important here
@@ -15,8 +16,8 @@ module.exports = class extends Generator {
   }
 
   async prompting() {
-    var srcDir = this.config.get('srcDir') || 'src';
-    var apiDir = this.config.get('apiDir') || 'api';
+    const srcDir = this.config.get('srcDir') || 'src';
+    const apiDir = this.config.get('apiDir') || 'api';
     this.answers = await this.prompt([
       {
         type: "input",
@@ -31,44 +32,46 @@ module.exports = class extends Generator {
   writing() {
     const modelName = this.answers.name;
     const camel = _.camelCase(modelName);
-    var filepath = function (filename) {
-      return path.join(props.dir, props.kebab, filename);
+    const camels = pluralize(camel);
+    const modelNames = pluralize(modelName);
+    const filepath = function (filename) {
+      return path.join('backend', 'src', 'api', camel, filename);
     };
 
     this.fs.copyTpl(
-      this.templatePath(filepath('controller.js')),
+      this.templatePath('controller.js'),
       this.destinationPath(filepath(`${camel}.controller.js`)),
-      { name: modelName }
+      { name: modelName, camelName: camel  }
     );
 
     this.fs.copyTpl(
-      this.templatePath(filepath('index.js')),
+      this.templatePath('index.js'),
       this.destinationPath(filepath('index.js')),
-      { name: modelName }
+      { name: modelName, camelName: camel, camelNames: camels, names: modelNames }
     );
 
     this.fs.copyTpl(
-      this.templatePath(filepath('model.js')),
+      this.templatePath('model.js'),
       this.destinationPath(filepath(`${camel}.model.js`)),
-      { name: modelName }
+      { name: modelName, camelName: camel  }
     );
 
     this.fs.copyTpl(
-      this.templatePath(filepath('service.js')),
+      this.templatePath('service.js'),
       this.destinationPath(filepath(`${camel}.service.js`)),
-      { name: modelName }
+      { name: modelName, camelName: camel  }
     );
 
     this.fs.copyTpl(
-      this.templatePath(filepath('test.js')),
+      this.templatePath('test.js'),
       this.destinationPath(filepath(`${camel}.test.js`)),
-      { name: modelName }
+      { name: modelName, camelName: camel  }
     );
 
     this.fs.copyTpl(
-      this.templatePath(filepath('validation.js')),
+      this.templatePath('validation.js'),
       this.destinationPath(filepath(`${camel}.validation.js`)),
-      { name: modelName }
+      { name: modelName, camelName: camel  }
     );
   }
 };

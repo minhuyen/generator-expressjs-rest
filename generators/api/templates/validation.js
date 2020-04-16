@@ -11,7 +11,7 @@ export const createValidationSchema = Joi.object({
   field2: Joi.string().required()
 });
 
-export const updateCountryValidationSchema = Joi.object({
+export const updateValidationSchema = Joi.object({
   field: Joi.string().options(),
   field2: Joi.string().required()
 }).unknown(true);
