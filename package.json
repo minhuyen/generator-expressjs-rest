@@ -21,7 +21,9 @@
     "passport"
   ],
   "scripts": {
-    "test": "NODE_ENV=test mocha  --exit ./tests"
+    "test": "NODE_ENV=test mocha  --exit ./tests",
+    "patch": "npm version patch && npm publish",
+    "minor": "npm version minor && npm publish",
   },
   "repository": {
     "type": "git",
