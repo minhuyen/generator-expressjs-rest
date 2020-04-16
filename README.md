@@ -60,12 +60,22 @@ docker-compose up
 ```bash
 src/
 ├─ api/
-│  ├─ user/
-│  │  ├─ controller.js
+│  ├─ auth/
+│  │  ├─ auth.controller.js
+│  │  ├─ auth.service.js
+│  │  ├─ auth.validation.js
 │  │  ├─ index.js
-│  │  ├─ index.test.js
-│  │  ├─ model.js
-│  │  └─ model.test.js
+│  │  └─ index.test.js
+│  ├─ uploads/
+│  │  ├─ index.js
+│  │  ├─ upload.controller.js
+│  ├─ users/
+│  │  ├─ index.js
+│  │  ├─ user.controller.js
+│  │  ├─ user.validation.js
+│  │  ├─ user.model.js
+│  │  ├─ user.service.js
+│  │  └─ user.test.js
 │  └─ index.js
 ├─ services/
 │  ├─ express/
