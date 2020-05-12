@@ -12,11 +12,11 @@ networks:
 
 services:
   node:
-    restart: always
+    restart: on-failure
+    container_name: <%=project_slug%>_node_test
     build:
       context: .
       dockerfile: Dockerfile
-    # command: bash
     environment:
       NODE_ENV: production
       DATABASE_URL: "mongodb://mongo:27017/<%=project_slug%>"
@@ -32,6 +32,7 @@ services:
     # tty: true
   mongo:
     restart: always
+    container_name: <%=project_slug%>_mongo_test
     image: mongo:4.2
     command: mongod --storageEngine wiredTiger
     volumes:

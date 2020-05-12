@@ -12,7 +12,8 @@ networks:
 
 services:
   node:
-    # restart: always
+    restart: on-failure
+    container_name: <%=project_slug%>_node_local
     build:
       context: ./backend
       dockerfile: ../compose/node/Dockerfile_dev
@@ -35,6 +36,7 @@ services:
     build:
       context: ./frontend
       dockerfile: ../compose/client/Dockerfile
+    container_name: <%=project_slug%>_client_local
     ports:
       - "3001:3000"
     env_file:
@@ -48,6 +50,7 @@ services:
 
   mongo:
     image: mongo:4.2
+    container_name: <%=project_slug%>_mongo_local
     env_file:
       - .env
     command: mongod --storageEngine wiredTiger
