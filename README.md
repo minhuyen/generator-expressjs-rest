@@ -78,12 +78,16 @@ src/
 │  │  └─ user.test.js
 │  └─ index.js
 ├─ services/
-│  ├─ express/
-│  ├─ facebook/
-│  ├─ mongoose/
-│  ├─ passport/
-│  ├─ sendgrid/
-│  └─ your-service/
+│  ├─ index.js
+│  ├─ jwt.js
+│  ├─ logger.js
+│  ├─ mailgun.js
+│  ├─ mongoose.js
+│  ├─ passport.js
+│  ├─ response.js
+│  ├─ s3.js
+│  ├─ swagger.js
+│  └─ your-service.js
 ├─ app.js
 ├─ config.js
 └─ index.js
