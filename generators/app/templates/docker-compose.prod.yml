@@ -14,7 +14,7 @@ networks:
 services:
   node:
     restart: on-failure
-    # container_name: awesome_server
+    container_name: <%=project_slug%>_node_prod
     build:
       context: .
       dockerfile: Dockerfile
@@ -33,6 +33,7 @@ services:
   mongo:
     restart: always
     image: mongo:4.2
+    container_name: <%=project_slug%>_mongo_prod
     env_file:
       - .env
     command: mongod --storageEngine wiredTiger
@@ -45,6 +46,7 @@ services:
   nginx:
     restart: always
     build: ./compose/nginx
+    container_name: <%=project_slug%>_nginx_prod
     depends_on:
       - node
     ports:

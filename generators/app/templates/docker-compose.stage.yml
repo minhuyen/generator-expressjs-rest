@@ -13,11 +13,11 @@ networks:
 
 services:
   node:
-    restart: always
+    restart: on-failure
+    container_name: <%=project_slug%>_node_stage
     build:
       context: .
       dockerfile: Dockerfile
-    # command: bash
     env_file:
       - .env
     volumes:
@@ -33,6 +33,7 @@ services:
   mongo:
     restart: always
     image: mongo:4.2
+    container_name: <%=project_slug%>_mongo_stage
     env_file:
       - .env
     command: mongod --storageEngine wiredTiger
@@ -45,6 +46,7 @@ services:
   nginx:
     restart: always
     build: ./compose/nginx
+    container_name: <%=project_slug%>_nginx_stage
     depends_on:
       - node
     ports:
