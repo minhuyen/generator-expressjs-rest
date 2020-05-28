@@ -5,7 +5,7 @@ import UserIcon from "@material-ui/icons/Group";
 import NotFound from "./NotFound";
 import authProvider from "./authProvider";
 import restProvider from "./restProvider";
-import { UserList, UserEdit } from "./users";
+import users from "./users";
 
 const httpClient = (url, options = {}) => {
   if (!options.headers) {
@@ -23,12 +23,12 @@ const uploadCapableDataProvider = addUploadFeature(dataProvider);
 
 const App = () => (
   <Admin
-    title="Dating App Admin"
+    title="Awesome App Admin"
     dataProvider={uploadCapableDataProvider}
     authProvider={customAuthProvider}
     catchAll={NotFound}
   >
-    <Resource name="users" list={UserList} edit={UserEdit} icon={UserIcon} />
+    <Resource name="users" {...users} />
   </Admin>
 );
 
