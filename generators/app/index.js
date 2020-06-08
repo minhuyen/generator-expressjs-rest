@@ -18,15 +18,15 @@ module.exports = class extends Generator {
         type: "input",
         name: "name",
         message: "Your project name",
-        default: this.appname // Default to current folder name
+        default: this.appname, // Default to current folder name
       },
       {
         type: "confirm",
         name: "cool",
-        message: "Would you like to enable the Cool feature?"
-      }
+        message: "Would you like to enable the Cool feature?",
+      },
     ]);
-    this.config.save()
+    // this.config.save()
   }
 
   writing() {
