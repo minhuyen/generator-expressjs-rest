@@ -5,3 +5,7 @@ export const randomInt = (low, high) => {
 export const randomVerfiedCode = () => {
   return randomInt(100000, 999999);
 };
+
+export const toNumber = (string) => {
+  return Number(string) || string === '0' ? Number(string) : string
+}
