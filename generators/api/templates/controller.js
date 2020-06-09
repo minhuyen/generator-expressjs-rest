@@ -1,5 +1,5 @@
 import { Controller } from '../../helpers/common';
-import <%=name%>Service from './<%=camelName%>.service';
+import <%=camelName%>Service from './<%=camelName%>.service';
 import { handleResponse as Response } from '../../helpers';
 
 class <%=name%>Controller extends Controller {

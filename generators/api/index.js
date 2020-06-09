@@ -30,12 +30,12 @@ module.exports = class extends Generator {
   writing() {
     const srcDir = this.config.get("srcDir") || "src";
     const apiDir = this.config.get("apiDir") || "api";
-    const modelName = this.answers.name;
+    const modelName = _.startCase(this.answers.name).replace(" ", "");
     const camel = _.camelCase(modelName);
     const camels = pluralize(camel);
     const modelNames = pluralize(modelName);
     const filepath = function (filename) {
-      return path.join("backend", srcDir, apiDir, camel, filename);
+      return path.join("backend", srcDir, apiDir, camels, filename);
     };
 
     this.fs.copyTpl(

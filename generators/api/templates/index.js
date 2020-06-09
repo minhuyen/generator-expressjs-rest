@@ -1,12 +1,6 @@
 import express from 'express';
 import { celebrate } from 'celebrate';
-import {
-  findAll,
-  findOne,
-  create,
-  update,
-  remove
-} from './<%=camelName%>.controller';
+import <%=camelName%>Controller from './<%=camelName%>.controller';
 import AuthService from '../../middlewares/auth';
 import {
   createValidationSchema,
@@ -68,7 +62,7 @@ const router = express.Router();
 router.post(
   '/',
   [AuthService.required, celebrate({ body: createValidationSchema })],
-  create
+  <%=camelName%>Controller.create
 );
 
 /**
@@ -104,7 +98,7 @@ router.put(
   '/:id',
   [AuthService.required],
   celebrate({ body: updateValidationSchema }),
-  update
+  <%=camelName%>Controller.update
 );
 
 /**
@@ -146,7 +140,7 @@ router.get(
   '/',
   AuthService.optional,
   celebrate({ query: customPaginateValidateSchema }),
-  findAll
+  <%=camelName%>Controller.findAll
 );
 
 /**
@@ -174,7 +168,7 @@ router.get(
  *      401:
  *        $ref: '#/responses/Unauthorized'
  */
-router.get('/:id', findOne);
+router.get('/:id', <%=camelName%>Controller.findOne);
 
 /**
  * @swagger
@@ -203,7 +197,7 @@ router.get('/:id', findOne);
  *      401:
  *        $ref: '#/responses/Unauthorized'
  */
-router.delete('/:id', AuthService.required, remove);
+router.delete('/:id', AuthService.required, <%=camelName%>Controller.remove);
 
 
 export default router;
