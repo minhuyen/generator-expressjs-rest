@@ -8,4 +8,4 @@ class <%=name%>Controller extends Controller {
   }
 }
 
-export default new <%=name%>Controller(<%=name%>Service, '<%=name%>');
+export default new <%=name%>Controller(<%=camelName%>Service, '<%=name%>');
