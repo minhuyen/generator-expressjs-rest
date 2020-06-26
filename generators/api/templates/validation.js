@@ -4,7 +4,7 @@ import { schemas } from '../../helpers';
 const { paginateValidationSchema, ObjectId } = schemas;
 
 
-export const customPaginateValidateSchema = paginateValidationSchema.keys({});
+export const customPaginateValidateSchema = paginateValidationSchema.keys();
 
 export const createValidationSchema = Joi.object({
   field: Joi.string().optional(),
