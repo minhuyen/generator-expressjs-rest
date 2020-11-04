@@ -10,11 +10,7 @@ const ROLES = {
 
 const UserSchema = new Schema(
   {
-    firstName: {
-      type: String,
-      required: true
-    },
-    lastName: {
+    full_name: {
       type: String,
       required: true
     },
@@ -28,7 +24,7 @@ const UserSchema = new Schema(
     password: {
       type: String,
       required: false,
-      minlength: 6
+      minlength: 4
     },
     role: {
       type: String,
@@ -54,6 +50,10 @@ const UserSchema = new Schema(
     },
     resetPasswordExpires: {
       type: Date
+    },
+    isPremium: {
+      type: Boolean,
+      default: false
     }
   },
   {
@@ -70,19 +70,24 @@ UserSchema.pre('save', async function() {
   }
 });
 
-UserSchema.methods.verifyPassword = function(password) {
-  return bcrypt.compareSync(password, this.password);
+UserSchema.methods = {
+  verifyPassword: function(password) {
+    return bcrypt.compareSync(password, this.password);
+  },
+  toJSON: function() {
+    const obj = this.toObject({ virtuals: true });
+    obj.hasPassword = !!obj.password
+    delete obj.password;
+    delete obj.resetPasswordToken;
+    delete obj.resetPasswordExpires;
+    return obj;
+  },
+  isAdmin: function() {
+    return this.role === ROLES.ADMIN;
+  }
 };
 
 UserSchema.plugin(mongoosePaginate);
 UserSchema.plugin(mongooseUniqueValidator);
-
-UserSchema.methods.toJSON = function() {
-  const obj = this.toObject();
-  delete obj.password;
-  delete obj.resetPasswordToken;
-  delete obj.resetPasswordExpires;
-  return obj;
-};
 
 export default mongoose.model('User', UserSchema);
