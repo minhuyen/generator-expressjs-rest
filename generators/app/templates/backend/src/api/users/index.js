@@ -9,7 +9,7 @@ import {
   addTipUserValidateSchema
 } from './user.validation';
 
-const { objectIdSchema, paginateValidationSchema } = schemas;
+const { objectIdSchema, paginateValidationSchema, changePasswordSchema } = schemas;
 
 const router = express.Router();
 
@@ -57,6 +57,12 @@ router.get(
   userController.findAll
 );
 
+router.get(
+  '/me',
+  AuthService.required,
+  userController.getMe
+);
+
 /**
  * @swagger
  *
@@ -90,6 +96,14 @@ router.get(
   celebrate({ params: objectIdSchema }),
   userController.findOne
 );
+
+router.post(
+  '/me/change-password',
+  AuthService.required,
+  celebrate({ body: changePasswordSchema }),
+  userController.changePassword
+);
+
 /**
  * @swagger
  *
@@ -124,6 +138,13 @@ router.delete(
   celebrate({ params: objectIdSchema }),
   userController.remove
 );
+
+router.put(
+  '/me',
+  AuthService.required,
+  userController.updateMe
+);
+
 /**
  * @swagger
  *

@@ -1,6 +1,7 @@
 import User from '../users/users.model';
 import { logger, jwt, MailService } from '../../services';
 import { utils } from '../../helpers';
+import { decodeToken } from "../../helpers/utils";
 // import deviceTokenService from '../deviceTokens/deviceToken.service';
 
 const signup = async data => {
@@ -79,6 +80,25 @@ const verifyCode = async data => {
   }
 };
 
+const loginWithApple = async (token) => {
+  let decodedToken = decodeToken(token)
+  let userDetail = await User.findOne({ email: decodedToken.email })
+
+  if (userDetail) {
+    let userToken = jwt.sign(userDetail._id)
+    return { user: userDetail, token: userToken }
+  } else {
+    let newUser = await User.create({
+      email: decodedToken.email,
+      full_name: decodedToken.email,
+      apple: { id: decodedToken.sub, token }
+    })
+
+    let userToken = jwt.sign(newUser._id)
+    return { user: newUser, token: userToken }
+  }
+}
+
 export default {
   signup,
   login,
@@ -87,5 +107,6 @@ export default {
   checkUsernameIsValid,
   forgotPassword,
   resetPassword,
-  verifyCode
+  verifyCode,
+  loginWithApple
 };
