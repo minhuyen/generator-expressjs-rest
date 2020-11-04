@@ -1,5 +1,5 @@
 import { Service } from '../../helpers/common';
-import Configs from './configs.model';
+import Configs from './config.model';
 import { toNumber } from '../../helpers/utils';
 
 class ConfigService extends Service {

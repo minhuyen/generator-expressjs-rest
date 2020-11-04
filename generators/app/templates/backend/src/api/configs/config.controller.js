@@ -1,5 +1,5 @@
 import { Controller } from '../../helpers/common';
-import configService from './configs.service';
+import configService from './config.service';
 import { handleResponse } from "../../helpers";
 import Configs from './configs.model'
 

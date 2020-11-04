@@ -1,5 +1,5 @@
 import express from 'express';
-import configController from './configs.controller';
+import configController from './config.controller';
 import AuthService from '../../middlewares/auth';
 
 const router = express.Router();
