@@ -6,6 +6,7 @@ import NotFound from "./NotFound";
 import authProvider from "./authProvider";
 import restProvider from "./restProvider";
 import users from "./users";
+import configs from "./configs";
 
 const httpClient = (url, options = {}) => {
   if (!options.headers) {
@@ -29,6 +30,7 @@ const App = () => (
     catchAll={NotFound}
   >
     <Resource name="users" {...users} />
+    <Resource name="configs" {...configs} />
   </Admin>
 );
 
