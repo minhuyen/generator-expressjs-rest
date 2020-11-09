@@ -5,11 +5,10 @@ import userController from './users.controller';
 import { schemas } from '../../helpers';
 import {
   paginateUserValidateSchema,
-  searchValidateSchema,
-  addTipUserValidateSchema
+  changePasswordSchema
 } from './user.validation';
 
-const { objectIdSchema, paginateValidationSchema, changePasswordSchema } = schemas;
+const { objectIdSchema, paginateValidationSchema } = schemas;
 
 const router = express.Router();
 
