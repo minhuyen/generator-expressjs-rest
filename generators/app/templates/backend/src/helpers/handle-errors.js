@@ -31,6 +31,8 @@ export const errorHandle = (error, req, res, next) => {
     return Response.error(res, {
       message: error.message
     });
+  } else if (error.name === 'CustomError') {
+    return Response.error(res, error);
   }
   // default to 500 server error
   logger.error('%o', error);

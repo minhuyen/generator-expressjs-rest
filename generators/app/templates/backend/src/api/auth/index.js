@@ -388,5 +388,6 @@ router.post(
 );
 router.post('/facebook', authFacebookToken, authController.login);
 router.post('/google', authGoogleToken, authController.login);
+router.post('/apple', authController.loginWithApple);
 
 export default router;
