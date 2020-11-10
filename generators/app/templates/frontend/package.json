@@ -4,10 +4,10 @@
   "private": true,
   "dependencies": {
     "ra-input-rich-text": "^3.3.1",
-    "react": "^16.9.0",
+    "react": "^17.0.1",
     "react-admin": "^3.9.6",
-    "react-dom": "^16.9.0",
-    "react-scripts": "^3.0.0"
+    "react-dom": "^17.0.1",
+    "react-scripts": "3.4.4"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -16,9 +16,6 @@
     "eject": "react-scripts eject"
   },
   "proxy": "http://node:3000",
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "browserslist": [
     ">0.2%",
     "not dead",
