@@ -47,6 +47,7 @@ services:
       - frontend:/home/app/client/build
     networks:
       - app-network
+    stdin_open: true
 
   mongo:
     image: mongo:4.2
