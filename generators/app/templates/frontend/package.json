@@ -15,7 +15,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://node:3000",
+  "proxy": "http://backend:3000",
   "browserslist": [
     ">0.2%",
     "not dead",

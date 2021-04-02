@@ -3,15 +3,13 @@ version: "3"
 volumes:
   mongo_data: {}
   frontend: {}
-  node_modules:
-  client_modules:
 
 networks:
   app-network:
     driver: bridge
 
 services:
-  node:
+  backend:
     restart: on-failure
     container_name: <%=project_slug%>_node_local
     build:
@@ -25,14 +23,14 @@ services:
       - .env
     volumes:
       - ./backend:/home/app/<%=project_slug%>
-      - node_modules:/home/app/<%=project_slug%>/node_modules
+      - /home/app/<%=project_slug%>/node_modules
       - frontend:/home/app/<%=project_slug%>/src/client/build
     depends_on:
       - mongo
     networks:
       - app-network
 
-  client:
+  frontend:
     build:
       context: ./frontend
       dockerfile: ../compose/client/Dockerfile
@@ -43,7 +41,7 @@ services:
       - .env
     volumes:
       - ./frontend:/home/app/client
-      - client_modules:/home/app/client/node_modules
+      - /home/app/client/node_modules
       - frontend:/home/app/client/build
     networks:
       - app-network
