@@ -47,7 +47,7 @@ services:
     build: ./compose/nginx
     container_name: <%=project_slug%>_nginx_stage
     depends_on:
-      - node
+      - backend
     ports:
       - "80:80"
       - "443:443"

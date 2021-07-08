@@ -43,6 +43,8 @@ services:
       - ./frontend:/home/app/client
       - /home/app/client/node_modules
       - frontend:/home/app/client/build
+    depends_on:
+      - backend
     networks:
       - app-network
     stdin_open: true
