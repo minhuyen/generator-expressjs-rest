@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import mongoosePaginate from 'mongoose-paginate';
+import mongoosePaginate from 'mongoose-paginate-v2';
 
 const ConfigSchema = new Schema(
   {

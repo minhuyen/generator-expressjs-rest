@@ -12,7 +12,7 @@ networks:
 
 services:
   backend:
-    restart: on-failure
+    restart: always
     container_name: <%=project_slug%>_node_stage
     build:
       context: .

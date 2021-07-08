@@ -3,7 +3,9 @@ import { schemas } from '../../helpers';
 
 const { paginateValidationSchema } = schemas;
 
-export const paginateUserValidateSchema = paginateValidationSchema.keys({}); // add more key
+export const paginateUserValidateSchema = paginateValidationSchema.keys({
+  email: Joi.string().optional()
+}); // add more key
 
 export const changePasswordSchema = Joi.object({
   currentPassword: Joi.string()

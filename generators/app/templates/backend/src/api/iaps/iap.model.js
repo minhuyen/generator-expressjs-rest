@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import mongoosePaginate from 'mongoose-paginate';
+import mongoosePaginate from 'mongoose-paginate-v2';
 import Packages, { PACKAGE_TYPE, CREDIT_TYPE } from '../packages/packages.model'
 import Users from '../users/users.model'
 

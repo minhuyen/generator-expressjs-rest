@@ -10,7 +10,7 @@ networks:
 
 services:
   backend:
-    restart: on-failure
+    restart: always
     container_name: <%=project_slug%>_node_local
     build:
       context: ./backend
@@ -31,10 +31,11 @@ services:
       - app-network
 
   frontend:
+    restart: always
+    container_name: <%=project_slug%>_client_local
     build:
       context: ./frontend
       dockerfile: ../compose/client/Dockerfile
-    container_name: <%=project_slug%>_client_local
     ports:
       - "3001:3000"
     env_file:

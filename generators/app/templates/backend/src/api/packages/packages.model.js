@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import mongoosePaginate from 'mongoose-paginate';
+import mongoosePaginate from 'mongoose-paginate-v2';
 import mongooseUniqueValidator from 'mongoose-unique-validator';
 
 export const PACKAGE_TYPE = {

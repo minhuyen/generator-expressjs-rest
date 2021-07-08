@@ -6,10 +6,10 @@ export default class Response {
       return res.json({
         status: 'success',
         data: data.docs,
-        total: data.total,
+        total: data.totalDocs,
         limit: data.limit,
         page: data.page,
-        pages: data.pages
+        pages: data.totalPages
       });
     }
     return res.json({
