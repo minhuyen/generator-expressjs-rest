@@ -17,10 +17,14 @@ import config from './config';
 
 require('./services/passport');
 
-const app = express();
 const rootApi = '/api/v1';
 const ROOT_FOLDER = path.join(__dirname, '..');
 const SRC_FOLDER = path.join(ROOT_FOLDER, 'src');
+
+const app = express();
+
+app.set('trust proxy', 1); // trust first proxy
+
 // Security
 app.use(helmet());
 app.use(cors());
@@ -28,7 +32,7 @@ app.use(cors());
 app.use(compression());
 
 // logs http request
-app.use(morgan('dev', { stream: logger.stream }));
+app.use(morgan(process.env.LOG_FORMAT || 'dev', { stream: logger.stream }));
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));

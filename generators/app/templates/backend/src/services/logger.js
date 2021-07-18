@@ -11,13 +11,8 @@ if (!fs.existsSync(logDir)) {
   fs.mkdirSync(logDir);
 }
 
-const dailyRotateFileTransport = new transports.DailyRotateFile({
-  filename: `${logDir}/%DATE%-results.log`,
-  datePattern: 'YYYY-MM-DD'
-});
-
 const logger = createLogger({
-  level: env === 'development' ? 'debug' : 'info',
+  level: 'info',
   format: format.combine(
     format.label({ label: path.basename(module.parent.filename) }),
     format.colorize(),
@@ -29,12 +24,29 @@ const logger = createLogger({
     )
   ),
   transports: [
-    new transports.Console({
-      level: 'info'
+    new transports.DailyRotateFile({
+      filename: `${logDir}/%DATE%-combined.log`,
+      datePattern: 'YYYY-MM-DD',
+      zippedArchive: true,
+      maxSize: '20m',
+      maxFiles: '14d'
     }),
-    dailyRotateFileTransport
+    new transports.DailyRotateFile({
+      filename: `${logDir}/%DATE%-error.log`,
+      datePattern: 'YYYY-MM-DD',
+      zippedArchive: true,
+      maxSize: '20m',
+      maxFiles: '14d',
+      level: 'error'
+    })
   ]
 });
+
+logger.add(
+  new transports.Console({
+    level: env !== 'production' ? 'info' : 'error'
+  })
+);
 
 // create a stream object with a 'write' function that will be used by `morgan`
 logger.stream = {

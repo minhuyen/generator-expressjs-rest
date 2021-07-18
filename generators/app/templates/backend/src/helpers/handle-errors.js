@@ -8,7 +8,7 @@ export const errorHandle = (error, req, res, next) => {
     // custom application error
     return Response.error(res, { message: error });
   } else if (isCelebrate(error)) {
-    logger.error('isCelebrate %s', isCelebrate(error));
+    // logger.error('isCelebrate %s', isCelebrate(error));
     const { joi } = error;
     return Response.error(res, {
       message: 'Invalid request data. Please review request and try again.',
@@ -35,7 +35,7 @@ export const errorHandle = (error, req, res, next) => {
     return Response.error(res, error);
   }
   // default to 500 server error
-  logger.error('%o', error);
+  logger.debug('%o', error);
   return Response.error(
     res,
     {
@@ -46,7 +46,7 @@ export const errorHandle = (error, req, res, next) => {
 };
 
 export const logErrors = (err, req, res, next) => {
-  console.error(err.stack);
+  // console.error(err.stack);
   next(err);
 };
 
