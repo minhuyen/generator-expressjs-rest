@@ -6,16 +6,25 @@ import { decodeToken } from "../../helpers/utils";
 
 const signup = async data => {
   const user = await User.create(data);
-  const token = jwt.sign(user._id);
+  const token = jwt.sign({
+    uid: user._id,
+    role: user.role
+  });
+  const refreshToken = jwt.refreshSign(user._id);
   const result = {
     user,
-    token
+    token,
+    refreshToken
   };
   return result;
 };
 
 const login = user => {
-  const token = jwt.sign(user._id);
+  const token = jwt.sign({
+    uid: user._id,
+    role: user.role
+  });
+  const refreshToken = jwt.refreshSign(user._id);
   return { user, token };
 };
 
