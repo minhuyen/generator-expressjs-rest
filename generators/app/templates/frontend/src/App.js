@@ -18,7 +18,6 @@ const httpClient = (url, options = {}) => {
 };
 
 const API_URL = process.env.API_URL || "";
-const customAuthProvider = authProvider(`${API_URL}/api/v1/auth/login`);
 const dataProvider = restProvider(`${API_URL}/api/v1`, httpClient);
 const uploadCapableDataProvider = addUploadFeature(dataProvider);
 
@@ -26,7 +25,7 @@ const App = () => (
   <Admin
     title="Awesome App Admin"
     dataProvider={uploadCapableDataProvider}
-    authProvider={customAuthProvider}
+    authProvider={authProvider}
     catchAll={NotFound}
   >
     <Resource name="users" {...users} />
