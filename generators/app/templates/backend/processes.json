@@ -3,7 +3,9 @@
     {
       "merge_logs": true,
       "name": "<%=project_slug%>",
-      "script": "npm run serve",
+      "script": "dist/server.js",
+      "exec_mode": "cluster",
+      "instances": "max",
       "out_file": "out.log",
       "error_file": "error.log",
       "log_date_format": "MM/DD/YYYY HH:mm:ss"

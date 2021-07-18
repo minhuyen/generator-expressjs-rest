@@ -17,4 +17,4 @@ RUN npm install
 
 COPY --chown=app:app . .
 
-CMD ["pm2", "start", "--no-daemon", "processes.json"]
+CMD ["pm2-runtime", "processes.json"]
