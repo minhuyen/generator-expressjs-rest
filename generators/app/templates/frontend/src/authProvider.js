@@ -1,4 +1,5 @@
 import decodeJwt from 'jwt-decode';
+import tokenProvider from "./utils/tokenProvider";
 
 const API_URL = process.env.API_URL || "";
 
@@ -18,7 +19,7 @@ const authProvider = {
         return response.json();
       })
       .then(({ data }) => {
-        localStorage.setItem("token", data.token);
+        tokenProvider.setToken(token);
       })
       .catch(() => {
         throw new Error('Network error')
@@ -27,25 +28,25 @@ const authProvider = {
   checkError: error => {
     const status = error.status;
     if (status === 401 || status === 403) {
-        localStorage.removeItem('token');
+        tokenProvider.removeToken();
         return Promise.reject();
     }
     // other error code (404, 500, etc): no need to log out
     return Promise.resolve();
   },
   checkAuth: () => {
-    return localStorage.getItem("token")
+    return tokenProvider.getToken()
       ? Promise.resolve()
       : Promise.reject();
   },
   logout: () => {
-    localStorage.removeItem("token");
+    tokenProvider.removeToken();
     return Promise.resolve();
   },
   getIdentity: () => Promise.resolve(),
   // authorization
   getPermissions: () => {
-    const token = localStorage.getItem("token");
+    const token = tokenProvider.getToken();
     const decodedToken = decodeJwt(token);
     const role = decodedToken.role;
     return role ? Promise.resolve(role) : Promise.reject();

@@ -1,5 +1,6 @@
 import React from "react";
 import { Admin, Resource, fetchUtils } from "react-admin";
+import decodeJwt from "jwt-decode";
 import addUploadFeature from "./addUploadFeature";
 import UserIcon from "@material-ui/icons/Group";
 import NotFound from "./NotFound";
@@ -7,14 +8,30 @@ import authProvider from "./authProvider";
 import restProvider from "./restProvider";
 import users from "./users";
 import configs from "./configs";
+import tokenProvider from "./utils/tokenProvider";
 
 const httpClient = (url, options = {}) => {
   if (!options.headers) {
     options.headers = new Headers({ Accept: "application/json" });
   }
-  const token = localStorage.getItem("token");
-  options.headers.set("Authorization", `Bearer ${token}`);
-  return fetchUtils.fetchJson(url, options);
+  const token = tokenProvider.getToken();
+  const decodedToken = decodeJwt(token);
+  const { exp } = decodedToken;
+  const now = new Date();
+  if (now > (exp + 5) * 1000) {
+    return tokenProvider.getRefreshedToken().then((gotFreshToken) => {
+      if (gotFreshToken) {
+        options.headers.set(
+          "Authorization",
+          `Bearer ${tokenProvider.getToken()}`
+        );
+      }
+      return fetchUtils.fetchJson(url, options);
+    });
+  } else {
+    options.headers.set("Authorization", `Bearer ${token}`);
+    return fetchUtils.fetchJson(url, options);
+  }
 };
 
 const API_URL = process.env.API_URL || "";

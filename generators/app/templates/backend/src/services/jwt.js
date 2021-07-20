@@ -8,7 +8,7 @@ export const sign = data => {
 };
 
 export const verify = token => {
-  return jwt.verify(token, process.env.JWT_SECRET, { ignoreExpiration: true });
+  return jwt.verify(token, process.env.JWT_SECRET, { ignoreExpiration: false });
 };
 
 export const refreshSign = uid => {
@@ -20,7 +20,7 @@ export const refreshSign = uid => {
 
 export const refreshVerify = token => {
   return jwt.verify(token, process.env.JWT_REFRESH_SECRET, {
-    ignoreExpiration: true
+    ignoreExpiration: false
   });
 };
 
