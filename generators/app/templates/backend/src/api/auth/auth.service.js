@@ -25,7 +25,10 @@ const login = user => {
     role: user.role
   });
   const refreshToken = jwt.refreshSign(user._id);
-  return { user, token };
+  // save the token
+  await userService.update(userId, { refreshToken });
+
+  return { user, token, refreshToken };
 };
 
 const logout = async token => {
@@ -108,6 +111,20 @@ const loginWithApple = async (token) => {
   }
 }
 
+const refreshToken = async token => {
+  const user = await userService.findOne({ refreshToken: token });
+  if (user) {
+    const newToken = jwt.sign({
+      uid: user._id,
+      role: user.role,
+      role_code: user.role_code
+    });
+    return { user, token: newToken, refreshToken: token };
+  } else {
+    throw new Error('The refresh token is invalid!');
+  }
+};
+
 export default {
   signup,
   login,
@@ -117,5 +134,6 @@ export default {
   forgotPassword,
   resetPassword,
   verifyCode,
-  loginWithApple
+  loginWithApple,
+  refreshToken
 };

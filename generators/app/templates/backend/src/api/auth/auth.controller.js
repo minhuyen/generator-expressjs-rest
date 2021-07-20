@@ -16,6 +16,7 @@ export const signup = async (req, res, next) => {
 export const login = (req, res) => {
   const user = req.user;
   const result = authService.login(user);
+  setTokenCookie(res, result.refreshToken);
   // return the information including token as JSON
   return Response.success(res, result, httpStatus.OK);
 };
@@ -91,4 +92,22 @@ export const loginWithApple = async (req, res, next) => {
   } catch (e) {
     next(e)
   }
-}
+};
+
+export const refreshToken = async (req, res, next) => {
+  try {
+    const token = req.cookies.refreshToken || req.body.refreshToken;
+    const result = await authService.refreshToken(token);
+    return Response.success(res, result);
+  } catch (exception) {
+    next(exception);
+  }
+};
+
+const setTokenCookie = (res, token) => {
+  const cookieOptions = {
+    httpOnly: true
+    // expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+  };
+  res.cookie('refreshToken', token, cookieOptions);
+};
