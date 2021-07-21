@@ -1,46 +1,58 @@
-import { AUTH_LOGIN, AUTH_LOGOUT, AUTH_ERROR, AUTH_CHECK } from "react-admin";
+import decodeJwt from 'jwt-decode';
+import tokenProvider from "./utils/tokenProvider";
 
-export default (loginUrlApi, noAccessPage = "/login") => {
-  return (type, params) => {
-    // called when the user attempts to log in
-    if (type === AUTH_LOGIN) {
-      const { username, password } = params;
-      const request = new Request(loginUrlApi, {
-        method: "POST",
-        body: JSON.stringify({ email: username, password }),
-        headers: new Headers({ "Content-Type": "application/json" })
-      });
-      return fetch(request)
-        .then(response => {
-          if (response.status < 200 || response.status >= 300) {
-            throw new Error(response.message);
-          }
-          return response.json();
-        })
-        .then(({ data }) => {
-          localStorage.setItem("token", data.token);
-        });
-    }
-    // called when the user clicks on the logout button
-    if (type === AUTH_LOGOUT) {
-      localStorage.removeItem("token");
-      return Promise.resolve();
-    }
-    // called when the API returns an error
-    if (type === AUTH_ERROR) {
-      const { status } = params;
-      if (status === 401 || status === 403) {
-        localStorage.removeItem("token");
+const API_URL = process.env.API_URL || "";
+
+const authProvider = {
+  // authentication
+  login: ({ username, password }) => {
+    const request = new Request(`${API_URL}/api/v1/auth/login`, {
+      method: "POST",
+      body: JSON.stringify({ email: username, password }),
+      headers: new Headers({ "Content-Type": "application/json" })
+    });
+    return fetch(request)
+      .then(response => {
+        if (response.status < 200 || response.status >= 300) {
+          throw new Error(response.message);
+        }
+        return response.json();
+      })
+      .then(({ data }) => {
+        const { token } = data;
+        tokenProvider.setToken(token);
+      })
+      .catch(() => {
+        throw new Error('Network error')
+    });
+  },
+  checkError: error => {
+    const status = error.status;
+    if (status === 401 || status === 403) {
+        tokenProvider.removeToken();
         return Promise.reject();
-      }
-      return Promise.resolve();
     }
-    // called when the user navigates to a new location
-    if (type === AUTH_CHECK) {
-      return localStorage.getItem("token")
-        ? Promise.resolve()
-        : Promise.reject();
-    }
-    return Promise.reject("Unknown method");
-  };
-};
+    // other error code (404, 500, etc): no need to log out
+    return Promise.resolve();
+  },
+  checkAuth: () => {
+    return tokenProvider.getToken()
+      ? Promise.resolve()
+      : Promise.reject();
+  },
+  logout: () => {
+    tokenProvider.removeToken();
+    return Promise.resolve();
+  },
+  getIdentity: () => Promise.resolve(),
+  // authorization
+  getPermissions: () => {
+    const token = tokenProvider.getToken();
+    const decodedToken = decodeJwt(token);
+    const role = decodedToken.role;
+    return role ? Promise.resolve(role) : Promise.reject();
+  },
+}
+
+export default authProvider;
+

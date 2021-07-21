@@ -1,14 +1,27 @@
 import jwt from 'jsonwebtoken';
 
-export const sign = uid => {
-  const token = jwt.sign({ uid: uid }, process.env.JWT_SECRET, {
-    expiresIn: 60 * 60 * 24 * 30
+export const sign = data => {
+  const token = jwt.sign(data, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES
   });
   return token;
 };
 
 export const verify = token => {
-  return jwt.verify(token, process.env.JWT_SECRET);
+  return jwt.verify(token, process.env.JWT_SECRET, { ignoreExpiration: false });
+};
+
+export const refreshSign = uid => {
+  const token = jwt.sign({ uid: uid }, process.env.JWT_REFRESH_SECRET, {
+    expiresIn: process.env.JWT_REFRESH_EXPIRES
+  });
+  return token;
+};
+
+export const refreshVerify = token => {
+  return jwt.verify(token, process.env.JWT_REFRESH_SECRET, {
+    ignoreExpiration: false
+  });
 };
 
 export const getToken = req => {
@@ -38,5 +51,7 @@ export const getToken = req => {
 export default {
   sign,
   verify,
-  getToken
+  getToken,
+  refreshSign,
+  refreshVerify
 };

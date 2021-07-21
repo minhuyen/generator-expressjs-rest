@@ -64,6 +64,9 @@ const UserSchema = new Schema(
     isPremium: {
       type: Boolean,
       default: false
+    },
+    refreshToken: {
+      type: String
     }
   },
   {
