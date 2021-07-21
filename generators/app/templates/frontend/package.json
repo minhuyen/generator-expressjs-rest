@@ -30,7 +30,18 @@
   },
   "proxy": "http://backend:3000",
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": ["react-app", "shared-config"],
+    "rules": {
+      "additional-rule": "warn"
+    },
+    "overrides": [
+      {
+        "files": ["**/*.ts?(x)"],
+        "rules": {
+          "additional-typescript-only-rule": "warn"
+        }
+      }
+    ]
   },
   "browserslist": [
     ">0.2%",
