@@ -12,6 +12,8 @@
     "heroku-postbuild": "cd client && npm install && npm run build",
     "serve": "node dist/server.js",
     "clean": "rimraf dist",
+    "lint": "eslint './src/**/*.{js,jsx}'",
+    "lint:fix": "eslint './src/**/*.{js,jsx}' --fix",
     "db": "babel-node src/db_seed"
   },
   "author": "Uyen Do",
