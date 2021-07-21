@@ -13,9 +13,9 @@ export const signup = async (req, res, next) => {
   }
 };
 
-export const login = (req, res) => {
+export const login = async (req, res) => {
   const user = req.user;
-  const result = authService.login(user);
+  const result = await authService.login(user);
   setTokenCookie(res, result.refreshToken);
   // return the information including token as JSON
   return Response.success(res, result, httpStatus.OK);

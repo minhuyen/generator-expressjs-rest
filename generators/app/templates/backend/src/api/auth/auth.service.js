@@ -3,6 +3,7 @@ import { logger, jwt, MailService } from '../../services';
 import { utils } from '../../helpers';
 import { decodeToken } from "../../helpers/utils";
 // import deviceTokenService from '../deviceTokens/deviceToken.service';
+import userService from '../users/users.service';
 
 const signup = async data => {
   const user = await User.create(data);
@@ -19,12 +20,13 @@ const signup = async data => {
   return result;
 };
 
-const login = user => {
+const login = async user => {
+  const userId = user._id
   const token = jwt.sign({
-    uid: user._id,
+    uid: userId,
     role: user.role
   });
-  const refreshToken = jwt.refreshSign(user._id);
+  const refreshToken = jwt.refreshSign(userId);
   // save the token
   await userService.update(userId, { refreshToken });
 

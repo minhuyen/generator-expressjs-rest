@@ -5,6 +5,7 @@ import cors from 'cors';
 import compression from 'compression';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import {
   errorHandle,
@@ -31,6 +32,7 @@ app.use(cors());
 // compression
 app.use(compression());
 
+app.use(cookieParser());
 // logs http request
 app.use(morgan(process.env.LOG_FORMAT || 'dev', { stream: logger.stream }));
 

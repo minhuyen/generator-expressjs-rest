@@ -19,6 +19,7 @@ const authProvider = {
         return response.json();
       })
       .then(({ data }) => {
+        const { token } = data;
         tokenProvider.setToken(token);
       })
       .catch(() => {
