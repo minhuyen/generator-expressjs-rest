@@ -35,12 +35,12 @@ services:
     container_name: <%=project_slug%>_mongo_prod
     env_file:
       - .env
-    command: mongod --port 37017 --storageEngine wiredTiger
+    command: mongod --port 27017 --storageEngine wiredTiger
     volumes:
       - mongo_data:/data/db
       - mongo_backup:/data/backup
     ports:
-      - "37017:37017"
+      - "27017:27017"
     networks:
       - app-network
 
