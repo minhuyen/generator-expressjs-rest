@@ -3,20 +3,34 @@ import { logger, jwt, MailService } from '../../services';
 import { utils } from '../../helpers';
 import { decodeToken } from "../../helpers/utils";
 // import deviceTokenService from '../deviceTokens/deviceToken.service';
+import userService from '../users/users.service';
 
 const signup = async data => {
   const user = await User.create(data);
-  const token = jwt.sign(user._id);
+  const token = jwt.sign({
+    uid: user._id,
+    role: user.role
+  });
+  const refreshToken = jwt.refreshSign(user._id);
   const result = {
     user,
-    token
+    token,
+    refreshToken
   };
   return result;
 };
 
-const login = user => {
-  const token = jwt.sign(user._id);
-  return { user, token };
+const login = async user => {
+  const userId = user._id
+  const token = jwt.sign({
+    uid: userId,
+    role: user.role
+  });
+  const refreshToken = jwt.refreshSign(userId);
+  // save the token
+  await userService.update(userId, { refreshToken });
+
+  return { user, token, refreshToken };
 };
 
 const logout = async token => {
@@ -99,6 +113,20 @@ const loginWithApple = async (token) => {
   }
 }
 
+const refreshToken = async token => {
+  const user = await userService.findOne({ refreshToken: token });
+  if (user) {
+    const newToken = jwt.sign({
+      uid: user._id,
+      role: user.role,
+      role_code: user.role_code
+    });
+    return { user, token: newToken, refreshToken: token };
+  } else {
+    throw new Error('The refresh token is invalid!');
+  }
+};
+
 export default {
   signup,
   login,
@@ -108,5 +136,6 @@ export default {
   forgotPassword,
   resetPassword,
   verifyCode,
-  loginWithApple
+  loginWithApple,
+  refreshToken
 };

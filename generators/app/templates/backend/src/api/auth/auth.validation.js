@@ -52,3 +52,7 @@ export const resetPasswordSchema = Joi.object({
     .required()
     .valid(Joi.ref('newPassword'))
 });
+
+export const refreshTokenSchema = Joi.object({
+  refreshToken: Joi.string().optional()
+});

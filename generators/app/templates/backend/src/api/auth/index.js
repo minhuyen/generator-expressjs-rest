@@ -386,6 +386,12 @@ router.post(
   celebrate({ body: authValidation.resetPasswordSchema }),
   authController.resetPassword
 );
+
+router.post(
+  '/refresh-token',
+  celebrate({ body: authValidation.refreshTokenSchema }),
+  authController.refreshToken
+);
 router.post('/facebook', authFacebookToken, authController.login);
 router.post('/google', authGoogleToken, authController.login);
 router.post('/apple', authController.loginWithApple);
