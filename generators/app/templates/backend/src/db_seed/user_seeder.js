@@ -6,7 +6,7 @@ export const createAdminAccount = async () => {
   if (!admin) {
     await User.create({
       email: 'admin@gmail.com',
-      full_name: 'admin',
+      fullName: 'admin',
       password: 'admin@123',
       role: 'admin'
     });

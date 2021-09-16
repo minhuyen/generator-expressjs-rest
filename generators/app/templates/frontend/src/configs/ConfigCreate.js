@@ -2,17 +2,12 @@ import React from "react";
 import {
   Create,
   SimpleForm,
-  TextInput,
-  ImageInput,
-  ImageField,
-  SelectInput
+  TextInput
 } from "react-admin";
-
-import RichTextInput from "ra-input-rich-text";
 
 const ConfigCreate = props => (
   <Create {...props}>
-    <SimpleForm>
+    <SimpleForm redirect="list">
       <TextInput source="name" />
       <TextInput source="value" />
     </SimpleForm>

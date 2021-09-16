@@ -3,31 +3,78 @@
  * That's not the most optimized way to store images in production, but it's
  * enough to illustrate the idea of data provider decoration.
  */
-const convertFileToBase64 = file =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file.rawFile);
-
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = reject;
-  });
-
-const uploadImage = file => {
-  console.log("Promise image: ", file);
+ const uploadFiles = (params, field, name) => {
   return new Promise((resolve, reject) => {
+    const newPictures = params.data[name].filter(
+      (p) => p.rawFile instanceof File
+    );
+    const formerPictures = params.data[name].filter(
+      (p) => !(p.rawFile instanceof File)
+    );
     const formData = new FormData();
-    formData.append("image", file.rawFile);
     const token = localStorage.getItem("token");
-    fetch("/api/v1/uploads", {
+    newPictures.map((p) => {
+      formData.append(field, p.rawFile);
+    });
+    fetch("/api/v1/uploads/multi", {
       method: "post",
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
-      body: formData
+      body: formData,
     })
-      .then(response => response.json())
-      .then(image => resolve(image))
-      .catch(err => reject(err));
+      .then((response) => response.json())
+      .then((images) => {
+        const newUploadictures = images.data.map((image) => {
+          return {
+            src: image.url,
+            title: image.title,
+          };
+        });
+
+        const tmp = {
+          ...params,
+          data: {
+            ...params.data,
+            [name]: [...formerPictures, ...newUploadictures],
+          },
+        };
+        resolve(tmp);
+      });
+  });
+};
+
+const uploadFile = (params, field, name) => {
+  return new Promise((resolve, reject) => {
+    if (params.data[name] && params.data[name].rawFile instanceof File) {
+      const formData = new FormData();
+      formData.append(field, params.data[name].rawFile);
+      const token = localStorage.getItem("token");
+
+      fetch("/api/v1/uploads", {
+        method: "post",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((image) => {
+          const tmp = {
+            ...params,
+            data: {
+              ...params.data,
+              [name]: {
+                src: image.data.url,
+                title: image.data.title,
+              },
+            },
+          };
+          resolve(tmp);
+        });
+    } else {
+      resolve(params);
+    }
   });
 };
 
@@ -37,68 +84,15 @@ const uploadImage = file => {
  */
 const addUploadFeature = requestHandler => (type, resource, params) => {
   // console.log("==========addUploadFeature===========", type, resource, params);
-  if (type === "UPDATE" && resource === "posts") {
-    // notice that following condition can be true only when `<ImageInput source="pictures" />` component has parameter `multiple={true}`
-    // if parameter `multiple` is false, then data.pictures is not an array, but single object
-    if (params.data.pictures && params.data.pictures.length) {
-      // only freshly dropped pictures are instance of File
-      const formerPictures = params.data.pictures.filter(
-        p => !(p.rawFile instanceof File)
-      );
-      const newPictures = params.data.pictures.filter(
-        p => p.rawFile instanceof File
-      );
-
-      return Promise.all(newPictures.map(convertFileToBase64))
-        .then(base64Pictures =>
-          base64Pictures.map((picture64, index) => ({
-            src: picture64,
-            title: `${newPictures[index].title}`
-          }))
-        )
-        .then(transformedNewPictures =>
-          requestHandler(type, resource, {
-            ...params,
-            data: {
-              ...params.data,
-              pictures: [...transformedNewPictures, ...formerPictures]
-            }
-          })
-        );
-    }
-  } else if (
+ if (
     (type === "UPDATE" || type === "CREATE") &&
-    (resource === "users" ||
-      resource === "recipes" ||
-      resource === "collections")
+    (resource === "users")
   ) {
-    // console.log("upload image recipes", params);
-    if (params.data.image) {
-      // console.log("upload image recipes exist");
-      const image = params.data.image;
-      // console.log("upload image recipes exist", image.rawFile);
-      if (image.rawFile instanceof File) {
-        // console.log("upload image recipes is rawFile");
-        return uploadImage(image)
-          .then(res => {
-            // console.log("=====uploaded image=======", res);
-            return requestHandler(type, resource, {
-              ...params,
-              data: {
-                ...params.data,
-                image: res.image
-              }
-            });
-          })
-          .catch(error => {
-            throw new Error(error.message);
-          });
-      } else {
-        return requestHandler(type, resource, params);
-      }
-    } else {
-      return requestHandler(type, resource, params);
-    }
+    return uploadFile(params, "image", "avatar")
+      .then((params) => requestHandler(type, resource, params))
+      .catch((error) => {
+        throw new Error(error.message);
+      });
   } else {
     // for other request types and resources, fall back to the default request handler
     return requestHandler(type, resource, params);

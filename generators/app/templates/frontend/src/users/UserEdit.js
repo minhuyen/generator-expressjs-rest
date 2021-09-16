@@ -12,9 +12,9 @@ const UserEdit = (props) => (
     <SimpleForm>
       <TextInput disabled source="id" />
       <TextInput source="username" />
-      <TextInput source="firstName" />
-      <TextInput source="lastName" />
+      <TextInput source="fullName" />
       <TextInput source="email" validate={validateEmail} />
+      <TextInput source="role" />
     </SimpleForm>
   </Edit>
 );

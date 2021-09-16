@@ -2,12 +2,8 @@ import React from "react";
 import {
   Edit,
   SimpleForm,
-  TextInput,
-  ImageInput,
-  ImageField,
-  SelectInput
+  TextInput
 } from "react-admin";
-import RichTextInput from "ra-input-rich-text";
 
 const ConfigEdit = props => (
   <Edit {...props}>

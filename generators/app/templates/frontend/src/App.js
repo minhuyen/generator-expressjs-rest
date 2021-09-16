@@ -2,7 +2,6 @@ import React from "react";
 import { Admin, Resource, fetchUtils } from "react-admin";
 import decodeJwt from "jwt-decode";
 import addUploadFeature from "./addUploadFeature";
-import UserIcon from "@material-ui/icons/Group";
 import NotFound from "./NotFound";
 import authProvider from "./authProvider";
 import restProvider from "./restProvider";

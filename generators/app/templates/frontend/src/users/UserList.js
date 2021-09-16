@@ -18,10 +18,9 @@ const UserList = (props) => (
   <List {...props} filters={<UserFilter />}>
     <Datagrid rowClick="edit">
       <TextField source="id" />
-      <TextField source="username" />
-      <TextField source="firstName" />
-      <TextField source="lastName" />
+      <TextField source="fullName" />
       <EmailField source="email" />
+      <TextField source="role" />
     </Datagrid>
   </List>
 );

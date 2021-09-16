@@ -6,17 +6,29 @@ import Response from '../../helpers/response';
 
 export const upload = (req, res) => {
   let image = '';
+  let originalname = '';
 
   if (req.file) {
     image = req.file.filename;
+    originalname = req.file.originalname;
   }
 
-  Response.success(res, { url: `/media/${image}` }, httpStatus.CREATED);
+  Response.success(
+    res,
+    {
+      url: `/media/${image}`,
+      title: originalname
+    },
+    httpStatus.CREATED
+  );
 };
 
 export const multiUpload = (req, res) => {
   const images = req.files.map(file => {
-    return { url: `/media/${file.filename}` };
+    return {
+      url: `/media/${file.filename}`,
+      title: file.originalname
+    };
   });
   Response.success(res, images, httpStatus.CREATED);
 };
