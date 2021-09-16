@@ -1,5 +1,6 @@
 import React from "react";
-import { Admin, Resource, fetchUtils } from "react-admin";
+import { Admin, Resource } from "react-admin";
+import * as fetchUtils from "./utils/fetch";
 import decodeJwt from "jwt-decode";
 import addUploadFeature from "./addUploadFeature";
 import NotFound from "./NotFound";
