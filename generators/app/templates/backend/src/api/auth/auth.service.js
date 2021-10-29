@@ -4,13 +4,11 @@ import { utils } from '../../helpers';
 import { decodeToken } from "../../helpers/utils";
 // import deviceTokenService from '../deviceTokens/deviceToken.service';
 import userService from '../users/users.service';
+import refreshTokenService from '../refreshTokens/refreshToken.service';
 
 const signup = async data => {
   const user = await User.create(data);
-  const token = jwt.sign({
-    uid: user._id,
-    role: user.role
-  });
+  const token = generateToken(user);
   const refreshToken = jwt.refreshSign(user._id);
   const result = {
     user,
@@ -20,17 +18,10 @@ const signup = async data => {
   return result;
 };
 
-const login = async user => {
-  const userId = user._id
-  const token = jwt.sign({
-    uid: userId,
-    role: user.role
-  });
-  const refreshToken = jwt.refreshSign(userId);
-  // save the token
-  await userService.update(userId, { refreshToken });
-
-  return { user, token, refreshToken };
+const login = async (user, ipAddress) => {
+  const token = generateToken(user);
+  const refreshToken = await generateRefreshToken(user, ipAddress);
+  return { user, token, refreshToken: refreshToken.token };
 };
 
 const logout = async token => {
@@ -113,18 +104,40 @@ const loginWithApple = async (token) => {
   }
 }
 
-const refreshToken = async token => {
-  const user = await userService.findOne({ refreshToken: token });
-  if (user) {
-    const newToken = jwt.sign({
-      uid: user._id,
-      role: user.role,
-      role_code: user.role_code
-    });
-    return { user, token: newToken, refreshToken: token };
+const refreshToken = async (token, ipAddress) => {
+  const refreshToken = await refreshTokenService.findOne({
+    token: token
+  });
+  if (refreshToken) {
+    const user = await userService.findById(refreshToken.user);
+    const newToken = generateToken(user);
+    const newRefreshToken = await generateRefreshToken(user, ipAddress);
+    refreshToken.revoked = Date.now();
+    refreshToken.revokedByIp = ipAddress;
+    refreshToken.replacedByToken = newRefreshToken.token;
+    await refreshToken.save();
+    return { user, token: newToken, refreshToken: newRefreshToken.token };
   } else {
     throw new Error('The refresh token is invalid!');
   }
+};
+
+const generateToken = user => {
+  return jwt.sign({
+    uid: user._id,
+    role: user.role
+  });
+};
+
+const generateRefreshToken = async (user, ipAddress) => {
+  const refreshToken = jwt.refreshSign(user._id);
+  // save the token
+  return await refreshTokenService.create({
+    user: user._id,
+    token: refreshToken,
+    // expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    createdByIp: ipAddress
+  });
 };
 
 export default {

@@ -15,7 +15,8 @@ export const signup = async (req, res, next) => {
 
 export const login = async (req, res) => {
   const user = req.user;
-  const result = await authService.login(user);
+  const ipAddress = req.ip;
+  const result = await authService.login(user, ipAddress);
   setTokenCookie(res, result.refreshToken);
   // return the information including token as JSON
   return Response.success(res, result, httpStatus.OK);
@@ -96,8 +97,9 @@ export const loginWithApple = async (req, res, next) => {
 
 export const refreshToken = async (req, res, next) => {
   try {
-    const token = req.cookies.refreshToken || req.body.refreshToken;
-    const result = await authService.refreshToken(token);
+    const token = req.body.refreshToken || req.cookies.refreshToken;
+    const ipAddress = req.ip;
+    const result = await authService.refreshToken(token, ipAddress);
     return Response.success(res, result);
   } catch (exception) {
     next(exception);

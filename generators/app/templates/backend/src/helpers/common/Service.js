@@ -30,6 +30,11 @@ class Service {
     return result;
   }
 
+  async find(data) {
+    const result = await this._model.find(data);
+    return result;
+  }
+
   async create(data) {
     const result = await this._model.create(data);
     return result;
