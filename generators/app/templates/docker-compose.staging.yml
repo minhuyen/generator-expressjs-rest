@@ -16,7 +16,7 @@ services:
     container_name: <%=project_slug%>_node_stage
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: compose/node/Dockerfile
     env_file:
       - .env
     volumes:

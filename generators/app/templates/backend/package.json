@@ -20,7 +20,7 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/minhuyen/<%=project_slug%>#readme",
   "dependencies": {
-    "api-query-params": "^4.9.0",
+    "api-query-params": "^5.1.1",
     "apn": "^2.2.0",
     "aws-sdk": "^2.387.0",
     "bcryptjs": "^2.4.3",

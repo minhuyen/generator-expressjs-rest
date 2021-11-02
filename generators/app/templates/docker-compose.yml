@@ -13,8 +13,8 @@ services:
     restart: always
     container_name: <%=project_slug%>_node_local
     build:
-      context: ./backend
-      dockerfile: ../compose/node/Dockerfile_dev
+      context: .
+      dockerfile: compose/node/Dockerfile_dev
     # command: nodemon --inspect=0.0.0.0:9229 --nolazy app.js
     ports:
       - "3000:3000"
@@ -34,8 +34,8 @@ services:
     restart: always
     container_name: <%=project_slug%>_client_local
     build:
-      context: ./frontend
-      dockerfile: ../compose/client/Dockerfile
+      context: .
+      dockerfile: compose/client/Dockerfile
     ports:
       - "3001:3000"
     env_file:
