@@ -15,7 +15,7 @@ services:
     container_name: <%=project_slug%>_node_test
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: compose/node/Dockerfile
     environment:
       NODE_ENV: production
       DATABASE_URL: "mongodb://mongo:27017/<%=project_slug%>"
