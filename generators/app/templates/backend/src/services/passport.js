@@ -24,7 +24,10 @@ passport.deserializeUser(function(id, done) {
 
 // JWT
 const jwtOpts = {};
-jwtOpts.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme('Bearer');
+jwtOpts.jwtFromRequest = ExtractJwt.fromExtractors([
+  ExtractJwt.fromAuthHeaderWithScheme('Bearer'), 
+  ExtractJwt.fromUrlQueryParameter("token")
+]);
 jwtOpts.secretOrKey = config.jwt.secret;
 passport.use(
   new StrategyJwt(jwtOpts, function(payload, done) {

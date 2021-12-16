@@ -8,8 +8,8 @@ import {
 const ConfigEdit = props => (
   <Edit {...props}>
     <SimpleForm>
-      <TextInput source="name" />
-      <TextInput source="value" />
+      <TextInput source="name" multiline fullWidth={true} />
+      <TextInput source="value" multiline fullWidth={true} />
     </SimpleForm>
   </Edit>
 );

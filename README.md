@@ -61,11 +61,11 @@ docker-compose up
 src/
 ├─ api/
 │  ├─ auth/
-│  │  ├─ auth.controller.js
+│  │  ├─ index.js
 │  │  ├─ auth.service.js
 │  │  ├─ auth.validation.js
-│  │  ├─ index.js
-│  │  └─ index.test.js
+│  │  ├─ auth.controller.js
+│  │  └─ auth.test.js
 │  ├─ uploads/
 │  │  ├─ index.js
 │  │  ├─ upload.controller.js

@@ -49,6 +49,12 @@ export default {
       ADMIN: 'ADMIN'
     }
   },
+
+  admin: {
+    email: process.env.DEFAULT_ADMIN_EMAIL,
+    password: process.env.DEFAULT_ADMIN_PASSWORD
+  },
+  
   apn: {
     keyId: process.env.APN_KEY_ID,
     teamId: process.env.APN_TEAM_ID,

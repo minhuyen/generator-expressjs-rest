@@ -1,17 +1,20 @@
+import config from '../config';
 import User from '../api/users/users.model';
 
 export const createAdminAccount = async () => {
-  const admin = await User.findOne({ email: 'admin@gmail.com' });
+  const defaultEmail = config.admin.email;
+  const defaultPassword = config.admin.password;
+  const admin = await User.findOne({ email: defaultEmail });
   // console.log('======admin======', admin);
   if (!admin) {
     await User.create({
-      email: 'admin@gmail.com',
-      fullName: 'admin',
-      password: 'admin@123',
+      email: defaultEmail,
+      full_name: 'admin',
+      password: defaultPassword,
       role: 'admin'
     });
   } else {
-    admin.password = 'admin@123';
+    admin.password = defaultPassword;
     await admin.save();
   }
 };

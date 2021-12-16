@@ -8,14 +8,14 @@ import {
   EditButton
 } from "react-admin";
 
-const ArticleFilter = props => (
+const ConfigFilter = props => (
   <Filter {...props}>
-    <TextInput label="Search" source="title" alwaysOn />
+    <TextInput label="Name" source="name" alwaysOn />
   </Filter>
 );
 
 const ConfigList = props => (
-  <List {...props} filters={<ArticleFilter />}>
+  <List {...props} filters={<ConfigFilter />}>
     <Datagrid rowClick="edit">
       <TextField source="id" />
       <TextField source="name" />

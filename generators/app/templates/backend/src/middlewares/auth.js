@@ -2,10 +2,13 @@ import passport from 'passport';
 import Response from '../helpers/response';
 
 export default class AuthService {
-  static getTokenFromHeaders(req) {
+  static getTokenFromHeaderOrQuerystring(req) {
+    const re = /(\S+)\s+(\S+)/;
     if (req.headers.authorization) {
-      const re = /(\S+)\s+(\S+)/;
       const matches = req.headers.authorization.match(re);
+      return matches && { scheme: matches[1], value: matches[2] };
+    } else if (req.query && req.query.token) {
+      const matches = req.query.token.match(re);
       return matches && { scheme: matches[1], value: matches[2] };
     } else {
       return null;
@@ -65,7 +68,7 @@ export default class AuthService {
   }
 
   static optional(req, res, next) {
-    const token = AuthService.getTokenFromHeaders(req);
+    const token = AuthService.getTokenFromHeaderOrQuerystring(req);
     if (token) {
       return AuthService.required(req, res, next);
     } else {
