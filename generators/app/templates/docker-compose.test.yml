@@ -26,6 +26,7 @@ services:
       - "3000:3000"
     depends_on:
       - mongo
+      - redis
     networks:
       - app-network
     # tty: true
@@ -39,6 +40,12 @@ services:
       - mongo_backup:/data/backup
 #    ports:
 #      - '27017:27017'
+    networks:
+      - app-network
+
+  redis:
+    image: redis:5.0.12-alpine
+    container_name: <%=project_slug%>_redis_local
     networks:
       - app-network
 

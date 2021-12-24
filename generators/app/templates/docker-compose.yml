@@ -27,6 +27,7 @@ services:
       - frontend:/home/app/<%=project_slug%>/src/client/build
     depends_on:
       - mongo
+      - redis
     networks:
       - app-network
 
@@ -60,6 +61,12 @@ services:
       - mongo_data:/data/db
     ports:
       - "27017:27017"
+    networks:
+      - app-network
+
+  redis:
+    image: redis:5.0.12-alpine
+    container_name: <%=project_slug%>_redis_local
     networks:
       - app-network
 

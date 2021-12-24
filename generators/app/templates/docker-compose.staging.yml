@@ -25,10 +25,11 @@ services:
       - media_data:/home/app/<%=project_slug%>/uploads
     depends_on:
       - mongo
+      - redis
     networks:
       - app-network
-
     # tty: true
+    
   mongo:
     restart: always
     image: mongo:4.2
@@ -39,6 +40,12 @@ services:
     volumes:
       - mongo_data:/data/db
       - mongo_backup:/data/backup
+    networks:
+      - app-network
+
+  redis:
+    image: redis:5.0.12-alpine
+    container_name: <%=project_slug%>_redis_local
     networks:
       - app-network
 
