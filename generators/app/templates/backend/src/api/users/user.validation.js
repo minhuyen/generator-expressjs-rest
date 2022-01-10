@@ -20,3 +20,9 @@ export const changePasswordSchema = Joi.object({
     .required()
     .valid(Joi.ref('newPassword'))
 });
+
+export const updateMeSchema = Joi.object({
+  email: Joi.any().forbidden(),
+  isPremium: Joi.any().forbidden(),
+  role: Joi.any().forbidden(),
+}).unknown(true);

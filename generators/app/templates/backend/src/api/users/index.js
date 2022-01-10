@@ -5,7 +5,8 @@ import userController from './users.controller';
 import { schemas } from '../../helpers';
 import {
   paginateUserValidateSchema,
-  changePasswordSchema
+  changePasswordSchema,
+  updateMeSchema,
 } from './user.validation';
 
 const { objectIdSchema, paginateValidationSchema } = schemas;
@@ -140,6 +141,7 @@ router.delete(
 
 router.put(
   '/me',
+  celebrate({ body: updateMeSchema }),
   AuthService.required,
   userController.updateMe
 );
