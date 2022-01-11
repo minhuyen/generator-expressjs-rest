@@ -16,6 +16,10 @@ export default {
     }
   },
 
+  redis: {
+    url: process.env.REDIS_URL
+  },
+
   facebook: {
     clientID: process.env.FACEBOOK_CLIENT_ID,
     clientSecret: process.env.FACEBOOK_CLIENT_SECRET,

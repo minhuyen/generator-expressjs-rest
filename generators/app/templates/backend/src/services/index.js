@@ -4,6 +4,8 @@ import Response from './response';
 import swagger from './swagger';
 import jwt from './jwt';
 import MailService from './mailgun';
+import redis from './redis';
+
 
 export {
   logger,
@@ -11,5 +13,6 @@ export {
   Response,
   swagger,
   jwt,
-  MailService
+  MailService,
+  redis
 };
