@@ -1,4 +1,4 @@
-FROM node:12.16.3-alpine
+FROM node:12.22.10-alpine
 
 RUN addgroup -S app && adduser -S app -G app
 
