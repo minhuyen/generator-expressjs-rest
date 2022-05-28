@@ -1,4 +1,4 @@
-FROM nginx:latest
+FROM nginx:stable
 RUN apt-get update && apt-get install nano
 RUN mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.backup
 
