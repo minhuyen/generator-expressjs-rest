@@ -4,7 +4,7 @@
 
 # Setup and build the client
 
-FROM node:12.16.3-alpine as builder
+FROM node:16.15-alpine as builder
 
 # set working directory
 WORKDIR /home/node/app
@@ -24,7 +24,7 @@ RUN yarn build
 
 # Setup the server
 
-FROM node:12.16.3-alpine
+FROM node:16.15-alpine
 
 ENV NPM_CONFIG_PRODUCTION false
 
@@ -32,7 +32,9 @@ RUN apk update \
   # curl depenencies
   && apk add curl \
   # Git depenencies
-  && apk add git
+  && apk add git \
+  # mongo tools
+  && apk add mongodb-tools
 
 RUN addgroup -S app && adduser -S app -G app
 
