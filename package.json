@@ -1,6 +1,6 @@
 {
   "name": "generator-expressjs-rest",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "yo template for an ExpressJS application",
   "main": "generators/index.js",
   "directories": {
