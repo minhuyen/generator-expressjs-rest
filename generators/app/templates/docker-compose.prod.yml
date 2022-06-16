@@ -1,10 +1,11 @@
 version: "3"
 
 volumes:
-  mongo_data:
-  mongo_backup:
-  node_logs:
-  media_data:
+  mongo_data: {}
+  mongo_backup: {}
+  node_logs: {}
+  media_data: {}
+  backend_node_module: {}
 
 networks:
   app-network:
@@ -20,7 +21,7 @@ services:
     env_file:
       - .env
     volumes:
-      - /home/app/<%=project_slug%>/node_modules
+      - backend_node_module:/home/app/<%=project_slug%>/node_modules
       - node_logs:/home/app/<%=project_slug%>/logs
       - media_data:/home/app/<%=project_slug%>/uploads
     depends_on:

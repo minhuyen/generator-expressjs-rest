@@ -39,7 +39,7 @@
     "jimp": "^0.16.1",
     "jsonwebtoken": "^8.4.0",
     "lodash": "^4.17.11",
-    "mailgun-js": "^0.22.0",
+    "mailgun.js": "^4.1.0",
     "moment": "^2.24.0",
     "mongoose": "^5.4.3",
     "mongoose-delete": "^0.5.0",

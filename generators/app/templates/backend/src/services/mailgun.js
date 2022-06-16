@@ -1,36 +1,27 @@
-import Mailgun from 'mailgun-js';
+import fs from 'fs';
+import path from 'path';
+import Mailgun from 'mailgun.js';
+import formData from 'form-data';
 import config from '../config';
 import { logger } from '../services';
 
-export default class MailService {
-  constructor() {
-    this.mail = new Mailgun({
-      apiKey: config.mailgun.apiKey,
-      domain: config.mailgun.domain
-    });
-  }
+const mailgun = new Mailgun(formData);
+const mg = mailgun.client({
+  username: 'api',
+  key: config.mailgun.apiKey,
+  timeout: 60000
+});
 
-  testEmail() {
+const domain = config.mailgun.domain;
+const fromEmail =
+  'Support<support@astraler.com>';
+
+export const sendPasswordResetEmail = async (to, passcode) => {
+  try {
     const data = {
-      from: 'Call Me Now Team <me@samples.mailgun.org>',
-      to: 'minhuyendo@gmail.com',
-      subject: 'Hello',
-      text: 'Testing some Mailgun awesomeness!'
-    };
-
-    this.mail
-      .messages()
-      .send(data)
-      .then(body => {
-        console.log(body);
-      });
-  }
-
-  passwordResetEmail(to, passcode) {
-    const data = {
-      from: 'Call Me Now Team <noreply@kikiapp.co>',
+      from: fromEmail,
       to: to,
-      subject: 'CallMeNow Reset Password',
+      subject: 'Reset Password App',
       // text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
       // 'Please use the passcode below:\n\n' +
       // '--' + passcode + '-- \n\n' +
@@ -43,28 +34,9 @@ export default class MailService {
         '</b>' +
         '<p>If you did not request this, please ignore this email and your password will remain unchanged.</p>'
     };
-
-    this.mail
-      .messages()
-      .send(data)
-      .then(result => {
-        logger.info('==============result==========%j', result);
-      })
-      .catch(error => {
-        logger.error('==============error==========%j', error);
-      });
+    const msg = await mg.messages.create(domain, data);
+    return msg;
+  } catch (error) {
+    console.log(error);
   }
-}
-
-// (async () => {
-//   try {
-//     const mailService = new MailService();
-//     const result = await mailService.passwordResetEmail(
-//       'minhuyendo@gmail.com',
-//       '888888'
-//     );
-//     logger.error('==============result==========%j', result);
-//   } catch (error) {
-//     logger.error('==============error==========%j', error);
-//   }
-// })();
+};

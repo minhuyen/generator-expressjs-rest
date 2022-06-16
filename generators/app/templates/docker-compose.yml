@@ -3,6 +3,8 @@ version: "3"
 volumes:
   mongo_data: {}
   frontend: {}
+  backend_node_module: {}
+  frontend_node_module: {}
 
 networks:
   app-network:
@@ -23,7 +25,7 @@ services:
       - .env
     volumes:
       - ./backend:/home/app/<%=project_slug%>
-      - /home/app/<%=project_slug%>/node_modules
+      - backend_node_module:/home/app/<%=project_slug%>/node_modules
       - frontend:/home/app/<%=project_slug%>/src/client/build
     depends_on:
       - mongo
@@ -43,7 +45,7 @@ services:
       - .env
     volumes:
       - ./frontend:/home/app/client
-      - /home/app/client/node_modules
+      - frontend_node_module:/home/app/client/node_modules
       - frontend:/home/app/client/build
     depends_on:
       - backend

@@ -4,6 +4,7 @@ volumes:
   mongo_data: {}
   mongo_backup: {}
   node_logs: {}
+  backend_node_module: {}
 
 networks:
   app-network:
@@ -20,7 +21,7 @@ services:
       NODE_ENV: production
       DATABASE_URL: "mongodb://mongo:27017/<%=project_slug%>"
     volumes:
-      - /home/app/<%=project_slug%>/node_modules
+      - backend_node_module:/home/app/<%=project_slug%>/node_modules
       - node_logs:/home/app/<%=project_slug%>/logs
     ports:
       - "3000:3000"
