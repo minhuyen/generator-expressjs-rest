@@ -5,12 +5,23 @@ import formData from 'form-data';
 import config from '../config';
 import { logger } from '../services';
 
-const mailgun = new Mailgun(formData);
-const mg = mailgun.client({
-  username: 'api',
-  key: config.mailgun.apiKey,
-  timeout: 60000
-});
+
+class MailgunConnect {
+  constructor() {}
+  static getInstance() {
+    if (!this.instance) {
+      const mailgun = new Mailgun(formData);
+      const mg = mailgun.client({
+        username: 'api',
+        key: config.mailgun.apiKey,
+        timeout: 60000
+      });
+      this.instance = mg;
+    }
+
+    return this.instance;
+  }
+}
 
 const domain = config.mailgun.domain;
 const fromEmail =
@@ -34,6 +45,7 @@ export const sendPasswordResetEmail = async (to, passcode) => {
         '</b>' +
         '<p>If you did not request this, please ignore this email and your password will remain unchanged.</p>'
     };
+    const mg = MailgunConnect.getInstance();
     const msg = await mg.messages.create(domain, data);
     return msg;
   } catch (error) {
