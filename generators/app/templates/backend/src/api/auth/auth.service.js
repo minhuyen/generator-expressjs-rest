@@ -52,7 +52,7 @@ const forgotPassword = async email => {
   if (!user) {
     throw new Error(`User not found with email: ${email}`);
   } else {
-    const passcode = utils.randomVerfiedCode();
+    const passcode = utils.randomVerifiedCode();
     user.resetPasswordToken = passcode;
     user.resetPasswordExpires = Date.now() + 360000; // expires in 1 hour
     await user.save();
@@ -86,7 +86,7 @@ const verifyCode = async data => {
 };
 
 const loginWithApple = async (token) => {
-  let decodedToken = decodeToken(token)
+  let decodedToken = await decodeToken(token)
   let userDetail = await User.findOne({ email: decodedToken.email })
 
   if (userDetail) {
