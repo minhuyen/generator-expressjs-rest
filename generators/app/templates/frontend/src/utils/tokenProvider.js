@@ -15,7 +15,7 @@ const tokenProvider = () => {
         return response.json();
       })
       .then(({ data }) => {
-        if (data.token) {
+        if (data && data.token) {
           setToken(data.token);
           return true;
         }
