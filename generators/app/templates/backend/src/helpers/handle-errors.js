@@ -46,7 +46,7 @@ export const errorHandle = (error, req, res, next) => {
 };
 
 export const logErrors = (err, req, res, next) => {
-  // console.error(err.stack);
+  console.error(err.stack);
   next(err);
 };
 
