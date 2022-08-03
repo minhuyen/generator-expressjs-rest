@@ -4,7 +4,8 @@ RUN addgroup -S app && adduser -S app -G app
 
 ENV HOME=/home/app
 
-COPY frontend/package.json frontend/yarn.lock $HOME/client/
+# frontend/yarn.lock
+COPY frontend/package.json $HOME/client/
 
 RUN mkdir $HOME/client/build
 
