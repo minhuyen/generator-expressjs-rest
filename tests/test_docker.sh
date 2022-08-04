@@ -6,12 +6,14 @@
 set -o errexit
 set -x
 
+
 # create a cache directory
 mkdir -p .cache/docker
 cd .cache/docker
 
+
 # create the project using the default settings in cookiecutter.json
-cookiecutter ../../ --no-input --overwrite-if-exists use_docker=y
+yo ../../ --no-input --overwrite-if-exists use_docker=y
 cd expressjs_boilerplate
 
 # run the project's tests
