@@ -13,8 +13,8 @@ cd .cache/docker
 
 
 # create the project using the default settings in cookiecutter.json
-yo ../../ --no-input
-ls -la 
+yo ../../generators/app --no-input
+ 
 cd expressjs_boilerplate
 
 # run the project's tests
