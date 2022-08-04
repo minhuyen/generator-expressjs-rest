@@ -43,6 +43,8 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm install -g yo 
+      - name: Install package
+        run: npm install
       - name: Test docker
         run: sh tests/test_docker.sh
 
