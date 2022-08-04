@@ -7,10 +7,6 @@ export default {
     url: process.env.DATABASE_URL,
     secret: '!&!&OJpWXnDtB0eju7OE!zDp20G1JC%6bpq2',
     options: {
-      useNewUrlParser: true,
-      useCreateIndex: true,
-      useFindAndModify: false,
-      useUnifiedTopology: true,
       user: process.env.MONGO_INITDB_ROOT_USERNAME,
       pass: process.env.MONGO_INITDB_ROOT_PASSWORD
     }

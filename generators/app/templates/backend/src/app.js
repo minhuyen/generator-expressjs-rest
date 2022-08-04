@@ -7,6 +7,7 @@ import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
+import session from 'express-session';
 import {
   errorHandle,
   notFoundHandle,
@@ -41,6 +42,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
+
+// session
+app.use(session({secret: 'router manager app', resave: true, saveUninitialized: true}));
 
 // passport
 app.use(passport.initialize());
