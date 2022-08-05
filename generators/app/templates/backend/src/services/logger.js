@@ -24,8 +24,8 @@ const logger = createLogger({
     )
   ),
   transports: [
-    new winston.transports.Console({
-      format: winston.format.simple(),
+    new transports.Console({
+      format: format.simple(),
     })
   ]
 });
