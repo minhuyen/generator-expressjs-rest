@@ -24,9 +24,9 @@ const logger = createLogger({
     )
   ),
   transports: [
-    logger.add(new winston.transports.Console({
+    new winston.transports.Console({
       format: winston.format.simple(),
-    }))
+    })
   ]
 });
 
