@@ -12,6 +12,6 @@ RUN chown -R app:app $HOME/*
 
 USER app
 WORKDIR $HOME/<%=project_slug%>
-RUN npm ci
+RUN npm install
 
 CMD ["npm", "start"]
