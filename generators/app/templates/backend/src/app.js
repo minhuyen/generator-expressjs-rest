@@ -8,6 +8,7 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import session from 'express-session';
+import rateLimit from 'express-rate-limit';
 import {
   errorHandle,
   notFoundHandle,
@@ -48,6 +49,15 @@ app.use(session({secret: 'router manager app', resave: true, saveUninitialized: 
 
 // passport
 app.use(passport.initialize());
+
+// rate limit
+const limiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false // Disable the `X-RateLimit-*` headers
+});
+app.use(limiter);
 
 // database
 mongoose.connect(config.mongodb.url, config.mongodb.options);
