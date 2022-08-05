@@ -14,8 +14,8 @@ cd .cache/docker
 
 # create the project using the default settings in cookiecutter.json
 yo ../../generators/app --no-input
- 
-cd expressjs_boilerplate
+
+cd awesome-project
 
 # run the project's tests
 docker-compose -f docker-compose.test.yml build
