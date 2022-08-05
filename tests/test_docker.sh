@@ -19,5 +19,5 @@ cd awesome-express-project
 
 # run the project's tests
 docker-compose -f docker-compose.test.yml build
-docker-compose -f docker-compose.test.yml run --rm node npm run test
+docker-compose -f docker-compose.test.yml run --rm backend npm run test
 docker-compose -f docker-compose.test.yml down
