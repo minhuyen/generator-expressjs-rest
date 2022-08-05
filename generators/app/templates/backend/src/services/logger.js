@@ -24,13 +24,23 @@ const logger = createLogger({
     )
   ),
   transports: [
+    logger.add(new winston.transports.Console({
+      format: winston.format.simple(),
+    }))
+  ]
+});
+
+if (env.includes["production"]) {
+  logger.add(
     new transports.DailyRotateFile({
       filename: `${logDir}/%DATE%-combined.log`,
       datePattern: 'YYYY-MM-DD',
       zippedArchive: true,
       maxSize: '20m',
       maxFiles: '14d'
-    }),
+    })
+  );
+  logger.add(
     new transports.DailyRotateFile({
       filename: `${logDir}/%DATE%-error.log`,
       datePattern: 'YYYY-MM-DD',
@@ -39,14 +49,9 @@ const logger = createLogger({
       maxFiles: '14d',
       level: 'error'
     })
-  ]
-});
+  );
+}
 
-logger.add(
-  new transports.Console({
-    level: env !== 'production' ? 'info' : 'error'
-  })
-);
 
 // create a stream object with a 'write' function that will be used by `morgan`
 logger.stream = {
