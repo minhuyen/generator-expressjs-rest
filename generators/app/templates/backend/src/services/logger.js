@@ -25,12 +25,13 @@ const logger = createLogger({
   ),
   transports: [
     new transports.Console({
-      format: format.simple(),
+      level: env === 'development' ? 'info' : 'error',
+      // format: format.simple(),
     })
   ]
 });
 
-if (env.includes["production"]) {
+if (env.includes["production", "development"]) {
   logger.add(
     new transports.DailyRotateFile({
       filename: `${logDir}/%DATE%-combined.log`,
