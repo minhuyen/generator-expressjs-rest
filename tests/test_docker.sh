@@ -17,7 +17,7 @@ yo ../../generators/app --no-input
 
 cd awesome-express-project
 
-cp .env.exammple .env
+cp .env.example .env
 
 # run the project's tests
 docker-compose -f docker-compose.test.yml build
