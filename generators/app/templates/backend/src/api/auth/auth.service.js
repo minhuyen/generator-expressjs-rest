@@ -26,7 +26,7 @@ const login = async (user, ipAddress) => {
 
 const logout = async token => {
   // const result = await deviceTokenService.deleteDeviceTokenByToken(token);
-  return "";
+  return { message: "Logout was successfully" };
 };
 
 const checkEmailIsValid = async email => {
@@ -80,8 +80,8 @@ const verifyCode = async data => {
     user.resetPasswordToken = null;
     user.resetPasswordExpires = null;
     await user.save();
-    const token = jwt.sign(user._id);
-    return { user, token };
+    const token = generateToken(user);
+    return { token };
   }
 };
 

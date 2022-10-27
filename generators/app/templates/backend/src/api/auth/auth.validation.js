@@ -24,7 +24,7 @@ export const loginValidationSchema = Joi.object({
 });
 
 export const logoutValidationSchema = Joi.object({
-  token: Joi.string().required()
+  token: Joi.string().optional()
 });
 
 export const forgotPasswordSchema = Joi.object({

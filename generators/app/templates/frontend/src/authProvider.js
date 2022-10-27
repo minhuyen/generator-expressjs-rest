@@ -48,9 +48,12 @@ const authProvider = {
   // authorization
   getPermissions: () => {
     const token = tokenProvider.getToken();
-    const decodedToken = decodeJwt(token);
-    const role = decodedToken.role;
-    return role ? Promise.resolve(role) : Promise.reject();
+    if (token) {
+      const decodedToken = decodeJwt(token);
+      const role = decodedToken.role;
+      return role ? Promise.resolve(role) : Promise.reject();
+    }
+    return Promise.reject();
   },
 }
 

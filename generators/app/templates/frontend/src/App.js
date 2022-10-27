@@ -15,23 +15,26 @@ const httpClient = (url, options = {}) => {
     options.headers = new Headers({ Accept: "application/json" });
   }
   const token = tokenProvider.getToken();
-  const decodedToken = decodeJwt(token);
-  const { exp } = decodedToken;
-  const now = new Date();
-  if (now > (exp + 5) * 1000) {
-    return tokenProvider.getRefreshedToken().then((gotFreshToken) => {
-      if (gotFreshToken) {
-        options.headers.set(
-          "Authorization",
-          `Bearer ${tokenProvider.getToken()}`
-        );
-      }
-      return fetchUtils.fetchJson(url, options);
-    });
-  } else {
-    options.headers.set("Authorization", `Bearer ${token}`);
-    return fetchUtils.fetchJson(url, options);
+  if (token) {
+    const decodedToken = decodeJwt(token);
+    const { exp } = decodedToken;
+    const now = new Date();
+    if (now > (exp + 5) * 1000) {
+      return tokenProvider.getRefreshedToken().then((gotFreshToken) => {
+        if (gotFreshToken) {
+          options.headers.set(
+            "Authorization",
+            `Bearer ${tokenProvider.getToken()}`
+          );
+        }
+        // return fetchUtils.fetchJson(url, options);
+      });
+    } else {
+      options.headers.set("Authorization", `Bearer ${token}`);
+      // return fetchUtils.fetchJson(url, options);
+    }
   }
+  return fetchUtils.fetchJson(url, options);
 };
 
 const API_URL = process.env.API_URL || "";

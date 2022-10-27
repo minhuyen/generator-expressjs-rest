@@ -1,7 +1,7 @@
 import passport from 'passport';
 import { Strategy as StrategyJwt, ExtractJwt } from 'passport-jwt';
 import FacebookTokenStrategy from 'passport-facebook-token';
-import { Strategy as GoogleTokenStrategy } from 'passport-google-token';
+import { Strategy as GoogleTokenStrategy } from 'passport-token-google';
 import LocalStrategy from 'passport-local';
 import _ from 'lodash';
 import util from 'util';

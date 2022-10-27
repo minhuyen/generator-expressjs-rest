@@ -1,5 +1,5 @@
 import React from "react";
-import { Edit, SimpleForm, TextInput } from "react-admin";
+import { Edit, SimpleForm, TextInput, required } from "react-admin";
 
 import { validateEmail } from "../validates";
 
@@ -13,8 +13,8 @@ const UserEdit = (props) => (
       <TextInput disabled source="id" />
       <TextInput source="username" />
       <TextInput source="fullName" />
-      <TextInput source="email" validate={validateEmail} />
-      <TextInput source="role" />
+      <TextInput source="email" validate={[validateEmail, required()]} />
+      <TextInput source="role" validate={required()} />
     </SimpleForm>
   </Edit>
 );

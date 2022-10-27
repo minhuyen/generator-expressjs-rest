@@ -15,7 +15,8 @@ class Service {
       page: skip || 1,
       limit: limit || 25,
       sort: sort || '-createdAt',
-      populate: population
+      populate: population,
+      lean: true
     });
     return result;
   }

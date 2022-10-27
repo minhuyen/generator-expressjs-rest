@@ -26,7 +26,7 @@ export const logout = async (req, res, next) => {
   try {
     const { token } = req.body;
     const result = await authService.logout(token);
-    return Response.success(res, null, httpStatus.OK);
+    return Response.success(res, result, httpStatus.OK);
   } catch (exception) {
     next(exception);
   }
