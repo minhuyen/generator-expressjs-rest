@@ -85,23 +85,20 @@ const verifyCode = async data => {
   }
 };
 
-const loginWithApple = async (token) => {
+const loginWithApple = async (appleToken, ipAddress) => {
   let decodedToken = await decodeToken(token)
-  let userDetail = await User.findOne({ email: decodedToken.email })
+  let user = await User.findOne({ email: decodedToken.email })
 
-  if (userDetail) {
-    let userToken = jwt.sign(userDetail._id)
-    return { user: userDetail, token: userToken }
-  } else {
-    let newUser = await User.create({
+ if (!user) {
+    user = await User.create({
       email: decodedToken.email,
       full_name: decodedToken.email,
       apple: { id: decodedToken.sub, token }
-    })
-
-    let userToken = jwt.sign(newUser._id)
-    return { user: newUser, token: userToken }
+    });
   }
+  const token = generateToken(user);
+  const refreshToken = await generateRefreshToken(user, ipAddress);
+  return { user, token, refreshToken: refreshToken.token };
 }
 
 const refreshToken = async (token, ipAddress) => {

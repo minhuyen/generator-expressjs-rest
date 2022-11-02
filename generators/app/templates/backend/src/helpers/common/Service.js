@@ -10,12 +10,13 @@ class Service {
   }
 
   async findAll(query) {
-    const { filter, skip, limit, sort, population } = query;
+    const { filter, skip, limit, sort, population, projection } = query;
     const result = await this._model.paginate(filter, {
       page: skip || 1,
       limit: limit || 25,
       sort: sort || '-createdAt',
       populate: population,
+      select: projection,
       lean: true
     });
     return result;
