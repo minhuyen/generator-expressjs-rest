@@ -43,6 +43,7 @@
     "jwks-rsa": "^2.1.4",
     "lodash": "^4.17.11",
     "mailgun.js": "^4.1.0",
+    "mime": "^3.0.0",
     "moment": "^2.29.4",
     "mongoose": "^6.4.6",
     "mongoose-delete": "^0.5.0",

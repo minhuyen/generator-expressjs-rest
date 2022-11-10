@@ -25,7 +25,7 @@
     })
       .then((response) => response.json())
       .then((images) => {
-        const newUploadictures = images.data.map((image) => {
+        const newUploadPictures = images.data.map((image) => {
           return {
             src: image.url,
             title: image.title,
@@ -36,7 +36,7 @@
           ...params,
           data: {
             ...params.data,
-            [name]: [...formerPictures, ...newUploadictures],
+            [name]: [...formerPictures, ...newUploadPictures],
           },
         };
         resolve(tmp);
