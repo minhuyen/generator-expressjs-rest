@@ -63,7 +63,7 @@
     "randomstring": "^1.1.5",
     "redis": "^4.0.1",
     "request-promise": "^4.2.5",
-    "socket.io": "^3.0.0",
+    "socket.io": "^4.5.3",
     "socketio-jwt": "^4.5.0",
     "swagger-jsdoc": "^3.2.9",
     "swagger-ui-express": "^4.0.2",
