@@ -9,8 +9,7 @@ FROM node:16.15-alpine as builder
 # set working directory
 WORKDIR /home/node/app
 
-# frontend/yarn.lock
-COPY --chown=node:node frontend/package.json ./
+COPY --chown=node:node frontend/package.json frontend/yarn.lock ./
 RUN chown -R node:node /home/node/*
 
 USER node
