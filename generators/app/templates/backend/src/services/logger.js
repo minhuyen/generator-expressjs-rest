@@ -3,6 +3,7 @@ import path from 'path';
 import { createLogger, format, transports } from 'winston';
 require('winston-daily-rotate-file');
 
+const fileEnvs = ['production', 'development'];
 const env = process.env.NODE_ENV || 'development';
 const logDir = 'logs';
 
@@ -31,7 +32,7 @@ const logger = createLogger({
   ]
 });
 
-if (env.includes["production", "development"]) {
+if (fileEnvs.includes(env)) {
   logger.add(
     new transports.DailyRotateFile({
       filename: `${logDir}/%DATE%-combined.log`,
