@@ -1,5 +1,5 @@
 import path from 'path';
-import apn from 'apn';
+import apn from '@parse/node-apn';
 import config from '../config';
 
 const options = {

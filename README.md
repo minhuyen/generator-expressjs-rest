@@ -1,7 +1,5 @@
 # Generator Expressjs Rest
 
-[![Build Status](https://travis-ci.org/minhuyen/generator-expressjs-rest.svg?branch=master)](https://travis-ci.org/minhuyen/generator-expressjs-rest)
-
 ## Features
 
 - User Registration
