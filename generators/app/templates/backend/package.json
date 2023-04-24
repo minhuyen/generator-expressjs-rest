@@ -22,7 +22,7 @@
   "dependencies": {
     "api-query-params": "^5.1.1",
     "apn": "^2.2.0",
-    "aws-sdk": "^2.387.0",
+    "aws-sdk": "^2.1354.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "celebrate": "^10.0.0",
