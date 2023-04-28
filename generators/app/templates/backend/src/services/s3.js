@@ -25,7 +25,7 @@ import multer from 'multer';
 //     crypto.pseudoRandomBytes(16, function(err, raw) {
 //       cb(
 //         null,
-//         raw.toString('hex') + Date.now() + '.' + mime.extension(file.mimetype)
+//         raw.toString('hex') + Date.now() + '.' + mime.getExtension(file.mimetype)
 //       );
 //     });
 //   }
@@ -43,7 +43,7 @@ const localStorage = multer.diskStorage({
     crypto.pseudoRandomBytes(16, function(err, raw) {
       cb(
         null,
-        raw.toString('hex') + Date.now() + '.' + mime.extension(file.mimetype)
+        raw.toString('hex') + Date.now() + '.' + mime.getExtension(file.mimetype)
       );
     });
   }

@@ -45,8 +45,8 @@ class Service {
   async update(id, data) {
     const result = await this._model.findOneAndUpdate({ _id: id }, data, {
       new: true,
-      runValidators: true,
-      context: 'query'
+      // runValidators: true,
+      // context: 'query'
     });
     return result;
   }
