@@ -1,8 +1,8 @@
-import Joi from '@hapi/joi';
+import Joi from 'joi';
 
 // password and confirmPassword must contain the same value
 export const signupValidationSchema = Joi.object({
-  fullName: Joi.string().required(),
+  fullName: Joi.string().optional(),
   email: Joi.string()
     .email()
     .lowercase()

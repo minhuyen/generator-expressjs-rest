@@ -1,45 +1,47 @@
-import { isCelebrate } from 'celebrate';
-import httpStatus from 'http-status';
-import { logger } from '../services';
-import Response from './response';
+import { isCelebrateError, Segments } from "celebrate";
+import httpStatus from "http-status";
+import { logger } from "../services";
+import Response from "./response";
 
 export const errorHandle = (error, req, res, next) => {
-  if (typeof error === 'string') {
+  if (typeof error === "string") {
     // custom application error
     return Response.error(res, { message: error });
-  } else if (isCelebrate(error)) {
-    // logger.error('isCelebrate %s', isCelebrate(error));
-    const { joi } = error;
+  } else if (isCelebrateError(error)) {
+    // logger.error("isCelebrate %s", isCelebrateError(error));
+    // const { joi } = error;
+    const celebrateError = error.details.get(Segments.BODY);
+    // console.log(celebrateError);
     return Response.error(res, {
-      message: 'Invalid request data. Please review request and try again.',
-      code: joi.name,
-      errors: joi.details.map(({ message, type }) => ({
-        message: message.replace(/['"]/g, ''),
-        type
-      }))
+      message: "Invalid request data. Please review request and try again.",
+      code: celebrateError.name,
+      errors: celebrateError.details.map(({ message, type }) => ({
+        message: message.replace(/['"]/g, ""),
+        type,
+      })),
     });
-  } else if (error.name === 'CastError' && error.kind === 'ObjectId') {
+  } else if (error.name === "CastError" && error.kind === "ObjectId") {
     return Response.error(res, {
       // code: error.name,
-      message: 'malformatted id'
+      message: "malformatted id",
     });
-  } else if (error.name === 'ValidationError') {
+  } else if (error.name === "ValidationError") {
     return Response.error(res, {
-      message: error.message
+      message: error.message,
     });
-  } else if (error.name === 'Error') {
+  } else if (error.name === "Error") {
     return Response.error(res, {
-      message: error.message
+      message: error.message,
     });
-  } else if (error.name === 'CustomError') {
+  } else if (error.name === "CustomError") {
     return Response.error(res, error);
   }
   // default to 500 server error
-  logger.debug('%o', error);
+  logger.error("%o", error);
   return Response.error(
     res,
     {
-      message: error.message
+      message: error.message,
     },
     httpStatus.INTERNAL_SERVER_ERROR
   );
@@ -54,8 +56,8 @@ export const notFoundHandle = (req, res, next) => {
   return Response.error(
     res,
     {
-      code: 'NotFound',
-      message: 'Page Not Found'
+      code: "NotFound",
+      message: "Page Not Found",
     },
     404
   );

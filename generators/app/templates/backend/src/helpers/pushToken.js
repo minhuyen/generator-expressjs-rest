@@ -1,44 +1,74 @@
-import path from 'path';
-import apn from 'apn';
-import config from '../config';
+import admin from 'firebase-admin';
 
-const options = {
-  token: {
-    // key: path.join('cert', 'AuthKey_75Q2LF3ZYT.p8'),
-    keyId: config.apn.keyId,
-    teamId: config.apn.teamId
-  },
-  production: config.apn.production === 'true' ? true : false
+admin.initializeApp({
+  credential: admin.credential.applicationDefault()
+});
+
+export const sendNotificationToIosDevice = async ({ token, title, body }) => {
+  const ios = {
+    headers: {
+      'apns-priority': 10,
+      'apns-expiration': 360000
+    },
+    payload: {
+      aps: {
+        alert: {
+          title: title,
+          body: body
+        },
+        badge: 1,
+        sound: 'default'
+      }
+    }
+  };
+  let message = {
+    apns: ios,
+    token: token
+  };
+  const response = await admin.messaging().send(message);
+  return response;
 };
 
-export default class PushToken {
-  constructor() {
-    this.apnProvider = new apn.Provider(options);
+export const sendNotificationToDevice = async ({
+  token,
+  title,
+  body,
+  data = {}
+}) => {
+  const android = {
+    notification: {
+      title: title,
+      body: body
+    }
+  };
+
+  const apns = {
+    payload: {
+      aps: {
+        alert: {
+          title: title,
+          body: body
+        },
+        badge: 1,
+        sound: 'default'
+      }
+    }
+  };
+
+  const message = {
+    notification: {
+      title: title,
+      body: body
+    },
+    data: data,
+    android: android,
+    apns: apns,
+    token: token
+  };
+  try {
+    const response = await admin.messaging().send(message);
+    return response;
+  } catch (error) {
+    console.error(error);
   }
-
-  async send(deviceToken, alert, payload) {
-    const note = new apn.Notification();
-
-    // note.expiry = Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
-    // note.badge = 1;
-    // note.sound = 'ping.aiff';
-    // note.alert = alert || '\uD83D\uDCE7 \u2709 You have a new message';
-    note.payload = payload || {};
-    note.topic = `${config.apn.topic}.voip`;
-    return await this.apnProvider.send(note, deviceToken);
-  }
-
-  async sendPushNotification(deviceToken, alert, payload) {
-    const note = new apn.Notification();
-
-    note.expiry = 0; //Math.floor(Date.now() / 1000) + 3600; // Expires 1 hour from now.
-    // note.badge = 1;
-    note.sound = '';
-    // note.alert = alert || '\uD83D\uDCE7 \u2709 You have a new message';
-    note.contentAvailable = 1;
-    note.payload = payload || {};
-    note.pushType = 'background';
-    note.topic = config.apn.topic;
-    return await this.apnProvider.send(note, deviceToken);
-  }
-}
+};
