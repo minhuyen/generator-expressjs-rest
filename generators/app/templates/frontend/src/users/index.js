@@ -1,5 +1,5 @@
+import UserIcon from "@mui/icons-material/Group";
 import UserList from "./UserList";
-import UserIcon from "@material-ui/icons/Group";
 import UserEdit from "./UserEdit";
 
 export default {

@@ -17,16 +17,21 @@ module.exports = {
     },
     ecmaVersion: 2020,
     sourceType: "module",
+    requireConfigFile: false,
+    "babelOptions": {
+      "presets": ["@babel/preset-react"]
+   },
   },
   parser: "@babel/eslint-parser",
   rules: {
     // indent: ["error", "tab"],
     "linebreak-style": ["error", "unix"],
-    quotes: ["error", "double"],
+    quotes: ["warn", "double"],
     semi: ["error", "always"],
     "react/prop-types": "off",
     // "react/jsx-key": "off",
     "react/display-name": "off",
+    "no-unused-vars": "warn"
   },
   settings: {
     react: {
