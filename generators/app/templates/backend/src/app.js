@@ -31,6 +31,8 @@ app.set('trust proxy', 1); // trust first proxy
 // Security
 app.use(helmet());
 app.use(cors());
+app.disable('x-powered-by')
+
 // compression
 app.use(compression());
 
