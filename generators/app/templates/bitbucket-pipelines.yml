@@ -1,0 +1,36 @@
+#  Template NodeJS build
+
+#  This template allows you to validate your NodeJS code.
+#  The workflow allows running tests and code linting on the default branch.
+
+image: node:16
+
+pipelines:
+  default:
+    - parallel:
+        - step:
+            name: Code linting frontend
+            caches:
+              - node
+            script:
+              - cd frontend
+              - yarn install
+              - yarn run lint
+        - step:
+            name: Code linting backend
+            script:
+              - cd backend
+              - npm install
+              - npm run lint
+            caches:
+              - node
+  branches:
+    develop:
+      - step:
+          script:
+            - pipe: atlassian/ssh-run:0.4.2
+              variables:
+                SSH_USER: $SSH_USER
+                SERVER: $SSH_SERVER
+                MODE: 'script'
+                COMMAND: './scripts/deploy.sh' # path to a script in your repository

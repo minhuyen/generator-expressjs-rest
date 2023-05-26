@@ -8,14 +8,13 @@ import {
   Filter,
 } from "react-admin";
 
-const UserFilter = (props) => (
-  <Filter {...props}>
-    <TextInput label="Search" source="email" alwaysOn />
-  </Filter>
-);
+const userFilters = [
+  <TextInput label="Search" source="email" alwaysOn />
+]
+
 
 const UserList = (props) => (
-  <List {...props} filters={<UserFilter />}>
+  <List filters={userFilters}>
     <Datagrid rowClick="edit">
       <TextField source="id" />
       <TextField source="fullName" />
