@@ -1,17 +1,13 @@
 import React from "react";
-import {
-  Edit,
-  SimpleForm,
-  TextInput
-} from "react-admin";
+import { Create, SimpleForm, TextInput } from "react-admin";
 
-const ConfigEdit = props => (
-  <Edit {...props}>
-    <SimpleForm>
+const ConfigCreate = () => (
+  <Create>
+    <SimpleForm redirect="list">
       <TextInput source="name" multiline fullWidth={true} />
       <TextInput source="value" multiline fullWidth={true} />
     </SimpleForm>
-  </Edit>
+  </Create>
 );
 
-export default ConfigEdit;
+export default ConfigCreate;

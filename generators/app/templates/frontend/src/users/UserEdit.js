@@ -7,8 +7,8 @@ const UserTitle = ({ record }) => {
   return <span>User {record ? record.username : ""}</span>;
 };
 
-const UserEdit = (props) => (
-  <Edit {...props} title={<UserTitle />}>
+const UserEdit = () => (
+  <Edit title={<UserTitle />}>
     <SimpleForm>
       <TextInput disabled source="id" />
       <TextInput source="username" />

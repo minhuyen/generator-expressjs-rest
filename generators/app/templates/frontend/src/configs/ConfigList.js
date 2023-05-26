@@ -5,17 +5,15 @@ import {
   TextField,
   TextInput,
   Filter,
-  EditButton
+  EditButton,
 } from "react-admin";
 
-const ConfigFilter = props => (
-  <Filter {...props}>
-    <TextInput label="Name" source="name" alwaysOn />
-  </Filter>
-);
+const configFilters = [
+  <TextInput label="Name" source="name" alwaysOn />
+]
 
-const ConfigList = props => (
-  <List {...props} filters={<ConfigFilter />}>
+const ConfigList = () => (
+  <List filters={configFilters}>
     <Datagrid rowClick="edit">
       <TextField source="id" />
       <TextField source="name" />
