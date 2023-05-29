@@ -1,7 +1,7 @@
 import express from 'express';
 import AuthService from '../../middlewares/auth';
-import { imageUpload, photosUpload } from '../../services/s3';
-import { upload, deleteFile, multiUpload } from './uploads.controller';
+import { imageUpload, imagesUpload } from '../../services/storage';
+import { upload, deleteFile, multiUpload } from './upload.controller';
 
 const router = express.Router();
 
@@ -69,7 +69,7 @@ router.post('/', imageUpload, upload);
  *       400:
  *          $ref: '#/responses/Error'
  */
-router.post('/multi', photosUpload, multiUpload);
+router.post('/multi', imagesUpload, multiUpload);
 /**
  * @swagger
  *
