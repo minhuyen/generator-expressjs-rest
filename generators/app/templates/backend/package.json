@@ -33,7 +33,7 @@
     "dotenv": "^6.2.0",
     "ejs": "^3.1.7",
     "express": "^4.16.4",
-    "express-rate-limit": "^6.5.1",
+    "express-rate-limit": "^6.7.0",
     "express-session": "^1.17.3",
     "express-validator": "^6.5.0",
     "firebase-admin": "^11.8.0",
