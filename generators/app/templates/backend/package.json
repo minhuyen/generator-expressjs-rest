@@ -36,7 +36,7 @@
     "express": "^4.16.4",
     "express-rate-limit": "^6.5.1",
     "express-session": "^1.17.3",
-    "express-validator": "^6.5.0",
+    "express-validator": "^6.15.0",
     "firebase-admin": "^11.8.0",
     "helmet": "^7.0.0",
     "http-status": "^1.6.2",
