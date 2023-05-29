@@ -1,8 +1,6 @@
 import httpStatus from 'http-status';
-import path from 'path';
-import fs from 'fs';
-import { promisify } from 'util';
 import Response from '../../helpers/response';
+import { removeFile } from './upload.service';
 
 export const upload = (req, res) => {
   let image = '';
@@ -34,10 +32,9 @@ export const multiUpload = (req, res) => {
 };
 
 export const deleteFile = async (req, res) => {
-  const filename = req.params.filename;
-  const unlink = promisify(fs.unlink);
+  const fileName = req.params.filename;
   try {
-    await unlink(path.join(__dirname, '../../../uploads', filename));
+    await removeFile(fileName);
     return Response.success(res, { message: 'File was deleted successfully!' });
   } catch (e) {
     return Response.error(res, e);
