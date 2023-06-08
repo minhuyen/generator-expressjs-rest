@@ -25,11 +25,11 @@ module.exports = {
   parser: "@babel/eslint-parser",
   rules: {
     // indent: ["error", "tab"],
-    "linebreak-style": ["error", "unix"],
+    "linebreak-style": ["warn", "unix"],
     quotes: ["warn", "double"],
-    semi: ["error", "always"],
+    semi: ["warn", "always"],
     "react/prop-types": "off",
-    // "react/jsx-key": "off",
+    "react/jsx-key": "off",
     "react/display-name": "off",
     "no-unused-vars": "warn"
   },
