@@ -9,8 +9,6 @@ import {
   resize
 } from './upload.service';
 import * as storage from '../../services/storage';
-import Response from '../../helpers/response';
-import { removeFile } from './upload.service';
 
 export const upload = (req, res) => {
   let image = '';
