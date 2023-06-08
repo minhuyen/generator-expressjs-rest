@@ -27,11 +27,11 @@ const httpClient = (url, options = {}) => {
             `Bearer ${tokenProvider.getToken()}`
           );
         }
-        // return fetchUtils.fetchJson(url, options);
+        return fetchUtils.fetchJson(url, options);
       });
     } else {
       options.headers.set("Authorization", `Bearer ${token}`);
-      // return fetchUtils.fetchJson(url, options);
+      return fetchUtils.fetchJson(url, options);
     }
   }
   return fetchUtils.fetchJson(url, options);
