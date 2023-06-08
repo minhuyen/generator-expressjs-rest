@@ -1,9 +1,75 @@
-/**
- * Convert a `File` object returned by the upload input into a base 64 string.
- * That's not the most optimized way to store images in production, but it's
- * enough to illustrate the idea of data provider decoration.
- */
- const uploadFiles = (params, field, name) => {
+const addUploadFeature = (dataProvider) => ({
+  ...dataProvider,
+  update: (resource, params) => {
+    console.log("resource=====", resource);
+    if (resource !== "discoveries" && resource !== "tools") {
+      // fallback to the default implementation
+      return dataProvider.update(resource, params);
+    }
+
+    return uploadFile(params, "image", "thumbnail")
+      .then((params) => uploadFile(params, "image", "gifFile"))
+      .then((params) => uploadFile(params, "image", "imageBefore"))
+      .then((params) => uploadFile(params, "image", "imageAfter"))
+      .then((params) => dataProvider.update(resource, params))
+      .catch((error) => {
+        throw new Error(error.message);
+      });
+  },
+  create: (resource, params) => {
+    console.log("resource=====", resource);
+    if (resource !== "discoveries" && resource !== "tools") {
+      // fallback to the default implementation
+      return dataProvider.create(resource, params);
+    }
+    console.log("resource=====", resource);
+    return uploadFile(params, "image", "thumbnail")
+      .then((params) => uploadFile(params, "image", "gifFile"))
+      .then((params) => uploadFile(params, "image", "imageBefore"))
+      .then((params) => uploadFile(params, "image", "imageAfter"))
+      .then((params) => dataProvider.create(resource, params))
+      .catch((error) => {
+        throw new Error(error.message);
+      });
+  },
+});
+
+export const uploadFile = (params, field, name) => {
+  return new Promise((resolve, reject) => {
+    if (params.data[name] && params.data[name].rawFile instanceof File) {
+      const formData = new FormData();
+      formData.append(field, params.data[name].rawFile);
+      const token = localStorage.getItem("token");
+
+      fetch("/api/v1/uploads", {
+        method: "post",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((image) => {
+          const tmp = {
+            ...params,
+            data: {
+              ...params.data,
+              [name]: {
+                src: image.data.src,
+                title: image.data.title,
+              },
+            },
+          };
+          resolve(tmp);
+        })
+        .catch((err) => reject(err));
+    } else {
+      resolve(params);
+    }
+  });
+};
+
+export const uploadFiles = (params, field, name) => {
   return new Promise((resolve, reject) => {
     const newPictures = params.data[name].filter(
       (p) => p.rawFile instanceof File
@@ -27,7 +93,7 @@
       .then((images) => {
         const newUploadPictures = images.data.map((image) => {
           return {
-            src: image.url,
+            src: image.src,
             title: image.title,
           };
         });
@@ -40,63 +106,9 @@
           },
         };
         resolve(tmp);
-      });
-  });
-};
-
-const uploadFile = (params, field, name) => {
-  return new Promise((resolve, reject) => {
-    if (params.data[name] && params.data[name].rawFile instanceof File) {
-      const formData = new FormData();
-      formData.append(field, params.data[name].rawFile);
-      const token = localStorage.getItem("token");
-
-      fetch("/api/v1/uploads", {
-        method: "post",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
       })
-        .then((response) => response.json())
-        .then((image) => {
-          const tmp = {
-            ...params,
-            data: {
-              ...params.data,
-              [name]: {
-                src: image.data.url,
-                title: image.data.title,
-              },
-            },
-          };
-          resolve(tmp);
-        });
-    } else {
-      resolve(params);
-    }
+      .catch((err) => reject(err));
   });
-};
-
-/**
- * For posts update only, convert uploaded image in base 64 and attach it to
- * the `picture` sent property, with `src` and `title` attributes.
- */
-const addUploadFeature = requestHandler => (type, resource, params) => {
-  // console.log("==========addUploadFeature===========", type, resource, params);
- if (
-    (type === "UPDATE" || type === "CREATE") &&
-    (resource === "users")
-  ) {
-    return uploadFile(params, "image", "avatar")
-      .then((params) => requestHandler(type, resource, params))
-      .catch((error) => {
-        throw new Error(error.message);
-      });
-  } else {
-    // for other request types and resources, fall back to the default request handler
-    return requestHandler(type, resource, params);
-  }
 };
 
 export default addUploadFeature;
