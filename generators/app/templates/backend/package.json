@@ -38,7 +38,7 @@
     "express-session": "^1.17.3",
     "express-validator": "^6.5.0",
     "firebase-admin": "^11.8.0",
-    "helmet": "^3.21.2",
+    "helmet": "^7.0.0",
     "http-status": "^1.6.2",
     "jimp": "^0.22.8",
     "jsonwebtoken": "^9.0.0",
