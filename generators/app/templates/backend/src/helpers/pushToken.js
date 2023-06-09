@@ -1,4 +1,4 @@
-import admin from 'firebase-admin';
+import admin from "firebase-admin";
 
 admin.initializeApp({
   credential: admin.credential.applicationDefault()
@@ -7,8 +7,8 @@ admin.initializeApp({
 export const sendNotificationToIosDevice = async ({ token, title, body }) => {
   const ios = {
     headers: {
-      'apns-priority': 10,
-      'apns-expiration': 360000
+      "apns-priority": 10,
+      "apns-expiration": 360000
     },
     payload: {
       aps: {
@@ -17,7 +17,7 @@ export const sendNotificationToIosDevice = async ({ token, title, body }) => {
           body: body
         },
         badge: 1,
-        sound: 'default'
+        sound: "default"
       }
     }
   };
@@ -50,7 +50,7 @@ export const sendNotificationToDevice = async ({
           body: body
         },
         badge: 1,
-        sound: 'default'
+        sound: "default"
       }
     }
   };

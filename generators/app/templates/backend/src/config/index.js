@@ -1,11 +1,11 @@
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 
 dotenv.config();
 
 export default {
   mongodb: {
     url: process.env.DATABASE_URL,
-    secret: '!&!&OJpWXnDtB0eju7OE!zDp20G1JC%6bpq2',
+    secret: "!&!&OJpWXnDtB0eju7OE!zDp20G1JC%6bpq2",
     options: {
       user: process.env.MONGO_INITDB_ROOT_USERNAME,
       pass: process.env.MONGO_INITDB_ROOT_PASSWORD
@@ -46,7 +46,7 @@ export default {
 
   app: {
     ROLE: {
-      ADMIN: 'ADMIN'
+      ADMIN: "ADMIN"
     }
   },
 
@@ -54,7 +54,7 @@ export default {
     email: process.env.DEFAULT_ADMIN_EMAIL,
     password: process.env.DEFAULT_ADMIN_PASSWORD
   },
-  
+
   apn: {
     keyId: process.env.APN_KEY_ID,
     teamId: process.env.APN_TEAM_ID,
@@ -63,9 +63,9 @@ export default {
   },
   iap: {
     IOS: {
-      VERIFY_RECEIPT_PRODUCT_URL: 'https://buy.itunes.apple.com/verifyReceipt',
+      VERIFY_RECEIPT_PRODUCT_URL: "https://buy.itunes.apple.com/verifyReceipt",
       VERIFY_RECEIPT_SANDBOX_URL:
-        'https://sandbox.itunes.apple.com/verifyReceipt'
+        "https://sandbox.itunes.apple.com/verifyReceipt"
     }
   },
   mailgun: {

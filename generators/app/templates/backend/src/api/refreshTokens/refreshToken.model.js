@@ -1,12 +1,12 @@
-import mongoose, { Schema } from 'mongoose';
-import mongoosePaginate from 'mongoose-paginate-v2';
-import mongooseUniqueValidator from 'mongoose-unique-validator';
+import mongoose, { Schema } from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
+import mongooseUniqueValidator from "mongoose-unique-validator";
 
 const RefreshTokenSchema = new Schema(
   {
     user: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true
     },
     token: {
@@ -32,16 +32,16 @@ const RefreshTokenSchema = new Schema(
   { timestamps: true }
 );
 
-RefreshTokenSchema.virtual('isExpired').get(function() {
+RefreshTokenSchema.virtual("isExpired").get(function() {
   return Date.now() >= this.expires;
 });
 
-RefreshTokenSchema.virtual('isActive').get(function() {
+RefreshTokenSchema.virtual("isActive").get(function() {
   return !this.revoked && !this.isExpired;
 });
 
 RefreshTokenSchema.plugin(mongoosePaginate);
 RefreshTokenSchema.plugin(mongooseUniqueValidator);
 
-const RefreshToken = mongoose.model('RefreshToken', RefreshTokenSchema);
+const RefreshToken = mongoose.model("RefreshToken", RefreshTokenSchema);
 export default RefreshToken;

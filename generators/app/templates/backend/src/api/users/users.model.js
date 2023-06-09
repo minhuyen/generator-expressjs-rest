@@ -1,11 +1,11 @@
-import mongoose, { Schema } from 'mongoose';
-import mongoosePaginate from 'mongoose-paginate-v2';
-import mongooseUniqueValidator from 'mongoose-unique-validator';
-import bcrypt from 'bcryptjs';
+import mongoose, { Schema } from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
+import mongooseUniqueValidator from "mongoose-unique-validator";
+import bcrypt from "bcryptjs";
 
 const ROLES = {
-  USER: 'user',
-  ADMIN: 'admin'
+  USER: "user",
+  ADMIN: "admin"
 };
 
 const UserSchema = new Schema(
@@ -51,10 +51,6 @@ const UserSchema = new Schema(
         token: String
       }
     },
-    avatar: {
-      type: String,
-      required: false
-    },
     apple: {
       id: {
         type: String,
@@ -84,9 +80,9 @@ const UserSchema = new Schema(
   }
 );
 
-UserSchema.pre('save', async function() {
+UserSchema.pre("save", async function() {
   const password = this.password;
-  if (this.isModified('password')) {
+  if (this.isModified("password")) {
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(password, saltRounds);
     this.password = passwordHash;
@@ -99,7 +95,7 @@ UserSchema.methods = {
   },
   toJSON: function() {
     const obj = this.toObject({ virtuals: true });
-    obj.hasPassword = !!obj.password
+    obj.hasPassword = !!obj.password;
     delete obj.password;
     delete obj.resetPasswordToken;
     delete obj.resetPasswordExpires;
@@ -113,4 +109,4 @@ UserSchema.methods = {
 UserSchema.plugin(mongoosePaginate);
 UserSchema.plugin(mongooseUniqueValidator);
 
-export default mongoose.model('User', UserSchema);
+export default mongoose.model("User", UserSchema);

@@ -3,7 +3,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import { Title } from "react-admin";
 
-export default () => (
+const NotFound = () => (
   <Card>
     <Title title="Not Found" />
     <CardContent>
@@ -11,3 +11,5 @@ export default () => (
     </CardContent>
   </Card>
 );
+
+export default NotFound;

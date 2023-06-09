@@ -1,6 +1,6 @@
-import { Service } from '../../helpers/common';
-import Configs from './config.model';
-import { toNumber } from '../../helpers/utils';
+import { Service } from "../../helpers/common";
+import Configs from "./config.model";
+import { toNumber } from "../../helpers/utils";
 
 class ConfigService extends Service {
   constructor(model) {
@@ -12,8 +12,8 @@ class ConfigService extends Service {
     let listConfigs = await Configs.find();
     for (let i = 0; i < listConfigs.length; i++) {
       if (
-        listConfigs[i].name === 'managesubscriptionlink' &&
-        (listConfigs[i].value == 0 || listConfigs[i].value == '')
+        listConfigs[i].name === "managesubscriptionlink" &&
+        (listConfigs[i].value == 0 || listConfigs[i].value == "")
       ) {
         listConfigs[i].value = null;
       }

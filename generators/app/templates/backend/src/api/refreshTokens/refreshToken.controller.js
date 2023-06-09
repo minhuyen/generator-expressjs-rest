@@ -1,6 +1,6 @@
-import { Controller } from '../../helpers/common';
-import refreshTokenService from './refreshToken.service';
-import { handleResponse as Response } from '../../helpers';
+import { Controller } from "../../helpers/common";
+import refreshTokenService from "./refreshToken.service";
+import { handleResponse as Response } from "../../helpers";
 
 class RefreshTokenController extends Controller {
   constructor(service, name) {
@@ -8,4 +8,4 @@ class RefreshTokenController extends Controller {
   }
 }
 
-export default new RefreshTokenController(refreshTokenService, 'RefreshToken');
+export default new RefreshTokenController(refreshTokenService, "RefreshToken");

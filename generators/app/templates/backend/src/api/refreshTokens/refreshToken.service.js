@@ -1,6 +1,5 @@
-import { Service } from '../../helpers/common';
-import RefreshToken from './refreshToken.model';
-
+import { Service } from "../../helpers/common";
+import RefreshToken from "./refreshToken.model";
 
 class RefreshTokenService extends Service {
   constructor() {

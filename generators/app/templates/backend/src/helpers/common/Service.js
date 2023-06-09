@@ -14,7 +14,7 @@ class Service {
     const result = await this._model.paginate(filter, {
       page: skip || 1,
       limit: limit || 25,
-      sort: sort || '-createdAt',
+      sort: sort || "-createdAt",
       populate: population,
       select: projection,
       lean: true
@@ -44,7 +44,7 @@ class Service {
 
   async update(id, data) {
     const result = await this._model.findOneAndUpdate({ _id: id }, data, {
-      new: true,
+      new: true
       // runValidators: true,
       // context: 'query'
     });

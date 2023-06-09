@@ -1,14 +1,14 @@
-import passport from 'passport';
-import { Strategy as StrategyJwt, ExtractJwt } from 'passport-jwt';
-import FacebookTokenStrategy from 'passport-facebook-token';
-import { Strategy as GoogleTokenStrategy } from 'passport-token-google';
-import LocalStrategy from 'passport-local';
-import _ from 'lodash';
-import util from 'util';
+import passport from "passport";
+import { Strategy as StrategyJwt, ExtractJwt } from "passport-jwt";
+import FacebookTokenStrategy from "passport-facebook-token";
+import { Strategy as GoogleTokenStrategy } from "passport-token-google";
+import LocalStrategy from "passport-local";
+import _ from "lodash";
+import util from "util";
 
-import User from '../api/users/users.model';
-import logger from './logger';
-import config from '../config';
+import User from "../api/users/users.model";
+import logger from "./logger";
+import config from "../config";
 
 // used to serialize the user for the session
 passport.serializeUser(function(user, done) {
@@ -25,14 +25,14 @@ passport.deserializeUser(function(id, done) {
 // JWT
 const jwtOpts = {};
 jwtOpts.jwtFromRequest = ExtractJwt.fromExtractors([
-  ExtractJwt.fromAuthHeaderWithScheme('Bearer'), 
+  ExtractJwt.fromAuthHeaderWithScheme("Bearer"),
   ExtractJwt.fromUrlQueryParameter("token")
 ]);
 jwtOpts.secretOrKey = config.jwt.secret;
 passport.use(
   new StrategyJwt(jwtOpts, function(payload, done) {
     User.findOne({ _id: payload.uid })
-      .select('-services -token')
+      .select("-services -token")
       .exec(function(err, user) {
         if (err) {
           return done(err, false);
@@ -52,13 +52,13 @@ passport.use(
     {
       clientID: config.facebook.clientID,
       clientSecret: config.facebook.clientSecret,
-      profileFields: ['id', 'first_name', 'last_name', 'email', 'picture']
+      profileFields: ["id", "first_name", "last_name", "email", "picture"]
     },
     function(accessToken, refreshToken, profile, done) {
       // asynchronous
       process.nextTick(function() {
-        profile = profile['_json'];
-        logger.info('========profile=--=======', profile);
+        profile = profile["_json"];
+        logger.info("========profile=--=======", profile);
         // find the user in the database based on their facebook id
         User.findOne({ email: profile.email }, function(err, user) {
           // if there is an error, stop everything and return that
@@ -71,7 +71,7 @@ passport.use(
               return done(null, user); // user found, return that user
             } else {
               user.avatar = util.format(
-                'http://graph.facebook.com/%s/picture?type=large',
+                "http://graph.facebook.com/%s/picture?type=large",
                 profile.id
               );
               user.save(function(err, data) {
@@ -92,7 +92,7 @@ passport.use(
             newUser.last_name = profile.last_name;
             newUser.email = profile.email;
             newUser.avatar = util.format(
-              'http://graph.facebook.com/%s/picture?type=large',
+              "http://graph.facebook.com/%s/picture?type=large",
               profile.id
             );
             var new_user = _.assign(newUser, { new: true });
@@ -114,11 +114,11 @@ passport.use(
 
 // local
 const localOpts = {
-  usernameField: 'email'
+  usernameField: "email"
 };
 
 const localStrategy = new LocalStrategy(localOpts, (email, password, done) => {
-  logger.info('========localStrategy========');
+  logger.info("========localStrategy========");
   User.findOne({
     email
   })
@@ -147,7 +147,7 @@ passport.use(
     function(accessToken, refreshToken, profile, done) {
       // logger.info("=========profile============: ", profile);
       process.nextTick(function() {
-        profile = profile['_json'];
+        profile = profile["_json"];
         // logger.info("=========profile============: ", profile);
         // find the user in the database based on their facebook id
         User.findOne({ email: profile.email }, function(err, user) {

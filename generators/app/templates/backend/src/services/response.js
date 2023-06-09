@@ -4,7 +4,7 @@ export default class Response {
     res.status(status);
     if (data && data.docs) {
       return res.json({
-        status: 'success',
+        status: "success",
         data: data.docs,
         total: data.total,
         limit: data.limit,
@@ -13,7 +13,7 @@ export default class Response {
       });
     }
     return res.json({
-      status: 'success',
+      status: "success",
       data: data
     });
   }
@@ -21,10 +21,10 @@ export default class Response {
   static error(res, error, status = 400) {
     res.status(status);
     return res.json({
-      success: 'failed',
+      success: "failed",
       error: {
         message: error.message,
-        code: error.code || 'Invalid',
+        code: error.code || "Invalid",
         errors: error.errors
       }
     });

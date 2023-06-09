@@ -1,6 +1,6 @@
-import { Controller } from '../../helpers/common';
-import packagesService from './packages.service';
-import { handleResponse as Response } from '../../helpers';
+import { Controller } from "../../helpers/common";
+import packagesService from "./packages.service";
+import { handleResponse as Response } from "../../helpers";
 
 class PackagesController extends Controller {
   constructor(service, name) {
@@ -8,4 +8,4 @@ class PackagesController extends Controller {
   }
 }
 
-export default new PackagesController(packagesService, 'Packages');
+export default new PackagesController(packagesService, "Packages");

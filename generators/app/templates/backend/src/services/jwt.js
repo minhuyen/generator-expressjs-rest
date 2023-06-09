@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
 export const sign = data => {
   const token = jwt.sign(data, process.env.JWT_SECRET, {
@@ -40,7 +40,7 @@ export const getToken = req => {
     authorization = req.socket.handshake.headers.authorization;
   }
   if (authorization) {
-    const tokens = authorization.split('Bearer ');
+    const tokens = authorization.split("Bearer ");
     if (Array.isArray(tokens) || tokens.length === 2) {
       token = tokens[1];
     }

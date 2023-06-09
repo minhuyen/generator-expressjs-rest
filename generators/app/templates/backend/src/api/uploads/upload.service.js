@@ -1,18 +1,18 @@
-import path from 'path';
-import fs from 'fs';
-import { promisify } from 'util';
-import sharp from 'sharp';
+import path from "path";
+import fs from "fs";
+import { promisify } from "util";
+import sharp from "sharp";
 
 import {
   deleteObject,
   resizeImage,
   uploadObject
-} from '../../services/storage';
+} from "../../services/storage";
 
 export const removeFile = async fileName => {
   const unlink = promisify(fs.unlink);
   const result = await unlink(
-    path.join(__dirname, '../../../uploads', fileName)
+    path.join(__dirname, "../../../uploads", fileName)
   );
   return result;
 };

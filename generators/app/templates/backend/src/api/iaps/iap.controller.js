@@ -1,13 +1,13 @@
-import { Controller } from '../../helpers/common';
-import iapService from './iap.service';
-import { handleResponse as Response } from '../../helpers';
+import { Controller } from "../../helpers/common";
+import iapService from "./iap.service";
+import { handleResponse as Response } from "../../helpers";
 
 class IapController extends Controller {
   constructor(service, name) {
     super(service, name);
 
-    this.verifyReceipt = this.verifyReceipt.bind(this)
-    this.subscription = this.subscription.bind(this)
+    this.verifyReceipt = this.verifyReceipt.bind(this);
+    this.subscription = this.subscription.bind(this);
   }
 
   async verifyReceipt(req, res, next) {
@@ -33,4 +33,4 @@ class IapController extends Controller {
   }
 }
 
-export default new IapController(iapService, 'Iap');
+export default new IapController(iapService, "Iap");

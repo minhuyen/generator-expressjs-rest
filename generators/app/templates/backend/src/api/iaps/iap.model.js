@@ -1,24 +1,27 @@
-import mongoose, { Schema } from 'mongoose';
-import mongoosePaginate from 'mongoose-paginate-v2';
-import Packages, { PACKAGE_TYPE, CREDIT_TYPE } from '../packages/packages.model'
-import Users from '../users/users.model'
+import mongoose, { Schema } from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
+import Packages, {
+  PACKAGE_TYPE,
+  CREDIT_TYPE
+} from "../packages/packages.model";
+import Users from "../users/users.model";
 
 const PLATFORM_TYPE = {
-  ANDROID: 'ANDROID',
-  IOS: 'IOS'
+  ANDROID: "ANDROID",
+  IOS: "IOS"
 };
 
 export const PURCHASE_TYPE = {
-  LIFETIME: 'LIFETIME',
-  SUBSCRIPTION: 'SUBSCRIPTION',
-  PREPAID: 'PREPAID'
+  LIFETIME: "LIFETIME",
+  SUBSCRIPTION: "SUBSCRIPTION",
+  PREPAID: "PREPAID"
 };
 
 const IAPSchema = new Schema(
   {
     user: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true
     },
     product_id: {
@@ -63,8 +66,8 @@ const IAPSchema = new Schema(
   }
 );
 
-IAPSchema.pre('save', async function () {
-  console.log('=======IAP pre save=========');
+IAPSchema.pre("save", async function() {
+  console.log("=======IAP pre save=========");
   if (this.isNew) {
     const packageObj = await Packages.findOne({
       product_id: this.product_id
@@ -79,9 +82,12 @@ IAPSchema.pre('save', async function () {
         // let listConfigs = await Configs.findOne({ name: 'bonus_credit' })
         // let bonus = listConfigs ? Number(listConfigs.value) : 0
         // console.log("BONUS ", bonus)
-        await Users.findOneAndUpdate({ _id: this.user }, {
-          isPremium: true,
-        });
+        await Users.findOneAndUpdate(
+          { _id: this.user },
+          {
+            isPremium: true
+          }
+        );
       }
     }
   }
@@ -89,4 +95,4 @@ IAPSchema.pre('save', async function () {
 
 IAPSchema.plugin(mongoosePaginate);
 
-export default mongoose.model('IAP', IAPSchema);
+export default mongoose.model("IAP", IAPSchema);
