@@ -1,19 +1,11 @@
 import React from "react";
-import {
-  List,
-  Datagrid,
-  TextField,
-  EmailField,
-  TextInput,
-  Filter,
-} from "react-admin";
+import { List, Datagrid, TextField, EmailField, TextInput } from "react-admin";
 
 const userFilters = [
-  <TextInput label="Search" source="email" alwaysOn />
-]
+  <TextInput key="1" label="Search" source="email" alwaysOn />,
+];
 
-
-const UserList = (props) => (
+const UserList = () => (
   <List filters={userFilters}>
     <Datagrid rowClick="edit">
       <TextField source="id" />

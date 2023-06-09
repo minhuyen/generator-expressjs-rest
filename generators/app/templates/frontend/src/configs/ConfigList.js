@@ -1,16 +1,9 @@
 import React from "react";
-import {
-  List,
-  Datagrid,
-  TextField,
-  TextInput,
-  Filter,
-  EditButton,
-} from "react-admin";
+import { List, Datagrid, TextField, TextInput, EditButton } from "react-admin";
 
 const configFilters = [
-  <TextInput label="Name" source="name" alwaysOn />
-]
+  <TextInput key="1" label="Name" source="name" alwaysOn />,
+];
 
 const ConfigList = () => (
   <List filters={configFilters}>

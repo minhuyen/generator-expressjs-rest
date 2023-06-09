@@ -1,44 +1,44 @@
-import express from 'express';
-import path from 'path';
-import helmet from 'helmet';
-import cors from 'cors';
-import compression from 'compression';
-import morgan from 'morgan';
-import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
-import passport from 'passport';
-import session from 'express-session';
-import rateLimit from 'express-rate-limit';
+import express from "express";
+import path from "path";
+import helmet from "helmet";
+import cors from "cors";
+import compression from "compression";
+import morgan from "morgan";
+import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
+import passport from "passport";
+import session from "express-session";
+import rateLimit from "express-rate-limit";
 import {
   errorHandle,
   notFoundHandle,
   logErrors
-} from './helpers/handle-errors';
-import { logger, mongoose, swagger } from './services';
-import api from './api';
-import config from './config';
+} from "./helpers/handle-errors";
+import { logger, mongoose, swagger } from "./services";
+import api from "./api";
+import config from "./config";
 
-require('./services/passport');
+require("./services/passport");
 
-const rootApi = '/api/v1';
-const ROOT_FOLDER = path.join(__dirname, '..');
-const SRC_FOLDER = path.join(ROOT_FOLDER, 'src');
+const rootApi = "/api/v1";
+const ROOT_FOLDER = path.join(__dirname, "..");
+const SRC_FOLDER = path.join(ROOT_FOLDER, "src");
 
 const app = express();
 
-app.set('trust proxy', 1); // trust first proxy
+app.set("trust proxy", 1); // trust first proxy
 
 // Security
 app.use(helmet());
 app.use(cors());
-app.disable('x-powered-by')
+app.disable("x-powered-by");
 
 // compression
 app.use(compression());
 
 app.use(cookieParser());
 // logs http request
-app.use(morgan(process.env.LOG_FORMAT || 'dev', { stream: logger.stream }));
+app.use(morgan(process.env.LOG_FORMAT || "dev", { stream: logger.stream }));
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -47,7 +47,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // session
-app.use(session({secret: 'router manager app', resave: true, saveUninitialized: true}));
+app.use(
+  session({
+    secret: "router manager app",
+    resave: true,
+    saveUninitialized: true
+  })
+);
 
 // passport
 app.use(passport.initialize());
@@ -64,21 +70,21 @@ app.use(limiter);
 // database
 mongoose.connect(config.mongodb.url, config.mongodb.options);
 
-app.use(express.static(path.join(ROOT_FOLDER, 'build'), { index: false }));
-app.use('/static', express.static(path.join(SRC_FOLDER, 'public')));
-app.use('/media', express.static(path.join(ROOT_FOLDER, 'uploads')));
-app.get('/', (req, res) =>
-  res.json({ message: 'Welcome to <%=project_slug%> API!' })
+app.use(express.static(path.join(ROOT_FOLDER, "build"), { index: false }));
+app.use("/static", express.static(path.join(SRC_FOLDER, "public")));
+app.use("/media", express.static(path.join(ROOT_FOLDER, "uploads")));
+app.get("/", (req, res) =>
+  res.json({ message: "Welcome to <%=project_slug%> API!" })
 );
 
-app.use('/api-docs', swagger());
+app.use("/api-docs", swagger());
 
 app.use(rootApi, api);
 
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
-app.get('/admin', (req, res) => {
-  res.sendFile(path.join(ROOT_FOLDER, 'build', 'index.html'));
+app.get("/admin", (req, res) => {
+  res.sendFile(path.join(ROOT_FOLDER, "build", "index.html"));
 });
 
 app.use(notFoundHandle);

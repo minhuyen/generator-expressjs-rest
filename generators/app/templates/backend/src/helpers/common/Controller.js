@@ -1,6 +1,6 @@
-import httpStatus from 'http-status';
-import aqp from 'api-query-params';
-import Response from '../response';
+import httpStatus from "http-status";
+import aqp from "api-query-params";
+import Response from "../response";
 
 class Controller {
   constructor(service, name) {
@@ -26,7 +26,7 @@ class Controller {
 
   get_queryset(req) {
     let params = aqp(req.query, {
-      skipKey: 'page'
+      skipKey: "page"
     });
     return params;
   }

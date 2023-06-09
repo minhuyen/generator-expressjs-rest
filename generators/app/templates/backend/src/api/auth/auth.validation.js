@@ -1,4 +1,4 @@
-import Joi from 'joi';
+import Joi from "joi";
 
 // password and confirmPassword must contain the same value
 export const signupValidationSchema = Joi.object({
@@ -10,7 +10,7 @@ export const signupValidationSchema = Joi.object({
   password: Joi.string()
     .min(4)
     .required()
-    .strict(),
+    .strict()
 });
 
 export const loginValidationSchema = Joi.object({
@@ -50,7 +50,7 @@ export const resetPasswordSchema = Joi.object({
     .required(),
   confirmNewPassword: Joi.string()
     .required()
-    .valid(Joi.ref('newPassword'))
+    .valid(Joi.ref("newPassword"))
 });
 
 export const refreshTokenSchema = Joi.object({

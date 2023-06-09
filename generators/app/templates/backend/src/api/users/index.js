@@ -1,13 +1,13 @@
-import express from 'express';
-import { celebrate } from 'celebrate';
-import AuthService from '../../middlewares/auth';
-import userController from './users.controller';
-import { schemas } from '../../helpers';
+import express from "express";
+import { celebrate } from "celebrate";
+import AuthService from "../../middlewares/auth";
+import userController from "./users.controller";
+import { schemas } from "../../helpers";
 import {
   paginateUserValidateSchema,
   changePasswordSchema,
-  updateMeSchema,
-} from './user.validation';
+  updateMeSchema
+} from "./user.validation";
 
 const { objectIdSchema, paginateValidationSchema } = schemas;
 
@@ -51,17 +51,13 @@ const router = express.Router();
  *          $ref: '#/responses/Unauthorized'
  */
 router.get(
-  '/',
+  "/",
   AuthService.required,
   celebrate({ query: paginateUserValidateSchema }),
   userController.findAll
 );
 
-router.get(
-  '/me',
-  AuthService.required,
-  userController.getMe
-);
+router.get("/me", AuthService.required, userController.getMe);
 
 /**
  * @swagger
@@ -91,14 +87,14 @@ router.get(
  *        $ref: '#/responses/Unauthorized'
  */
 router.get(
-  '/:id',
+  "/:id",
   AuthService.required,
   celebrate({ params: objectIdSchema }),
   userController.findOne
 );
 
 router.post(
-  '/me/change-password',
+  "/me/change-password",
   AuthService.required,
   celebrate({ body: changePasswordSchema }),
   userController.changePassword
@@ -132,7 +128,7 @@ router.post(
  *        $ref: '#/responses/Unauthorized'
  */
 router.delete(
-  '/:id',
+  "/:id",
   AuthService.required,
   AuthService.isAdmin(),
   celebrate({ params: objectIdSchema }),
@@ -140,7 +136,7 @@ router.delete(
 );
 
 router.put(
-  '/me',
+  "/me",
   celebrate({ body: updateMeSchema }),
   AuthService.required,
   userController.updateMe
@@ -179,7 +175,7 @@ router.put(
  *        $ref: '#/responses/Unauthorized'
  */
 router.put(
-  '/:id',
+  "/:id",
   AuthService.required,
   AuthService.isAdmin(),
   celebrate({ params: objectIdSchema }),

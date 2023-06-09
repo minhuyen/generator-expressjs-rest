@@ -1,4 +1,4 @@
-import decodeJwt from 'jwt-decode';
+import decodeJwt from "jwt-decode";
 import tokenProvider from "./utils/tokenProvider";
 
 const API_URL = process.env.API_URL || "";
@@ -9,10 +9,10 @@ const authProvider = {
     const request = new Request(`${API_URL}/api/v1/auth/login`, {
       method: "POST",
       body: JSON.stringify({ email: username, password }),
-      headers: new Headers({ "Content-Type": "application/json" })
+      headers: new Headers({ "Content-Type": "application/json" }),
     });
     return fetch(request)
-      .then(response => {
+      .then((response) => {
         if (response.status < 200 || response.status >= 300) {
           throw new Error(response.message);
         }
@@ -23,22 +23,20 @@ const authProvider = {
         tokenProvider.setToken(token);
       })
       .catch(() => {
-        throw new Error('Network error')
-    });
+        throw new Error("Network error");
+      });
   },
-  checkError: error => {
+  checkError: (error) => {
     const status = error.status;
     if (status === 401 || status === 403) {
-        tokenProvider.removeToken();
-        return Promise.reject();
+      tokenProvider.removeToken();
+      return Promise.reject();
     }
     // other error code (404, 500, etc): no need to log out
     return Promise.resolve();
   },
   checkAuth: () => {
-    return tokenProvider.getToken()
-      ? Promise.resolve()
-      : Promise.reject();
+    return tokenProvider.getToken() ? Promise.resolve() : Promise.reject();
   },
   logout: () => {
     tokenProvider.removeToken();
@@ -55,7 +53,6 @@ const authProvider = {
     }
     return Promise.reject();
   },
-}
+};
 
 export default authProvider;
-

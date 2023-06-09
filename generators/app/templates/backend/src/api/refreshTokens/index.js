@@ -1,12 +1,12 @@
-import express from 'express';
-import { celebrate } from 'celebrate';
-import refreshTokenController from './refreshToken.controller';
-import AuthService from '../../middlewares/auth';
+import express from "express";
+import { celebrate } from "celebrate";
+import refreshTokenController from "./refreshToken.controller";
+import AuthService from "../../middlewares/auth";
 import {
   createValidationSchema,
   updateValidationSchema,
-  customPaginateValidateSchema,
-} from './refreshToken.validation';
+  customPaginateValidateSchema
+} from "./refreshToken.validation";
 
 const router = express.Router();
 /**
@@ -60,7 +60,7 @@ const router = express.Router();
  */
 
 router.post(
-  '/',
+  "/",
   [AuthService.required, celebrate({ body: createValidationSchema })],
   refreshTokenController.create
 );
@@ -95,7 +95,7 @@ router.post(
  */
 
 router.put(
-  '/:id',
+  "/:id",
   [AuthService.required],
   celebrate({ body: updateValidationSchema }),
   refreshTokenController.update
@@ -137,7 +137,7 @@ router.put(
  *          $ref: '#/responses/Unauthorized'
  */
 router.get(
-  '/',
+  "/",
   AuthService.optional,
   celebrate({ query: customPaginateValidateSchema }),
   refreshTokenController.findAll
@@ -168,7 +168,7 @@ router.get(
  *      401:
  *        $ref: '#/responses/Unauthorized'
  */
-router.get('/:id', refreshTokenController.findOne);
+router.get("/:id", refreshTokenController.findOne);
 
 /**
  * @swagger
@@ -197,7 +197,6 @@ router.get('/:id', refreshTokenController.findOne);
  *      401:
  *        $ref: '#/responses/Unauthorized'
  */
-router.delete('/:id', AuthService.required, refreshTokenController.remove);
-
+router.delete("/:id", AuthService.required, refreshTokenController.remove);
 
 export default router;

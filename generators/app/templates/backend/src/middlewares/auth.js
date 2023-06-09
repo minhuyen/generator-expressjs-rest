@@ -1,5 +1,5 @@
-import passport from 'passport';
-import Response from '../helpers/response';
+import passport from "passport";
+import Response from "../helpers/response";
 
 export default class AuthService {
   static getTokenFromHeaderOrQuerystring(req) {
@@ -17,7 +17,7 @@ export default class AuthService {
 
   static required(req, res, next) {
     return passport.authenticate(
-      'jwt',
+      "jwt",
       { session: false },
       (err, user, info) => {
         // console.log('=======info==========', info);
@@ -28,8 +28,8 @@ export default class AuthService {
           return Response.error(
             res,
             {
-              code: 'Unauthorized',
-              message: 'Invalid Token'
+              code: "Unauthorized",
+              message: "Invalid Token"
             },
             401
           );
@@ -47,7 +47,7 @@ export default class AuthService {
 
   static roles(roles = []) {
     return (req, res, next) => {
-      if (typeof roles === 'string') {
+      if (typeof roles === "string") {
         roles = [roles];
       }
       if (roles.length && !roles.includes(req.user.role)) {
@@ -55,8 +55,8 @@ export default class AuthService {
         return Response.error(
           res,
           {
-            message: 'You are not authorized to access this page!',
-            code: 'Unauthorized'
+            message: "You are not authorized to access this page!",
+            code: "Unauthorized"
           },
           401
         );
@@ -77,13 +77,13 @@ export default class AuthService {
   }
 
   static isAdmin() {
-    return AuthService.roles('admin');
+    return AuthService.roles("admin");
   }
 }
 
 // export const authLocal = passport.authenticate('local', { session: false });
 export const authLocal = (req, res, next) => {
-  passport.authenticate('local', { session: false }, (err, user, info) => {
+  passport.authenticate("local", { session: false }, (err, user, info) => {
     if (err) {
       return next(err);
     }
@@ -91,8 +91,8 @@ export const authLocal = (req, res, next) => {
       return Response.error(
         res,
         {
-          code: 'Unauthorized',
-          message: 'Your email or password is incorrect'
+          code: "Unauthorized",
+          message: "Your email or password is incorrect"
         },
         401
       );
@@ -105,6 +105,6 @@ export const authLocal = (req, res, next) => {
     });
   })(req, res, next);
 };
-export const authJwt = passport.authenticate('jwt', { session: false });
-export const authFacebookToken = passport.authenticate('facebook-token');
-export const authGoogleToken = passport.authenticate('google-token');
+export const authJwt = passport.authenticate("jwt", { session: false });
+export const authFacebookToken = passport.authenticate("facebook-token");
+export const authGoogleToken = passport.authenticate("google-token");

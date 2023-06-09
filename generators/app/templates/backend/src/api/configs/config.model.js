@@ -1,5 +1,5 @@
-import mongoose, { Schema } from 'mongoose';
-import mongoosePaginate from 'mongoose-paginate-v2';
+import mongoose, { Schema } from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
 
 const ConfigSchema = new Schema(
   {
@@ -16,4 +16,4 @@ const ConfigSchema = new Schema(
 
 ConfigSchema.plugin(mongoosePaginate);
 
-export default mongoose.model('Config', ConfigSchema);
+export default mongoose.model("Config", ConfigSchema);

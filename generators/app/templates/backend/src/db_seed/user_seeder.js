@@ -1,5 +1,5 @@
-import config from '../config';
-import User from '../api/users/users.model';
+import config from "../config";
+import User from "../api/users/users.model";
 
 export const createAdminAccount = async () => {
   const defaultEmail = config.admin.email;
@@ -9,9 +9,9 @@ export const createAdminAccount = async () => {
   if (!admin) {
     await User.create({
       email: defaultEmail,
-      fullName: 'admin',
+      fullName: "admin",
       password: defaultPassword,
-      role: 'admin'
+      role: "admin"
     });
   } else {
     admin.password = defaultPassword;
