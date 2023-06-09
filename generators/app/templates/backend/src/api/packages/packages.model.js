@@ -1,16 +1,16 @@
-import mongoose, { Schema } from 'mongoose';
-import mongoosePaginate from 'mongoose-paginate-v2';
-import mongooseUniqueValidator from 'mongoose-unique-validator';
+import mongoose, { Schema } from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
+import mongooseUniqueValidator from "mongoose-unique-validator";
 
 export const PACKAGE_TYPE = {
-  LIFETIME: 'LIFETIME',
-  SUBSCRIPTION: 'SUBSCRIPTION',
-  PREPAID: 'PREPAID'
+  LIFETIME: "LIFETIME",
+  SUBSCRIPTION: "SUBSCRIPTION",
+  PREPAID: "PREPAID"
 };
 
 const UNIT_TYPE = {
-  DAY: 'day',
-  YEAR: 'month'
+  DAY: "day",
+  YEAR: "month"
 };
 
 const PackagesSchema = new Schema(
@@ -26,7 +26,7 @@ const PackagesSchema = new Schema(
     },
     credit: {
       type: Number,
-      default: 0,
+      default: 0
     },
     package_type: {
       type: String,
@@ -39,7 +39,7 @@ const PackagesSchema = new Schema(
     unit: {
       type: String,
       enum: Object.values(UNIT_TYPE)
-    },
+    }
   },
   {
     timestamps: true
@@ -49,5 +49,5 @@ const PackagesSchema = new Schema(
 PackagesSchema.plugin(mongoosePaginate);
 PackagesSchema.plugin(mongooseUniqueValidator);
 
-const Packages = mongoose.model('Packages', PackagesSchema);
+const Packages = mongoose.model("Packages", PackagesSchema);
 export default Packages;

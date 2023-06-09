@@ -1,19 +1,19 @@
-import mime from 'mime';
-import crypto from 'crypto';
-import path from 'path';
-import fs from 'fs';
-import { promisify } from 'util';
-import { DeleteObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { Upload } from '@aws-sdk/lib-storage';
-import multer from 'multer';
-import multerS3 from 'multer-s3';
-import axios from 'axios';
-import sharp from 'sharp';
+import mime from "mime";
+import crypto from "crypto";
+import path from "path";
+import fs from "fs";
+import { promisify } from "util";
+import { DeleteObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { Upload } from "@aws-sdk/lib-storage";
+import multer from "multer";
+import multerS3 from "multer-s3";
+import axios from "axios";
+import sharp from "sharp";
 
-import config from '../config';
+import config from "../config";
 
 const pseudoRandomBytesAsync = promisify(crypto.pseudoRandomBytes);
-const S3_ACL = 'public-read';
+const S3_ACL = "public-read";
 
 const s3 = new S3Client({
   region: config.aws.region,
@@ -35,9 +35,9 @@ const s3Storage = multerS3({
     crypto.pseudoRandomBytes(16, function(err, raw) {
       cb(
         null,
-        raw.toString('hex') +
+        raw.toString("hex") +
           Date.now() +
-          '.' +
+          "." +
           mime.getExtension(file.mimetype)
       );
     });
@@ -46,7 +46,7 @@ const s3Storage = multerS3({
 
 const localStorage = multer.diskStorage({
   destination: function(req, file, callback) {
-    const uploadFolder = path.join(__dirname, '..', '..', 'uploads');
+    const uploadFolder = path.join(__dirname, "..", "..", "uploads");
     if (!fs.existsSync(uploadFolder)) {
       fs.mkdirSync(uploadFolder);
     }
@@ -56,9 +56,9 @@ const localStorage = multer.diskStorage({
     crypto.pseudoRandomBytes(16, function(err, raw) {
       cb(
         null,
-        raw.toString('hex') +
+        raw.toString("hex") +
           Date.now() +
-          '.' +
+          "." +
           mime.getExtension(file.mimetype)
       );
     });
@@ -67,7 +67,7 @@ const localStorage = multer.diskStorage({
 
 const generateFileName = async fileExt => {
   const raw = await pseudoRandomBytesAsync(16);
-  const fileName = raw.toString('hex') + Date.now() + '.' + fileExt;
+  const fileName = raw.toString("hex") + Date.now() + "." + fileExt;
   return fileName;
 };
 
@@ -101,13 +101,13 @@ export const deleteObject = async key => {
 };
 
 export const uploadObject = async buffer => {
-  const key = await generateFileName('png');
+  const key = await generateFileName("png");
   const params = {
     Bucket: config.aws.bucketName,
     Key: key,
-    Body: Buffer.from(buffer, 'base64'),
+    Body: Buffer.from(buffer, "base64"),
     ACL: S3_ACL,
-    ContentType: 'image/png'
+    ContentType: "image/png"
   };
 
   try {
@@ -116,7 +116,7 @@ export const uploadObject = async buffer => {
       params: params
     });
 
-    uploadS3.on('httpUploadProgress', progress => {
+    uploadS3.on("httpUploadProgress", progress => {
       console.log(progress);
     });
 
@@ -128,7 +128,7 @@ export const uploadObject = async buffer => {
 
 export const resizeImage = async (imageUrl, width, height) => {
   // let cachedCompositeInput = null;
-  const input = (await axios({ url: imageUrl, responseType: 'arraybuffer' }))
+  const input = (await axios({ url: imageUrl, responseType: "arraybuffer" }))
     .data;
   return await sharp(input)
     // .composite({ input: cachedCompositeInput })
@@ -137,12 +137,12 @@ export const resizeImage = async (imageUrl, width, height) => {
     .toBuffer();
 };
 
-export const avatarUpload = upload.single('avatar');
-export const imageUpload = upload.single('image');
-export const imagesUpload = upload.array('images', 12);
-export const fileUpload = upload.single('file');
+export const avatarUpload = upload.single("avatar");
+export const imageUpload = upload.single("image");
+export const imagesUpload = upload.array("images", 12);
+export const fileUpload = upload.single("file");
 
-export const avatarUploadS3 = uploadS3.single('avatar');
-export const imageUploadS3 = uploadS3.single('image');
-export const imagesUploadS3 = uploadS3.array('images', 12);
-export const fileUploadS3 = uploadS3.single('file');
+export const avatarUploadS3 = uploadS3.single("avatar");
+export const imageUploadS3 = uploadS3.single("image");
+export const imagesUploadS3 = uploadS3.array("images", 12);
+export const fileUploadS3 = uploadS3.single("file");

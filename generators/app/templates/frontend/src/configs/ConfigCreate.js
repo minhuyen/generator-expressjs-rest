@@ -1,11 +1,7 @@
 import React from "react";
-import {
-  Create,
-  SimpleForm,
-  TextInput
-} from "react-admin";
+import { Create, SimpleForm, TextInput } from "react-admin";
 
-const ConfigCreate = props => (
+const ConfigCreate = (props) => (
   <Create {...props}>
     <SimpleForm redirect="list">
       <TextInput source="name" multiline fullWidth={true} />

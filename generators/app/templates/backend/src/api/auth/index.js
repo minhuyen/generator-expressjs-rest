@@ -1,12 +1,12 @@
-import express from 'express';
-import { celebrate } from 'celebrate';
-import * as authController from './auth.controller';
-import * as authValidation from './auth.validation';
+import express from "express";
+import { celebrate } from "celebrate";
+import * as authController from "./auth.controller";
+import * as authValidation from "./auth.validation";
 import AuthService, {
   authFacebookToken,
   authLocal,
   authGoogleToken
-} from '../../middlewares/auth';
+} from "../../middlewares/auth";
 
 const router = express.Router();
 
@@ -170,7 +170,7 @@ const router = express.Router();
  *         $ref: '#/responses/Error'
  */
 router.post(
-  '/signup',
+  "/signup",
   celebrate({
     body: authValidation.signupValidationSchema
   }),
@@ -205,7 +205,7 @@ router.post(
  *           $ref: '#/definitions/User'
  */
 router.post(
-  '/login',
+  "/login",
   celebrate({ body: authValidation.loginValidationSchema }),
   authLocal,
   authController.login
@@ -236,7 +236,7 @@ router.post(
  *         description: OK
  */
 router.post(
-  '/logout',
+  "/logout",
   AuthService.required,
   celebrate({ body: authValidation.logoutValidationSchema }),
   authController.logout
@@ -264,7 +264,7 @@ router.post(
  *       200:
  *         description: OK
  */
-router.post('/check-email', authController.checkEmail);
+router.post("/check-email", authController.checkEmail);
 /**
  * @swagger
  *
@@ -288,7 +288,7 @@ router.post('/check-email', authController.checkEmail);
  *       200:
  *         description: OK
  */
-router.post('/check-username', authController.checkUsername);
+router.post("/check-username", authController.checkUsername);
 /**
  * @swagger
  *
@@ -314,7 +314,7 @@ router.post('/check-username', authController.checkUsername);
  *         description: OK
  */
 router.post(
-  '/forgot-password',
+  "/forgot-password",
   celebrate({ body: authValidation.forgotPasswordSchema }),
   authController.forgotPassword
 );
@@ -346,7 +346,7 @@ router.post(
  *         description: OK
  */
 router.post(
-  '/verify-code',
+  "/verify-code",
   celebrate({ body: authValidation.verifyCodeValidationSchema }),
   authController.verifyCode
 );
@@ -381,19 +381,19 @@ router.post(
  *         description: OK
  */
 router.post(
-  '/reset-password',
+  "/reset-password",
   AuthService.required,
   celebrate({ body: authValidation.resetPasswordSchema }),
   authController.resetPassword
 );
 
 router.post(
-  '/refresh-token',
+  "/refresh-token",
   celebrate({ body: authValidation.refreshTokenSchema }),
   authController.refreshToken
 );
-router.post('/facebook', authFacebookToken, authController.login);
-router.post('/google', authGoogleToken, authController.login);
-router.post('/apple', authController.loginWithApple);
+router.post("/facebook", authFacebookToken, authController.login);
+router.post("/google", authGoogleToken, authController.login);
+router.post("/apple", authController.loginWithApple);
 
 export default router;

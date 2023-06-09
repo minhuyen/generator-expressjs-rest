@@ -1,10 +1,10 @@
-import User from '../users/users.model';
-import { logger, jwt, MailService } from '../../services';
-import { utils } from '../../helpers';
+import User from "../users/users.model";
+import { logger, jwt, MailService } from "../../services";
+import { utils } from "../../helpers";
 import { decodeToken } from "../../helpers/utils";
 // import deviceTokenService from '../deviceTokens/deviceToken.service';
-import userService from '../users/users.service';
-import refreshTokenService from '../refreshTokens/refreshToken.service';
+import userService from "../users/users.service";
+import refreshTokenService from "../refreshTokens/refreshToken.service";
 
 const signup = async data => {
   const user = await User.create(data);
@@ -31,18 +31,18 @@ const logout = async token => {
 
 const checkEmailIsValid = async email => {
   const count = await User.countDocuments({ email });
-  let result = { isValid: true, message: 'Your email is valid!' };
+  let result = { isValid: true, message: "Your email is valid!" };
   if (count > 0) {
-    result = { isValid: false, message: 'Your email already exists!' };
+    result = { isValid: false, message: "Your email already exists!" };
   }
   return result;
 };
 
 const checkUsernameIsValid = async username => {
   const count = await User.countDocuments({ username });
-  let result = { isValid: true, message: 'Your username is valid!' };
+  let result = { isValid: true, message: "Your username is valid!" };
   if (count > 0) {
-    result = { isValid: false, message: 'Your username already exists!' };
+    result = { isValid: false, message: "Your username already exists!" };
   }
   return result;
 };
@@ -75,7 +75,7 @@ const verifyCode = async data => {
     resetPasswordExpires: { $gt: Date.now() }
   });
   if (!user) {
-    throw new Error('Code is invalid or has expired!');
+    throw new Error("Code is invalid or has expired!");
   } else {
     user.resetPasswordToken = null;
     user.resetPasswordExpires = null;
@@ -86,10 +86,10 @@ const verifyCode = async data => {
 };
 
 const loginWithApple = async (appleToken, ipAddress) => {
-  let decodedToken = await decodeToken(token)
-  let user = await User.findOne({ email: decodedToken.email })
+  let decodedToken = await decodeToken(token);
+  let user = await User.findOne({ email: decodedToken.email });
 
- if (!user) {
+  if (!user) {
     user = await User.create({
       email: decodedToken.email,
       full_name: decodedToken.email,
@@ -99,7 +99,7 @@ const loginWithApple = async (appleToken, ipAddress) => {
   const token = generateToken(user);
   const refreshToken = await generateRefreshToken(user, ipAddress);
   return { user, token, refreshToken: refreshToken.token };
-}
+};
 
 const refreshToken = async (token, ipAddress) => {
   const refreshToken = await refreshTokenService.findOne({
@@ -115,7 +115,7 @@ const refreshToken = async (token, ipAddress) => {
     await refreshToken.save();
     return { user, token: newToken, refreshToken: newRefreshToken.token };
   } else {
-    throw new Error('The refresh token is invalid!');
+    throw new Error("The refresh token is invalid!");
   }
 };
 

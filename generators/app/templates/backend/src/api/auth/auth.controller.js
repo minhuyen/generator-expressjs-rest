@@ -1,7 +1,7 @@
-import httpStatus from 'http-status';
-import { logger } from '../../services';
-import Response from '../../helpers/response';
-import authService from './auth.service';
+import httpStatus from "http-status";
+import { logger } from "../../services";
+import Response from "../../helpers/response";
+import authService from "./auth.service";
 
 export const signup = async (req, res, next) => {
   try {
@@ -85,13 +85,13 @@ export const resetPassword = async (req, res, next) => {
 
 export const loginWithApple = async (req, res, next) => {
   try {
-    const { access_token } = req.body
+    const { access_token } = req.body;
     const ipAddress = req.ip;
-    let result = await authService.loginWithApple(access_token, ipAddress)
+    let result = await authService.loginWithApple(access_token, ipAddress);
 
-    return Response.success(res, result)
+    return Response.success(res, result);
   } catch (e) {
-    next(e)
+    next(e);
   }
 };
 
@@ -111,5 +111,5 @@ const setTokenCookie = (res, token) => {
     httpOnly: true
     // expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
   };
-  res.cookie('refreshToken', token, cookieOptions);
+  res.cookie("refreshToken", token, cookieOptions);
 };
