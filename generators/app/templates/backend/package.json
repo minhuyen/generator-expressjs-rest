@@ -32,7 +32,7 @@
     "cors": "^2.8.5",
     "debug": "^4.3.4",
     "dotenv": "^6.2.0",
-    "ejs": "^3.1.7",
+    "ejs": "^3.1.9",
     "express": "^4.16.4",
     "express-rate-limit": "^6.7.0",
     "express-session": "^1.17.3",
