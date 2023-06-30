@@ -1,5 +1,5 @@
 export class AppError extends Error {
-  constructor(message, status) {
+  constructor(message, code) {
     // Calling parent constructor of base Error class.
     super(message);
 
@@ -12,6 +12,6 @@ export class AppError extends Error {
     // You can use any additional properties you want.
     // I'm going to use preferred HTTP status for this error types.
     // `500` is the default value if not specified.
-    this.status = status || 500;
+    this.code = code || 500;
   }
 }
