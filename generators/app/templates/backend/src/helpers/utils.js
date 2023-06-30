@@ -20,7 +20,7 @@ export const asyncForEach = async (array, callback) => {
   }
 };
 
-export const parseMilisecond = ms => moment(parseInt(ms));
+export const parseMillisecond = ms => moment(parseInt(ms));
 
 export const decodeToken = async token => {
   const decoded = jwt.decode(token, { complete: true });
@@ -33,4 +33,9 @@ export const decodeToken = async token => {
   const key = await client.getSigningKey(kid);
   const signingKey = key.getPublicKey() || key.rsaPublicKey();
   return jwt.verify(token, signingKey, { algorithms: alg });
+};
+
+export const getDeviceId = req => {
+  const deviceId = req.headers["device-id"] || req.params.deviceId || "NONE";
+  return deviceId;
 };

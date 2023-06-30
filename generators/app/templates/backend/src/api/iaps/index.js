@@ -1,23 +1,72 @@
 import express from "express";
+import { celebrate } from "celebrate";
 import AuthService from "../../middlewares/auth";
-import IAPCtrl from "./iap.controller";
+import iapController from "./iap.controller";
+import * as iapValidation from "./iap.validation";
 
 const router = express.Router();
 
-router.post("/", AuthService.required, AuthService.isAdmin(), IAPCtrl.create);
-router.post("/verify-receipt", AuthService.required, IAPCtrl.verifyReceipt);
-router.post("/subscription", AuthService.required, IAPCtrl.subscription);
+router.post(
+  "/",
+  [AuthService.required, AuthService.isAdmin()],
+  iapController.create
+);
+router.post(
+  "/inapp/ios",
+  [
+    AuthService.optional,
+    celebrate({
+      headers: iapValidation.headerValidationSchema,
+      body: iapValidation.iosIapReceiptValidationSchema
+    })
+  ],
+  iapController.verifyIosInAppReceipt
+);
+router.post(
+  "/inapp/android",
+  [
+    AuthService.optional,
+    celebrate({
+      headers: iapValidation.headerValidationSchema,
+      body: iapValidation.androidIapReceiptValidationSchema
+    })
+  ],
+  iapController.verifyAndroidInAppReceipt
+);
+router.post(
+  "/inapp/check",
+  [
+    AuthService.optional,
+    celebrate({
+      headers: iapValidation.headerValidationSchema
+    })
+  ],
+  iapController.checkIapModel
+);
+router.post(
+  "/subs/ios",
+  AuthService.optional,
+  iapController.verifyIosSubscriptionReceipt
+);
 
-router.get("/", IAPCtrl.findAll);
-router.get("/:id", IAPCtrl.findOne);
+router.get(
+  "/",
+  [AuthService.required, AuthService.isAdmin()],
+  iapController.findAll
+);
+router.get("/:id", iapController.findOne);
 
-router.put("/:id", AuthService.required, AuthService.isAdmin(), IAPCtrl.update);
+router.put(
+  "/:id",
+  [AuthService.required, AuthService.isAdmin()],
+  iapController.update
+);
 
 router.delete(
   "/:id",
   AuthService.required,
   AuthService.isAdmin(),
-  IAPCtrl.remove
+  iapController.remove
 );
 
 export default router;

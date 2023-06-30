@@ -73,14 +73,43 @@ const generateFileName = async fileExt => {
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
+const fileFilter = (req, file, cb) => {
+  if (
+    file.mimetype == "image/png" ||
+    file.mimetype == "image/jpg" ||
+    file.mimetype == "image/jpeg" ||
+    file.mimetype == "image/gif" ||
+    file.mimetype == "video/mp4"
+  ) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+    return cb(new Error("Only .png, .jpg and .jpeg .gif .mp4 format allowed!"));
+  }
+};
+
+const fileFilterAllImageVideo = (req, file, cb) => {
+  const acceptedTypes = file.mimetype.split("/");
+
+  if (acceptedTypes[0] === "image" || acceptedTypes[0] === "video") {
+    cb(null, true);
+  } else {
+    cb(null, false);
+    cb(new Error("Only images and videos formats allowed!"));
+  }
+};
+
 const upload = multer({
   storage: localStorage,
+  fileFilter: fileFilter,
   limits: {
     fileSize: MAX_FILE_SIZE
   }
 });
+
 const uploadS3 = multer({
   storage: s3Storage,
+  fileFilter: fileFilterAllImageVideo,
   limits: {
     fileSize: MAX_FILE_SIZE
   }

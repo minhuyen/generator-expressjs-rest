@@ -1,5 +1,5 @@
-import { Service } from '../../helpers/common';
-import <%=name%> from './<%=camelName%>.model';
+import { Service } from "../../helpers/common";
+import <%=name%> from "./<%=camelName%>.model";
 
 
 class <%=name%>Service extends Service {
