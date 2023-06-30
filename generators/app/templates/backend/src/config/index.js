@@ -63,8 +63,8 @@ export default {
   },
   iap: {
     IOS: {
-      VERIFY_RECEIPT_PRODUCT_URL: "https://buy.itunes.apple.com/verifyReceipt",
-      VERIFY_RECEIPT_SANDBOX_URL:
+      VERIFY_RECEIPT_URL: "https://buy.itunes.apple.com/verifyReceipt",
+      SANDBOX_VERIFY_RECEIPT_URL:
         "https://sandbox.itunes.apple.com/verifyReceipt"
     }
   },

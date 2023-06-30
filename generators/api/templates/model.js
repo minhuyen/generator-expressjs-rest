@@ -1,6 +1,6 @@
-import mongoose, { Schema } from 'mongoose';
-import mongoosePaginate from 'mongoose-paginate-v2';
-import mongooseUniqueValidator from 'mongoose-unique-validator';
+import mongoose, { Schema } from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
+import mongooseUniqueValidator from "mongoose-unique-validator";
 
 const <%=name%>Schema = new Schema(
   {
@@ -19,5 +19,5 @@ const <%=name%>Schema = new Schema(
 <%=name%>Schema.plugin(mongoosePaginate);
 <%=name%>Schema.plugin(mongooseUniqueValidator);
 
-const <%=name%> = mongoose.model('<%=name%>', <%=name%>Schema);
+const <%=name%> = mongoose.model("<%=name%>", <%=name%>Schema);
 export default <%=name%>;

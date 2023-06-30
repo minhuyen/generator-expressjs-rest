@@ -1,5 +1,5 @@
-import Joi from 'joi';
-import { schemas } from '../../helpers';
+import Joi from "joi";
+import { schemas } from "../../helpers";
 
 const { paginateValidationSchema, ObjectId } = schemas;
 

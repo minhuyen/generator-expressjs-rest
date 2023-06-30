@@ -16,8 +16,7 @@ class Service {
       limit: limit || 25,
       sort: sort || "-createdAt",
       populate: population,
-      select: projection,
-      lean: true
+      select: projection
     });
     return result;
   }
