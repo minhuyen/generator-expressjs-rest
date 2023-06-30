@@ -38,7 +38,9 @@ RUN apk update \
 
 RUN addgroup -S app && adduser -S app -G app
 
-RUN npm config set unsafe-perm true && npm install -g pm2
+# RUN npm config set unsafe-perm true
+
+npm install -g pm2
 
 ENV HOME=/home/app
 
@@ -51,10 +53,16 @@ WORKDIR $HOME/<%=project_slug%>
 
 COPY --from=builder /home/node/app/build/ ./build/
 
-RUN npm ci
+# Safe install
+RUN npm ci && npm cache clean --force
 
 COPY --chown=app:app backend .
 
 RUN npm run build
+
+# Clean dev packages
+RUN npm prune --production
+
+EXPOSE 3000
 
 CMD ["pm2-runtime", "processes.json"]
