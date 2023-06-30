@@ -1,12 +1,12 @@
-import express from 'express';
-import { celebrate } from 'celebrate';
-import <%=camelName%>Controller from './<%=camelName%>.controller';
-import AuthService from '../../middlewares/auth';
+import express from "express";
+import { celebrate } from "celebrate";
+import <%=camelName%>Controller from "./<%=camelName%>.controller";
+import AuthService from "../../middlewares/auth";
 import {
   createValidationSchema,
   updateValidationSchema,
   customPaginateValidateSchema,
-} from './<%=camelName%>.validation';
+} from "./<%=camelName%>.validation";
 
 const router = express.Router();
 /**
@@ -27,7 +27,7 @@ const router = express.Router();
  *   ArrayOf<%=names%>:
  *      type: array
  *      items:
- *        $ref: '#/definitions/<%=name%>'
+ *        $ref: "#/definitions/<%=name%>"
  */
 
 /**
@@ -46,21 +46,21 @@ const router = express.Router();
  *         in: body
  *         required: true
  *         schema:
- *          $ref: '#/definitions/<%=name%>'
+ *          $ref: "#/definitions/<%=name%>"
  *
  *     responses:
  *      200:
  *         description: OK
  *         schema:
- *           $ref: '#/definitions/<%=name%>'
+ *           $ref: "#/definitions/<%=name%>"
  *      400:
- *        $ref: '#/responses/Error'
+ *        $ref: "#/responses/Error"
  *      401:
- *        $ref: '#/responses/Unauthorized'
+ *        $ref: "#/responses/Unauthorized"
  */
 
 router.post(
-  '/',
+  "/",
   [AuthService.required, celebrate({ body: createValidationSchema })],
   <%=camelName%>Controller.create
 );
@@ -81,21 +81,21 @@ router.post(
  *         in: body
  *         required: true
  *         schema:
- *          $ref: '#/definitions/<%=name%>'
+ *          $ref: "#/definitions/<%=name%>"
  *
  *     responses:
  *      200:
  *         description: OK
  *         schema:
- *           $ref: '#/definitions/<%=name%>'
+ *           $ref: "#/definitions/<%=name%>"
  *      400:
- *        $ref: '#/responses/Error'
+ *        $ref: "#/responses/Error"
  *      401:
- *        $ref: '#/responses/Unauthorized'
+ *        $ref: "#/responses/Unauthorized"
  */
 
 router.put(
-  '/:id',
+  "/:id",
   [AuthService.required],
   celebrate({ body: updateValidationSchema }),
   <%=camelName%>Controller.update
@@ -111,8 +111,8 @@ router.put(
  *     produces:
  *       - application/json
  *     parameters:
- *       - $ref: '#/parameters/pageParam'
- *       - $ref: '#/parameters/limitParam'
+ *       - $ref: "#/parameters/pageParam"
+ *       - $ref: "#/parameters/limitParam"
  *     responses:
  *        200:
  *         description: OK
@@ -132,12 +132,12 @@ router.put(
  *                type: integer
  *                format: int32
  *              data:
- *                $ref: '#/definitions/ArrayOf<%=names%>'
+ *                $ref: "#/definitions/ArrayOf<%=names%>"
  *        401:
- *          $ref: '#/responses/Unauthorized'
+ *          $ref: "#/responses/Unauthorized"
  */
 router.get(
-  '/',
+  "/",
   AuthService.optional,
   celebrate({ query: customPaginateValidateSchema }),
   <%=camelName%>Controller.findAll
@@ -162,13 +162,13 @@ router.get(
  *      200:
  *         description: OK
  *         schema:
- *           $ref: '#/definitions/<%=name%>'
+ *           $ref: "#/definitions/<%=name%>"
  *      400:
- *        $ref: '#/responses/Error'
+ *        $ref: "#/responses/Error"
  *      401:
- *        $ref: '#/responses/Unauthorized'
+ *        $ref: "#/responses/Unauthorized"
  */
-router.get('/:id', <%=camelName%>Controller.findOne);
+router.get("/:id", <%=camelName%>Controller.findOne);
 
 /**
  * @swagger
@@ -191,13 +191,13 @@ router.get('/:id', <%=camelName%>Controller.findOne);
  *      200:
  *         description: OK
  *         schema:
- *           $ref: '#/definitions/<%=name%>'
+ *           $ref: "#/definitions/<%=name%>"
  *      400:
- *        $ref: '#/responses/Error'
+ *        $ref: "#/responses/Error"
  *      401:
- *        $ref: '#/responses/Unauthorized'
+ *        $ref: "#/responses/Unauthorized"
  */
-router.delete('/:id', AuthService.required, <%=camelName%>Controller.remove);
+router.delete("/:id", AuthService.required, <%=camelName%>Controller.remove);
 
 
 export default router;

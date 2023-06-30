@@ -23,3 +23,17 @@ export const paginateValidationSchema = Joi.object({
     .optional(),
   filter: Joi.string().optional()
 });
+
+export const headerValidationSchema = Joi.object({
+  "device-id": Joi.string(),
+  authorization: Joi.string()
+})
+  .or("authorization", "device-id")
+  .unknown(true);
+
+export const imageSchema = Joi.object({
+  _id: ObjectId.optional(),
+  src: Joi.string().required(),
+  title: Joi.string().optional(),
+  metadata: Joi.object().optional()
+});

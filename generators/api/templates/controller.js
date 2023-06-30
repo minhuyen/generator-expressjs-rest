@@ -1,6 +1,6 @@
-import { Controller } from '../../helpers/common';
-import <%=camelName%>Service from './<%=camelName%>.service';
-import { handleResponse as Response } from '../../helpers';
+import { Controller } from "../../helpers/common";
+import <%=camelName%>Service from "./<%=camelName%>.service";
+import { handleResponse as Response } from "../../helpers";
 
 class <%=name%>Controller extends Controller {
   constructor(service, name) {
@@ -8,4 +8,4 @@ class <%=name%>Controller extends Controller {
   }
 }
 
-export default new <%=name%>Controller(<%=camelName%>Service, '<%=name%>');
+export default new <%=name%>Controller(<%=camelName%>Service, "<%=name%>");

@@ -1,12 +1,9 @@
 import mongoose, { Schema } from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
-import Packages, {
-  PACKAGE_TYPE,
-  CREDIT_TYPE
-} from "../packages/packages.model";
+import Packages, { PACKAGE_TYPE } from "../packages/packages.model";
 import Users from "../users/users.model";
 
-const PLATFORM_TYPE = {
+export const PLATFORM_TYPE = {
   ANDROID: "ANDROID",
   IOS: "IOS"
 };
@@ -17,12 +14,21 @@ export const PURCHASE_TYPE = {
   PREPAID: "PREPAID"
 };
 
+export const STATUS_TYPE = {
+  NEW: "new",
+  USED: "used"
+};
+
 const IAPSchema = new Schema(
   {
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true
+    },
+    deviceId: {
+      type: String,
+      required: false
     },
     product_id: {
       type: String,
@@ -59,6 +65,11 @@ const IAPSchema = new Schema(
     retry_number: {
       type: Number,
       default: 0
+    },
+    status: {
+      type: String,
+      enum: Object.values(STATUS_TYPE),
+      default: STATUS_TYPE.NEW
     }
   },
   {
