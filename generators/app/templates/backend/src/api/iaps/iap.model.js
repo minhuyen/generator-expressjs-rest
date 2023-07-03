@@ -30,29 +30,29 @@ const IAPSchema = new Schema(
       type: String,
       required: false
     },
-    product_id: {
+    productId: {
       type: String,
       required: true
     },
     environment: {
       type: String
     },
-    original_transaction_id: {
+    originalTransactionId: {
       type: String
     },
-    transaction_id: {
+    transactionId: {
       type: String
     },
-    start_date: {
+    startDate: {
       type: Date
     },
-    end_date: {
+    endDate: {
       type: Date
     },
-    latest_receipt: {
+    latestReceipt: {
       type: String
     },
-    purchase_type: {
+    purchaseType: {
       type: String,
       enum: Object.values(PURCHASE_TYPE),
       default: PURCHASE_TYPE.PREPAID
@@ -62,7 +62,7 @@ const IAPSchema = new Schema(
       enum: Object.values(PLATFORM_TYPE),
       default: PLATFORM_TYPE.IOS
     },
-    retry_number: {
+    retryNumber: {
       type: Number,
       default: 0
     },
@@ -81,10 +81,10 @@ IAPSchema.pre("save", async function() {
   console.log("=======IAP pre save=========");
   if (this.isNew) {
     const packageObj = await Packages.findOne({
-      product_id: this.product_id
+      productId: this.productId
     }).lean();
     if (packageObj) {
-      if (packageObj.package_type === PACKAGE_TYPE.PREPAID) {
+      if (packageObj.packageType === PACKAGE_TYPE.PREPAID) {
         await Users.findOneAndUpdate(
           { _id: this.user },
           { $inc: { credits: packageObj.credit } }

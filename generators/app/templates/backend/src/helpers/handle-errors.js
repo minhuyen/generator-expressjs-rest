@@ -41,7 +41,8 @@ export const errorHandle = (error, req, res, next) => {
   return Response.error(
     res,
     {
-      message: error.message
+      message: error.message,
+      stack: error.stack
     },
     httpStatus.INTERNAL_SERVER_ERROR
   );

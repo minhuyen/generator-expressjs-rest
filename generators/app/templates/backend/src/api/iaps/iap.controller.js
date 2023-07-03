@@ -11,6 +11,7 @@ class IapController extends Controller {
       this
     );
     this.verifyAndroidInAppReceipt = this.verifyAndroidInAppReceipt.bind(this);
+    this.verifyAndroidSubReceipt = this.verifyAndroidSubReceipt.bind(this);
     this.checkIapModel = this.checkIapModel.bind(this);
   }
 
@@ -44,6 +45,27 @@ class IapController extends Controller {
       }
       const deviceId = utils.getDeviceId(req);
       const result = await this.service.verifyAndroidInAppReceipt(
+        data,
+        userId,
+        deviceId
+      );
+      return Response.success(res, result);
+    } catch (exception) {
+      next(exception);
+    }
+  }
+
+  async verifyAndroidSubReceipt(req, res, next) {
+    try {
+      const data = req.body;
+      console.log("======verifyAndroidSubReceipt===", data);
+      let userId = null;
+      const user = req.user;
+      if (user) {
+        userId = user._id;
+      }
+      const deviceId = utils.getDeviceId(req);
+      const result = await this.service.verifyAndroidSubReceipt(
         data,
         userId,
         deviceId
