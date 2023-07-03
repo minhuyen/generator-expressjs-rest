@@ -25,7 +25,7 @@ class IapService extends Service {
 
   async verifyIosInAppPurchaseReceipt(data, userId, deviceId) {
     const receiptData = await verifyReceiptHelper.verifyIosInAppReceipt(data);
-    logger.info("==== receiptData ==== %o", receiptData);
+    // logger.info("==== receiptData ==== %o", receiptData);
     const { item, environment } = receiptData;
 
     const {
@@ -37,7 +37,7 @@ class IapService extends Service {
     } = item;
     const iapObj = await this._model.findOneAndUpdate(
       {
-        original_transaction_id,
+        originalTransactionId: original_transaction_id,
         platform: PLATFORM_TYPE.IOS,
         environment
       },
@@ -46,12 +46,12 @@ class IapService extends Service {
         user: userId,
         platform: PLATFORM_TYPE.IOS,
         environment,
-        product_id: product_id,
-        transaction_id,
-        original_transaction_id,
+        productId: product_id,
+        transactionId: transaction_id,
+        originalTransactionId: original_transaction_id,
         quantity: quantity,
-        start_date: parseMillisecond(original_purchase_date_ms),
-        purchase_type: PURCHASE_TYPE.PREPAID
+        startDate: parseMillisecond(original_purchase_date_ms),
+        purchaseType: PURCHASE_TYPE.PREPAID
       },
       {
         upsert: true,
@@ -67,27 +67,56 @@ class IapService extends Service {
       data
     );
     // logger.info('==== receiptData ==== %o', receiptData);
-    // const { item, environment } = receiptData;
 
     const { orderId, purchaseTimeMillis } = receiptData;
 
     const iapObj = await this._model.findOneAndUpdate(
       {
-        original_transaction_id: orderId,
+        originalTransactionId: orderId,
         platform: PLATFORM_TYPE.ANDROID
-        // environment
       },
       {
         deviceId,
         user: userId,
         platform: PLATFORM_TYPE.ANDROID,
-        // environment,
-        product_id: productId,
-        transaction_id: orderId,
-        original_transaction_id: orderId,
+        productId: productId,
+        transactionId: orderId,
+        originalTransactionId: orderId,
         quantity: 1,
-        start_date: parseMillisecond(purchaseTimeMillis),
-        purchase_type: PURCHASE_TYPE.PREPAID
+        startDate: parseMillisecond(purchaseTimeMillis),
+        purchaseType: PURCHASE_TYPE.PREPAID
+      },
+      {
+        upsert: true,
+        new: true
+      }
+    );
+    return iapObj;
+  }
+
+  async verifyAndroidSubReceipt(data, userId, deviceId) {
+    const { subscriptionId } = data;
+    const receiptData = await verifyReceiptHelper.verifyAndroidSubReceipt(data);
+    logger.info("==== receiptData ==== %o", receiptData);
+
+    const { orderId, startTimeMillis, expiryTimeMillis1 } = receiptData;
+
+    const iapObj = await this._model.findOneAndUpdate(
+      {
+        originalTransactionId: orderId,
+        platform: PLATFORM_TYPE.ANDROID
+      },
+      {
+        deviceId,
+        user: userId,
+        platform: PLATFORM_TYPE.ANDROID,
+        productId: subscriptionId,
+        transactionId: orderId,
+        originalTransactionId: orderId,
+        quantity: 1,
+        startDate: parseMillisecond(startTimeMillis),
+        endDate: parseMillisecond(expiryTimeMillis),
+        purchaseType: PURCHASE_TYPE.SUBSCRIPTION
       },
       {
         upsert: true,
@@ -103,11 +132,7 @@ class IapService extends Service {
       data
     );
     // logger.info("==== RESPONSE SUBSCRIPTION ==== %o", receiptData);
-    // if (response.status === 0) {
-    // const receipt = response['receipt'];
     const { environment, latest_receipt, item } = receiptData;
-    // if (response['latest_receipt_info']) {
-    // const latest_receipt_info = response['latest_receipt_info'][0];
     const {
       original_transaction_id,
       transaction_id,
@@ -117,12 +142,10 @@ class IapService extends Service {
       expires_date,
       expires_date_ms
     } = item;
-    // latest_receipt_info['original_transaction_id'];
-    // const transaction_id = latest_receipt_info['transaction_id'];
 
     const iapObj = await this._model.findOneAndUpdate(
       {
-        original_transaction_id,
+        originalTransactionId: original_transaction_id,
         platform: PLATFORM_TYPE.IOS,
         environment
       },
@@ -131,13 +154,13 @@ class IapService extends Service {
         deviceId,
         platform: PLATFORM_TYPE.IOS,
         environment,
-        product_id: product_id,
-        transaction_id,
-        original_transaction_id,
+        productId: product_id,
+        transactionId: transaction_id,
+        originalTransactionId: original_transaction_id,
         quantity: quantity,
-        start_date: parseMillisecond(original_purchase_date_ms),
+        startDate: parseMillisecond(original_purchase_date_ms),
         latest_receipt,
-        end_date: expires_date ? parseMillisecond(expires_date_ms) : null,
+        endDate: expires_date ? parseMillisecond(expires_date_ms) : null,
         purchase_type: expires_date
           ? PURCHASE_TYPE.SUBSCRIPTION
           : PURCHASE_TYPE.PREPAID

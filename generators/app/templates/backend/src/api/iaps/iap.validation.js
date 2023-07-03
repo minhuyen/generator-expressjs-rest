@@ -13,7 +13,7 @@ export const createValidationSchema = Joi.object({
 });
 
 export const iosIapReceiptValidationSchema = Joi.object({
-  "receipt-data": Joi.string().required(),
+  receiptData: Joi.string().required(),
   password: Joi.string().optional()
 });
 

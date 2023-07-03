@@ -25,7 +25,7 @@ export default class Response {
       error: {
         message: error.message,
         code: error.code,
-        errors: error.errors
+        stack: process.env.NODE_ENV === "development" ? error.stack : {}
       }
     });
   }

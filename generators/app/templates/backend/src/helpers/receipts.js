@@ -37,12 +37,13 @@ const auth = new google.auth.GoogleAuth({
 
 export const verifyIosReceipt = async data => {
   // logger.info("======verify_receipt_data========%o", data);
+  const { receiptData, password } = data;
   const options = {
     method: "post",
     url: config.iap.IOS.VERIFY_RECEIPT_URL,
     data: {
-      "receipt-data": data["receipt-data"],
-      password: data["password"],
+      "receipt-data": receiptData,
+      password: password,
       "exclude-old-transactions": true
     }
   };
@@ -118,7 +119,29 @@ export const verifyAndroidInAppReceipt = async data => {
     // console.log('purchaseResponse: ', purchaseResponse);
     return purchaseResponse.data;
   } catch (error) {
-    // console.log('purchaseResponse error: ', error);
+    // console.log("purchaseResponse error: ", error);
+    throw new Error(error);
+  }
+};
+
+export const verifyAndroidSubReceipt = async data => {
+  // console.log('=====verifyAndroidReceipt=====', data);
+  const { packageName, subscriptionId, purchaseToken } = data;
+  const authClient = await auth.getClient();
+  google.options({ auth: authClient });
+  let purchaseResponse = {};
+  let purchases = google.androidpublisher({ version: "v3" }).purchases;
+  try {
+    //products
+    purchaseResponse = await purchases.subscriptions.get({
+      packageName: packageName,
+      subscriptionId: subscriptionId,
+      token: purchaseToken
+    });
+    // console.log('purchaseResponse: ', purchaseResponse);
+    return purchaseResponse.data;
+  } catch (error) {
+    // console.log("purchaseResponse error: ", error);
     throw new Error(error);
   }
 };
