@@ -71,28 +71,33 @@ export default (apiUrl, httpClient = fetchUtils.fetchJson) => ({
       body: JSON.stringify(params.data),
     }).then(({ json }) => ({ data: { ...json.data, id: json.data._id } })),
 
-  // updateMany: (resource, params) => {
-  //   const query = {
-  //     filter: JSON.stringify({ id: params.ids }),
-  //   };
-  //   return httpClient(`${apiUrl}/${resource}?${stringify(query)}`, {
-  //     method: "PUT",
-  //     body: JSON.stringify(params.data),
-  //   }).then(({ json }) => ({ data: { ...params.data, id: json.data._id } }));
-  // },
+  updateMany: (resource, params) => {
+    return Promise.all(
+      params.ids.map((id) =>
+        httpClient(`${apiUrl}/${resource}/${id}`, {
+          method: "PUT",
+          body: JSON.stringify(params.data),
+        })
+      )
+    ).then((responses) => ({
+      data: responses.map((response) => response.json),
+    }));
+  },
 
   delete: (resource, params) =>
     httpClient(`${apiUrl}/${resource}/${params.id}`, {
       method: "DELETE",
     }).then(({ json }) => ({ data: { ...params.data, id: json.data._id } })),
 
-  // deleteMany: (resource, params) => {
-  //   const query = {
-  //     filter: JSON.stringify({ id: params.ids }),
-  //   };
-  //   return httpClient(`${apiUrl}/${resource}?${stringify(query)}`, {
-  //     method: "DELETE",
-  //     body: JSON.stringify(params.data),
-  //   }).then(({ json }) => ({ data: json }));
-  // },
+  deleteMany: (resource, params) => {
+    return Promise.all(
+      params.ids.map((id) =>
+        httpClient(`${apiUrl}/${resource}/${id}`, {
+          method: "DELETE",
+        })
+      )
+    ).then((responses) => ({
+      data: responses.map((response) => response.json),
+    }));
+  },
 });

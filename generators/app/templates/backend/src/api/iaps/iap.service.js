@@ -13,7 +13,13 @@ class IapService extends Service {
     const countIap = await this._model
       .find({
         deviceId: deviceId,
-        $or: [{ status: STATUS_TYPE.NEW }, { status: null }]
+        $or: [
+          { purchaseType: PURCHASE_TYPE.LIFETIME },
+          {
+            purchaseType: PURCHASE_TYPE.SUBSCRIPTION,
+            endDate: { $gte: new Date() }
+          }
+        ]
       })
       .count();
     if (countIap > 0) {
@@ -70,9 +76,11 @@ class IapService extends Service {
 
     const { orderId, purchaseTimeMillis } = receiptData;
 
+    const originalTransactionId = orderId.split("..")[0];
+
     const iapObj = await this._model.findOneAndUpdate(
       {
-        originalTransactionId: orderId,
+        originalTransactionId: originalTransactionId,
         platform: PLATFORM_TYPE.ANDROID
       },
       {
@@ -81,7 +89,7 @@ class IapService extends Service {
         platform: PLATFORM_TYPE.ANDROID,
         productId: productId,
         transactionId: orderId,
-        originalTransactionId: orderId,
+        originalTransactionId: originalTransactionId,
         quantity: 1,
         startDate: parseMillisecond(purchaseTimeMillis),
         purchaseType: PURCHASE_TYPE.PREPAID

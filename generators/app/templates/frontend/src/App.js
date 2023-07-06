@@ -9,6 +9,8 @@ import restProvider from "./restProvider";
 import users from "./users";
 import configs from "./configs";
 import tokenProvider from "./utils/tokenProvider";
+import iaps from "./iaps";
+import deviceTokens from "./deviceTokens";
 
 const httpClient = (url, options = {}) => {
   if (!options.headers) {
@@ -48,6 +50,12 @@ const App = () => (
     authProvider={authProvider}
     catchAll={NotFound}
   >
+    <Resource name="iaps" {...iaps} options={{ label: "In App Purchase" }} />
+    <Resource
+      name="device-tokens"
+      {...deviceTokens}
+      options={{ label: "Device Tokens" }}
+    />
     <Resource name="users" {...users} />
     <Resource name="configs" {...configs} />
   </Admin>

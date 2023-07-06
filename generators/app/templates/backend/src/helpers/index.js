@@ -1,5 +1,5 @@
 import handleResponse from "./response";
-import pushToken from "./pushToken";
+import * as pushToken from "./pushToken";
 import * as schemas from "./schemas";
 import * as utils from "./utils";
 
