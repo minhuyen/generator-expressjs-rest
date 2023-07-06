@@ -12,5 +12,6 @@ router.use("/users", users);
 router.use("/uploads", uploads);
 router.use("/configs", configs);
 router.use("/iaps", iaps);
+router.use("/device-tokens", deviceTokens);
 
 export default router;
