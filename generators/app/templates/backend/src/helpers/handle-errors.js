@@ -20,6 +20,11 @@ export const errorHandle = (error, req, res, next) => {
         type
       }))
     });
+  } else if (error instanceof AppError) {
+    return Response.error(res, {
+      message: error.message,
+      code: error.code
+    });
   } else if (error.name === "CastError" && error.kind === "ObjectId") {
     return Response.error(res, {
       // code: error.name,
