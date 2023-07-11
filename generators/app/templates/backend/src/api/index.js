@@ -4,6 +4,7 @@ import users from "./users";
 import uploads from "./uploads";
 import configs from "./configs";
 import iaps from "./iaps";
+import deviceTokens from "./deviceTokens";
 
 const router = new Router();
 
