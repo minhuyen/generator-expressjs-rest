@@ -49,7 +49,7 @@ app.use(bodyParser.json());
 // session
 app.use(
   session({
-    secret: config.session.secret,,
+    secret: config.session.secret,
     resave: true,
     saveUninitialized: true
   })
