@@ -49,7 +49,7 @@ app.use(bodyParser.json());
 // session
 app.use(
   session({
-    secret: "router manager app",
+    secret: config.session.secret,,
     resave: true,
     saveUninitialized: true
   })
