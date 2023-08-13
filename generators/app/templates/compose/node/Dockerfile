@@ -4,7 +4,7 @@
 
 # Setup and build the client
 
-FROM node:18.16-alpine as builder
+FROM node:18.17.0-alpine as builder
 
 # set working directory
 WORKDIR /home/node/app
@@ -24,7 +24,7 @@ RUN yarn build
 
 # Setup the server
 
-FROM node:18.16-alpine
+FROM node:18.17.0-alpine
 
 ENV NPM_CONFIG_PRODUCTION false
 
