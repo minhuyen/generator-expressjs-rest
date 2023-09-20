@@ -12,6 +12,6 @@ export class AppError extends Error {
     // You can use any additional properties you want.
     // I'm going to use preferred HTTP status for this error types.
     // `500` is the default value if not specified.
-    this.code = code || 500;
+    this.code = code || "500";
   }
 }
