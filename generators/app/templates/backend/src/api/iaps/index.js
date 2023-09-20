@@ -11,8 +11,9 @@ router.post(
   [AuthService.required, AuthService.isAdmin()],
   iapController.create
 );
+
 router.post(
-  "/inapp/ios",
+  "/in-app/ios",
   [
     AuthService.optional,
     celebrate({
@@ -22,8 +23,9 @@ router.post(
   ],
   iapController.verifyIosInAppReceipt
 );
+
 router.post(
-  "/inapp/android",
+  "/in-app/android",
   [
     AuthService.optional,
     celebrate({
@@ -33,8 +35,9 @@ router.post(
   ],
   iapController.verifyAndroidInAppReceipt
 );
+
 router.post(
-  "/inapp/check",
+  "/in-app/check",
   [
     AuthService.optional,
     celebrate({
@@ -43,10 +46,17 @@ router.post(
   ],
   iapController.checkIapModel
 );
+
 router.post(
   "/subs/ios",
   AuthService.optional,
   iapController.verifyIosSubscriptionReceipt
+);
+
+router.post(
+  "/subs/android",
+  AuthService.optional,
+  iapController.verifyAndroidSubReceipt
 );
 
 router.get(
@@ -54,6 +64,7 @@ router.get(
   [AuthService.required, AuthService.isAdmin()],
   iapController.findAll
 );
+
 router.get("/:id", iapController.findOne);
 
 router.put(
