@@ -6,7 +6,8 @@ import authService from "./auth.service";
 export const signup = async (req, res, next) => {
   try {
     const data = req.body;
-    const result = await authService.signup(data);
+    const ipAddress = req.ip;
+    const result = await authService.signup(data, ipAddress);
     return Response.success(res, result, httpStatus.CREATED);
   } catch (exception) {
     next(exception);
@@ -20,6 +21,23 @@ export const login = async (req, res) => {
   setTokenCookie(res, result.refreshToken);
   // return the information including token as JSON
   return Response.success(res, result, httpStatus.OK);
+};
+
+export const requestOtpLogin = async (req, res) => {
+  const { email } = req.body;
+  await authService.requestOtpLogin(email);
+  // return the information including token as JSON
+  return Response.success(res, email, "Otp has been sent!");
+};
+
+export const handleCompareOtp = async (req, res, next) => {
+  try {
+    const { email, otpRequest } = req.body;
+    const result = await authService.handleCompareOtp(email, otpRequest);
+    return Response.success(res, result);
+  } catch (exception) {
+    next(exception);
+  }
 };
 
 export const logout = async (req, res, next) => {
@@ -77,6 +95,32 @@ export const resetPassword = async (req, res, next) => {
   const user = req.user;
   try {
     const result = await authService.resetPassword(user, newPassword);
+    return Response.success(res, result);
+  } catch (exception) {
+    next(exception);
+  }
+};
+
+export const loginWithGoogle = async (req, res, next) => {
+  try {
+    const { id_token, access_token } = req.body;
+    const ipAddress = req.ip;
+    const result = await authService.loginWithGoogle(
+      id_token,
+      access_token,
+      ipAddress
+    );
+    return Response.success(res, result);
+  } catch (exception) {
+    next(exception);
+  }
+};
+
+export const loginWithFacebook = async (req, res, next) => {
+  try {
+    const { access_token } = req.body;
+    const ipAddress = req.ip;
+    const result = await authService.loginWithFacebook(access_token, ipAddress);
     return Response.success(res, result);
   } catch (exception) {
     next(exception);
