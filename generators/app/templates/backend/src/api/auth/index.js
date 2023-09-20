@@ -2,11 +2,8 @@ import express from "express";
 import { celebrate } from "celebrate";
 import * as authController from "./auth.controller";
 import * as authValidation from "./auth.validation";
-import AuthService, {
-  authFacebookToken,
-  authLocal,
-  authGoogleToken
-} from "../../middlewares/auth";
+import AuthService, { authLocal } from "../../middlewares/auth";
+import { rateLimitByUser } from "../../middlewares/rate-limit";
 
 const router = express.Router();
 
@@ -210,37 +207,22 @@ router.post(
   authLocal,
   authController.login
 );
-/**
- * @swagger
- *
- * /auth/logout:
- *   post:
- *     tags: [auth]
- *     description: logout to the application
- *     security:
- *       - BearerAuth: []
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: data
- *         description: logout api
- *         required: true
- *         in: body
- *         schema:
- *           type: object
- *           properties:
- *             token:
- *               type: string
- *     responses:
- *       200:
- *         description: OK
- */
+
 router.post(
-  "/logout",
-  AuthService.required,
-  celebrate({ body: authValidation.logoutValidationSchema }),
-  authController.logout
+  "/request-otp-login",
+  rateLimitByUser(5, 300),
+  celebrate({ body: authValidation.requestOtpLoginValidationSchema }),
+  authController.requestOtpLogin
 );
+
+router.post(
+  "/compare-otp",
+  rateLimitByUser(5, 300),
+  celebrate({ body: authValidation.compareOtpValidationSchema }),
+  authController.handleCompareOtp
+);
+
+router.post("/loginOtp", AuthService.required, authController.login);
 /**
  * @swagger
  *
@@ -315,6 +297,7 @@ router.post("/check-username", authController.checkUsername);
  */
 router.post(
   "/forgot-password",
+  rateLimitByUser(5, 60),
   celebrate({ body: authValidation.forgotPasswordSchema }),
   authController.forgotPassword
 );
@@ -347,6 +330,7 @@ router.post(
  */
 router.post(
   "/verify-code",
+  rateLimitByUser(5, 60),
   celebrate({ body: authValidation.verifyCodeValidationSchema }),
   authController.verifyCode
 );
@@ -382,18 +366,30 @@ router.post(
  */
 router.post(
   "/reset-password",
+  rateLimitByUser(5, 60),
   AuthService.required,
   celebrate({ body: authValidation.resetPasswordSchema }),
   authController.resetPassword
 );
-
 router.post(
   "/refresh-token",
   celebrate({ body: authValidation.refreshTokenSchema }),
   authController.refreshToken
 );
-router.post("/facebook", authFacebookToken, authController.login);
-router.post("/google", authGoogleToken, authController.login);
-router.post("/apple", authController.loginWithApple);
+router.post(
+  "/facebook",
+  celebrate({ body: authValidation.getProfileSchema }),
+  authController.loginWithFacebook
+);
+router.post(
+  "/google",
+  celebrate({ body: authValidation.getProfileSchema }),
+  authController.loginWithGoogle
+);
+router.post(
+  "/apple",
+  celebrate({ body: authValidation.getProfileSchema }),
+  authController.loginWithApple
+);
 
 export default router;

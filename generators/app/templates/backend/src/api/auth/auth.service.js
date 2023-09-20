@@ -1,3 +1,4 @@
+import axios from "axios";
 import User from "../users/users.model";
 import { logger, jwt, MailService } from "../../services";
 import { utils } from "../../helpers";
@@ -6,14 +7,18 @@ import { decodeToken } from "../../helpers/utils";
 import userService from "../users/users.service";
 import refreshTokenService from "../refreshTokens/refreshToken.service";
 
-const signup = async data => {
+const signup = async (data, ipAddress) => {
+  const existingUser = await User.findOne({ email: data.email });
+  if (existingUser) {
+    throw new Error("Email existing in system!");
+  }
   const user = await User.create(data);
   const token = generateToken(user);
-  const refreshToken = jwt.refreshSign(user._id);
+  const refreshToken = await generateRefreshToken(user, ipAddress);
   const result = {
     user,
     token,
-    refreshToken
+    refreshToken: refreshToken.token
   };
   return result;
 };
@@ -22,6 +27,43 @@ const login = async (user, ipAddress) => {
   const token = generateToken(user);
   const refreshToken = await generateRefreshToken(user, ipAddress);
   return { user, token, refreshToken: refreshToken.token };
+};
+
+const requestOtpLogin = async email => {
+  const existingUser = await User.findOne({ email });
+
+  if (!existingUser) {
+    await User.create({ email });
+  }
+
+  const OTP = await generateOtp(email);
+
+  const optionsEmail = {
+    to: email,
+    subject: "Verify OTP Login For App",
+    html: `<html>
+    <body>
+      <h2>Verify OTP</h2>
+      <p>Use this OTP to reset your password. OTP is valid for 30 second</p>
+      <h3>${OTP}</h3>
+    </body>
+  </html>`
+  };
+
+  return sendEmail(optionsEmail);
+};
+
+const handleCompareOtp = async (email, otpRequest) => {
+  const isValidOtp = await compareOtp(email, otpRequest);
+
+  if (!isValidOtp) {
+    throw new Error("Otp is invalid!");
+  }
+
+  const user = await User.findOne({ email });
+  const access_token = generateToken(user);
+
+  return { access_token };
 };
 
 const logout = async token => {
@@ -82,6 +124,62 @@ const verifyCode = async data => {
     await user.save();
     const token = generateToken(user);
     return { token };
+  }
+};
+
+const loginWithGoogle = async (id_token, access_token, ipAddress) => {
+  try {
+    let dataRequest;
+    if (access_token) {
+      dataRequest = await axios.get(
+        `${config.profileUrl.google_access_token}?alt=json&access_token=${access_token}`
+      );
+    } else {
+      dataRequest = await axios.get(
+        `${config.profileUrl.google_id_token}?id_token=${id_token}`
+      );
+    }
+
+    let user = await User.findOne({ email: dataRequest.data.email });
+
+    if (!user) {
+      user = new User();
+      user.services.google.id = access_token
+        ? dataRequest.data.id
+        : dataRequest.data.sub;
+      user.fullName = dataRequest.data.name;
+      user.email = dataRequest.data.email;
+      user.avatar.src = dataRequest.data.picture;
+      await user.save();
+    }
+    const token = generateToken(user);
+    const refreshToken = await generateRefreshToken(user, ipAddress);
+    return { user, token, refreshToken: refreshToken.token };
+  } catch (err) {
+    throw new Error("Invalid profile google");
+  }
+};
+
+const loginWithFacebook = async (facebookToken, ipAddress) => {
+  try {
+    const { data } = await axios.get(
+      `${config.profileUrl.facebook}?fields=picture,email,name&access_token=${facebookToken}`
+    );
+
+    let user = await User.findOne({ services: { facebook: { id: data.id } } });
+
+    if (!user) {
+      user = new User();
+      user.services.facebook.id = data.id;
+      user.fullName = data.name;
+      user.avatar.src = data.picture.data.url;
+      await user.save();
+    }
+    const token = generateToken(user);
+    const refreshToken = await generateRefreshToken(user, ipAddress);
+    return { user, token, refreshToken: refreshToken.token };
+  } catch (err) {
+    throw new Error("Invalid profile facebook");
   }
 };
 
@@ -146,6 +244,8 @@ export default {
   forgotPassword,
   resetPassword,
   verifyCode,
+  loginWithGoogle,
+  loginWithFacebook,
   loginWithApple,
   refreshToken
 };
