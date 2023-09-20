@@ -40,7 +40,7 @@ RUN addgroup -S app && adduser -S app -G app
 
 # RUN npm config set unsafe-perm true
 
-npm install -g pm2
+RUN npm install -g pm2
 
 ENV HOME=/home/app
 

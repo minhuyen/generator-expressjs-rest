@@ -27,6 +27,9 @@ pipelines:
   branches:
     develop:
       - step:
+          name: Deploy to staging
+          deployment: staging
+          # trigger: manual
           script:
             - pipe: atlassian/ssh-run:0.4.2
               variables:
@@ -34,3 +37,16 @@ pipelines:
                 SERVER: $SSH_SERVER
                 MODE: 'script'
                 COMMAND: './scripts/deploy.sh' # path to a script in your repository
+    master:
+      - step:
+          name: Security Scan
+          script:
+            # Run a security scan for sensitive data.
+            # See more security tools at https://bitbucket.org/product/features/pipelines/integrations?&category=security
+            - pipe: atlassian/git-secrets-scan:0.5.1
+      - step:
+          name: 'Deployment to Production'
+          deployment: production
+          trigger: 'manual'
+          script:
+            - echo "Your deployment to production script goes here..."

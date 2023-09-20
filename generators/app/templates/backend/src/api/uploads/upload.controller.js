@@ -70,7 +70,7 @@ export const uploadS3 = (req, res, next) => {
       return Response.success(
         res,
         {
-          src: image,
+          url: image,
           title: originalname,
           key
         },
@@ -101,7 +101,7 @@ export const multiUploadS3 = (req, res, next) => {
     try {
       const images = req.files.map(file => {
         return {
-          src: file.location,
+          url: file.location,
           title: file.originalname
         };
       });

@@ -7,10 +7,7 @@ const addUploadFeature = (dataProvider) => ({
       return dataProvider.update(resource, params);
     }
 
-    return uploadFile(params, "image", "thumbnail")
-      .then((params) => uploadFile(params, "image", "gifFile"))
-      .then((params) => uploadFile(params, "image", "imageBefore"))
-      .then((params) => uploadFile(params, "image", "imageAfter"))
+    return uploadFile(params, "image", "avatar")
       .then((params) => dataProvider.update(resource, params))
       .catch((error) => {
         throw new Error(error.message);
@@ -23,10 +20,7 @@ const addUploadFeature = (dataProvider) => ({
       return dataProvider.create(resource, params);
     }
     console.log("resource=====", resource);
-    return uploadFile(params, "image", "thumbnail")
-      .then((params) => uploadFile(params, "image", "gifFile"))
-      .then((params) => uploadFile(params, "image", "imageBefore"))
-      .then((params) => uploadFile(params, "image", "imageAfter"))
+    return uploadFile(params, "image", "avatar")
       .then((params) => dataProvider.create(resource, params))
       .catch((error) => {
         throw new Error(error.message);
@@ -55,7 +49,7 @@ export const uploadFile = (params, field, name) => {
             data: {
               ...params.data,
               [name]: {
-                src: image.data.src,
+                url: image.data.url,
                 title: image.data.title,
               },
             },
@@ -93,7 +87,7 @@ export const uploadFiles = (params, field, name) => {
       .then((images) => {
         const newUploadPictures = images.data.map((image) => {
           return {
-            src: image.src,
+            url: image.url,
             title: image.title,
           };
         });

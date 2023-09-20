@@ -16,7 +16,7 @@ class IapService extends Service {
         $or: [
           { purchaseType: PURCHASE_TYPE.LIFETIME },
           {
-            purchaseType: PURCHASE_TYPE.SUBSCRIPTION,
+            purchaseType: { $ne: PURCHASE_TYPE.LIFETIME },
             endDate: { $gte: new Date() }
           }
         ]
@@ -31,7 +31,7 @@ class IapService extends Service {
 
   async verifyIosInAppPurchaseReceipt(data, userId, deviceId) {
     const receiptData = await verifyReceiptHelper.verifyIosInAppReceipt(data);
-    // logger.info("==== receiptData ==== %o", receiptData);
+    logger.info("==== receiptData ==== %o", receiptData);
     const { item, environment } = receiptData;
 
     const {
@@ -57,7 +57,7 @@ class IapService extends Service {
         originalTransactionId: original_transaction_id,
         quantity: quantity,
         startDate: parseMillisecond(original_purchase_date_ms),
-        purchaseType: PURCHASE_TYPE.PREPAID
+        purchaseType: PURCHASE_TYPE.LIFETIME
       },
       {
         upsert: true,
@@ -72,15 +72,13 @@ class IapService extends Service {
     const receiptData = await verifyReceiptHelper.verifyAndroidInAppReceipt(
       data
     );
-    // logger.info('==== receiptData ==== %o', receiptData);
+    logger.info("==== receiptData ==== %o", receiptData);
 
     const { orderId, purchaseTimeMillis } = receiptData;
 
-    const originalTransactionId = orderId.split("..")[0];
-
     const iapObj = await this._model.findOneAndUpdate(
       {
-        originalTransactionId: originalTransactionId,
+        originalTransactionId: orderId,
         platform: PLATFORM_TYPE.ANDROID
       },
       {
@@ -89,10 +87,10 @@ class IapService extends Service {
         platform: PLATFORM_TYPE.ANDROID,
         productId: productId,
         transactionId: orderId,
-        originalTransactionId: originalTransactionId,
+        originalTransactionId: orderId,
         quantity: 1,
         startDate: parseMillisecond(purchaseTimeMillis),
-        purchaseType: PURCHASE_TYPE.PREPAID
+        purchaseType: PURCHASE_TYPE.LIFETIME
       },
       {
         upsert: true,
@@ -107,11 +105,11 @@ class IapService extends Service {
     const receiptData = await verifyReceiptHelper.verifyAndroidSubReceipt(data);
     logger.info("==== receiptData ==== %o", receiptData);
 
-    const { orderId, startTimeMillis, expiryTimeMillis1 } = receiptData;
-
+    const { orderId, startTimeMillis, expiryTimeMillis } = receiptData;
+    const originalTransactionId = orderId.split("..")[0];
     const iapObj = await this._model.findOneAndUpdate(
       {
-        originalTransactionId: orderId,
+        originalTransactionId: originalTransactionId,
         platform: PLATFORM_TYPE.ANDROID
       },
       {
@@ -120,7 +118,7 @@ class IapService extends Service {
         platform: PLATFORM_TYPE.ANDROID,
         productId: subscriptionId,
         transactionId: orderId,
-        originalTransactionId: orderId,
+        originalTransactionId: originalTransactionId,
         quantity: 1,
         startDate: parseMillisecond(startTimeMillis),
         endDate: parseMillisecond(expiryTimeMillis),
@@ -169,9 +167,7 @@ class IapService extends Service {
         startDate: parseMillisecond(original_purchase_date_ms),
         latest_receipt,
         endDate: expires_date ? parseMillisecond(expires_date_ms) : null,
-        purchase_type: expires_date
-          ? PURCHASE_TYPE.SUBSCRIPTION
-          : PURCHASE_TYPE.PREPAID
+        purchase_type: PURCHASE_TYPE.SUBSCRIPTION
       },
       {
         new: true,

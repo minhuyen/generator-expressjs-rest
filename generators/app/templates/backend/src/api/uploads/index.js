@@ -1,8 +1,9 @@
 import express from "express";
 import AuthService from "../../middlewares/auth";
+import { imageUpload, imagesUpload } from "../../services/storage";
 import {
   upload,
-  deleteS3File,
+  deleteFile,
   multiUpload,
   resizeImage,
   resizeImageStream
@@ -41,7 +42,7 @@ const router = express.Router();
  *       400:
  *          $ref: '#/responses/Error'
  */
-router.post("/", upload);
+router.post("/", imageUpload, upload);
 /**
  * @swagger
  *
@@ -74,9 +75,7 @@ router.post("/", upload);
  *       400:
  *          $ref: '#/responses/Error'
  */
-router.post("/multi", multiUpload);
-router.post("/resize", resizeImage);
-router.get("/resize", resizeImageStream);
+router.post("/multi", imagesUpload, multiUpload);
 /**
  * @swagger
  *
@@ -101,6 +100,6 @@ router.get("/resize", resizeImageStream);
  *       400:
  *          $ref: '#/responses/Error'
  */
-router.delete("/:filename", AuthService.optional, deleteS3File);
+router.delete("/:filename", AuthService.optional, deleteFile);
 
 export default router;
