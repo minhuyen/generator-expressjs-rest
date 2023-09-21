@@ -23,6 +23,23 @@ export const loginValidationSchema = Joi.object({
     .required()
 });
 
+export const compareOtpValidationSchema = Joi.object({
+  email: Joi.string()
+    .email()
+    .required(),
+  otpRequest: Joi.string()
+    .length(6)
+    .regex(/\d/)
+    .required()
+});
+
+export const requestOtpLoginValidationSchema = Joi.object({
+  email: Joi.string()
+    .email()
+    .required()
+});
+
+
 export const logoutValidationSchema = Joi.object({
   token: Joi.string().optional()
 });
@@ -56,3 +73,12 @@ export const resetPasswordSchema = Joi.object({
 export const refreshTokenSchema = Joi.object({
   refreshToken: Joi.string().optional()
 });
+
+export const getProfileSchema = Joi.object({
+  access_token: Joi.string().optional(),
+  id_token: Joi.when("access_token", {
+    is: null,
+    then: Joi.string().required(),
+    otherwise: Joi.string()
+  })
+}).or("access_token", "id_token");
