@@ -1,10 +1,9 @@
 import admin from "firebase-admin";
 
-admin.initializeApp({
-  credential: admin.credential.applicationDefault()
-});
-
 export const sendNotificationToIosDevice = async ({ token, title, body }) => {
+  admin.initializeApp({
+    credential: admin.credential.applicationDefault()
+  });
   const ios = {
     headers: {
       "apns-priority": 10,
@@ -35,6 +34,9 @@ export const sendNotificationToDevice = async ({
   body,
   data = {}
 }) => {
+  admin.initializeApp({
+    credential: admin.credential.applicationDefault()
+  });
   const android = {
     notification: {
       title: title,
