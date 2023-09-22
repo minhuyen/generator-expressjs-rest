@@ -237,6 +237,8 @@ const generateRefreshToken = async (user, ipAddress) => {
 
 export default {
   signup,
+  requestOtpLogin,
+  handleCompareOtp,
   login,
   logout,
   checkEmailIsValid,
