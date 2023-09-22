@@ -67,7 +67,7 @@ services:
       - app-network
 
   redis:
-    image: redis:5.0.12-alpine
+    image: redis:6.2.13-alpine
     container_name: <%=project_slug%>_redis_local
     networks:
       - app-network
