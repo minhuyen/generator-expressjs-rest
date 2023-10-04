@@ -1,11 +1,12 @@
 import axios from "axios";
 import User from "../users/users.model";
-import { logger, jwt, MailService } from "../../services";
+import { logger, jwt, mailService } from "../../services";
 import { utils } from "../../helpers";
-import { decodeToken } from "../../helpers/utils";
+import { decodeToken, generateOtp, compareOtp } from "../../helpers/utils";
 // import deviceTokenService from '../deviceTokens/deviceToken.service';
 import userService from "../users/users.service";
 import refreshTokenService from "../refreshTokens/refreshToken.service";
+import config from "../../config";
 
 const signup = async (data, ipAddress) => {
   const existingUser = await User.findOne({ email: data.email });
@@ -98,8 +99,7 @@ const forgotPassword = async email => {
     user.resetPasswordToken = passcode;
     user.resetPasswordExpires = Date.now() + 360000; // expires in 1 hour
     await user.save();
-    const mailService = new MailService();
-    mailService.passwordResetEmail(email, passcode);
+    mailService.sendPasswordResetEmail(email, passcode);
   }
 };
 

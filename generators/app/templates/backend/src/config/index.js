@@ -41,7 +41,8 @@ export default {
   aws: {
     accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
-    bucketName: process.env.AWS_STORAGE_BUCKET_NAME
+    bucketName: process.env.AWS_STORAGE_BUCKET_NAME,
+    region: process.env.AWS_REGION_NAME
   },
 
   jwt: {
@@ -75,5 +76,11 @@ export default {
   mailgun: {
     apiKey: process.env.MAILGUN_API_KEY,
     domain: process.env.MAILGUN_DOMAIN
+  },
+  profileUrl: {
+    google_access_token: process.env.GOOGLE_USER_PROFILE_URL_ACCESS_TOKEN,
+    google_id_token: process.env.GOOGLE_USER_PROFILE_URL_ID_TOKEN,
+    facebook: process.env.FACEBOOK_USER_PROFILE_URL,
+    apple: process.env.APPLE_USER_PROFILE_URL
   }
 };

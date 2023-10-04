@@ -1,6 +1,7 @@
 import moment from "moment";
 import jwt from "jsonwebtoken";
 import jwksClient from "jwks-rsa";
+import client from "../services/redis";
 
 export const randomInt = (low, high) => {
   return Math.floor(Math.random() * (high - low) + low);
@@ -39,3 +40,51 @@ export const getDeviceId = req => {
   const deviceId = req.headers["device-id"] || req.params.deviceId || "NONE";
   return deviceId;
 };
+
+export const generateOtp = async email => {
+  const otp = randomVerifiedCode();
+
+  await Promise.all([
+    client.set(`${email}_otp`, otp, {
+      EX: 30,
+      NX: false
+    }),
+    client.set(`${email}_attempts`, 0, {
+      EX: 30,
+      NX: false
+    })
+  ]);
+
+  return otp;
+};
+
+export const compareOtp = async (email, otpRequest) => {
+  const [numAttempts, otpStored] = await Promise.all([
+    client.incr(`${email}_attempts`),
+    client.get(`${email}_otp`)
+  ]);
+
+  if (!numAttempts || !otpStored) return false;
+
+  if (parseInt(numAttempts) > 3) {
+    console.log("Deleting OTP due to 3 failed attempts");
+    await Promise.all([
+      client.del(`${email}_otp`),
+      client.del(`${email}_attempts`)
+    ]);
+
+    return false;
+  }
+
+  if (parseInt(otpStored) !== parseInt(otpRequest)) {
+    return false;
+  }
+
+  await Promise.all([
+    client.del(`${email}_otp`),
+    client.del(`${email}_attempts`)
+  ]);
+
+  return true;
+};
+

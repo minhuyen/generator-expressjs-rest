@@ -4,9 +4,7 @@ import { imageUpload, imagesUpload } from "../../services/storage";
 import {
   upload,
   deleteFile,
-  multiUpload,
-  resizeImage,
-  resizeImageStream
+  multiUpload
 } from "./upload.controller";
 
 const router = express.Router();
