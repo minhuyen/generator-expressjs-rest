@@ -2,24 +2,41 @@ import { isCelebrateError, Segments } from "celebrate";
 import httpStatus from "http-status";
 import { logger } from "../services";
 import Response from "./response";
+import { AppError } from "./error";
 
+// eslint-disable-next-line no-unused-vars
 export const errorHandle = (error, req, res, next) => {
   if (typeof error === "string") {
     // custom application error
     return Response.error(res, { message: error });
   } else if (isCelebrateError(error)) {
-    // logger.error("isCelebrate %s", isCelebrateError(error));
-    // const { joi } = error;
-    const celebrateError = error.details.get(Segments.BODY);
-    // console.log(celebrateError);
-    return Response.error(res, {
-      message: "Invalid request data. Please review request and try again.",
-      code: celebrateError.name,
-      errors: celebrateError.details.map(({ message, type }) => ({
-        message: message.replace(/['"]/g, ""),
-        type
-      }))
-    });
+    const bodyCelebrateError = error.details.get(Segments.BODY);
+    const headerCelebrateError = error.details.get(Segments.HEADERS);
+
+    const response = {
+      message: "Invalid request data. Please review the request and try again.",
+      code: []
+    };
+
+    if (bodyCelebrateError) {
+      response.code = response.code.concat(
+        bodyCelebrateError.details.map(({ message, type }) => ({
+          message: message.replace(/['"]/g, ""),
+          code: type
+        }))
+      );
+    }
+
+    if (headerCelebrateError) {
+      response.code = response.code.concat(
+        headerCelebrateError.details.map(({ message, type }) => ({
+          message: message.replace(/['"]/g, ""),
+          code: type
+        }))
+      );
+    }
+
+    return Response.error(res, response);
   } else if (error instanceof AppError) {
     return Response.error(res, {
       message: error.message,

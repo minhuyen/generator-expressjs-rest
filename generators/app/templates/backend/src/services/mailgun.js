@@ -1,9 +1,7 @@
-import fs from "fs";
-import path from "path";
 import Mailgun from "mailgun.js";
 import formData from "form-data";
 import config from "../config";
-import { logger } from "../services";
+// import { logger } from "../services";
 
 class MailgunConnect {
   constructor() {}
@@ -46,6 +44,21 @@ export const sendPasswordResetEmail = async (to, passcode) => {
     const mg = MailgunConnect.getInstance();
     const msg = await mg.messages.create(domain, data);
     return msg;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const sendEmail = async options => {
+  try {
+    const mailOptions = {
+      from: fromEmail,
+      to: options.to,
+      subject: options.subject,
+      html: options.html
+    };
+    const mg = MailgunConnect.getInstance();
+    return mg.messages.create(domain, mailOptions);
   } catch (error) {
     console.log(error);
   }
