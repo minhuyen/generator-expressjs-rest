@@ -27,6 +27,13 @@ class UserService extends Service {
   async handleGetMe(user) {
     return { ...user.toJSON() };
   }
+
+  async deleteAccount(user) {
+    const result = await User.findByIdAndDelete(user._id);
+    if (result) {
+      return result;
+    } else throw new Error("User not found!");
+  }
 }
 
 export default new UserService(User);

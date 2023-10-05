@@ -44,6 +44,16 @@ class UserController extends Controller {
       next(e);
     }
   }
+
+  async deleteAccount(req, res, next) {
+    try {
+      const user = req.user;
+      const result = await this.service.deleteAccount(user);
+      return handleResponse.success(res, result);
+    } catch (e) {
+      next(e);
+    }
+  }
 }
 
 export default new UserController(userService, "User");
