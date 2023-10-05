@@ -8,6 +8,7 @@ class UserController extends Controller {
     this.updateMe = this.updateMe.bind(this);
     this.getMe = this.getMe.bind(this);
     this.changePassword = this.changePassword.bind(this);
+    this.deleteAccount = this.deleteAccount.bind(this);
   }
 
   async changePassword(req, res, next) {
