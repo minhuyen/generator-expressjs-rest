@@ -27,7 +27,7 @@ export const requestOtpLogin = async (req, res) => {
   const { email } = req.body;
   await authService.requestOtpLogin(email);
   // return the information including token as JSON
-  return Response.success(res, email, "Otp has been sent!");
+  return Response.success(res, { message: "Opt has been sent" });
 };
 
 export const handleCompareOtp = async (req, res, next) => {
