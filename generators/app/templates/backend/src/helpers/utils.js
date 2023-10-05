@@ -46,11 +46,11 @@ export const generateOtp = async email => {
 
   await Promise.all([
     client.set(`${email}_otp`, otp, {
-      EX: 30,
+      EX: 180,
       NX: false
     }),
     client.set(`${email}_attempts`, 0, {
-      EX: 30,
+      EX: 180,
       NX: false
     })
   ]);

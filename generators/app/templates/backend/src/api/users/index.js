@@ -182,4 +182,10 @@ router.put(
   userController.update
 );
 
+router.delete(
+  "/me/delete-account",
+  AuthService.required,
+  userController.deleteAccount
+);
+
 export default router;
