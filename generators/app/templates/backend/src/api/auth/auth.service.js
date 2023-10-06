@@ -184,14 +184,14 @@ const loginWithFacebook = async (facebookToken, ipAddress) => {
 };
 
 const loginWithApple = async (appleToken, ipAddress) => {
-  let decodedToken = await decodeToken(token);
+  let decodedToken = await decodeToken(appleToken);
   let user = await User.findOne({ email: decodedToken.email });
 
   if (!user) {
     user = await User.create({
       email: decodedToken.email,
       full_name: decodedToken.email,
-      apple: { id: decodedToken.sub, token }
+      services: { apple: { id: decodedToken.sub } }
     });
   }
   const token = generateToken(user);
