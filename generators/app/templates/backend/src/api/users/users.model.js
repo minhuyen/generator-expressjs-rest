@@ -49,16 +49,10 @@ const UserSchema = new Schema(
       google: {
         id: String,
         token: String
-      }
-    },
-    apple: {
-      id: {
-        type: String,
-        required: false
       },
-      token: {
-        type: String,
-        required: false
+      apple: {
+        id: String,
+        token: String
       }
     },
     resetPasswordToken: {
