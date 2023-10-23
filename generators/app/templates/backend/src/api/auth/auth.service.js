@@ -166,8 +166,15 @@ const loginWithFacebook = async (facebookToken, ipAddress) => {
       `${config.profileUrl.facebook}?fields=picture,email,name&access_token=${facebookToken}`
     );
 
-    let user = await User.findOne({ services: { facebook: { id: data.id } } });
-
+    let user = await User.findOne({
+      $or: [
+        {
+          services: { facebook: { id: data.id } }
+        },
+        { email: data.email }
+      ]
+    });
+    
     if (!user) {
       user = new User();
       user.services.facebook.id = data.id;
