@@ -69,7 +69,7 @@
     "redis": "^4.6.6",
     "util": "^0.12.5",
     "winston": "^3.8.2",
-    "sharp": "^0.32.1",
+    "sharp": "^0.32.6",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.0.2",
     "winston-daily-rotate-file": "^4.5.5"
