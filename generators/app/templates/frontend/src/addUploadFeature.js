@@ -1,7 +1,7 @@
 const addUploadFeature = (dataProvider) => ({
   ...dataProvider,
   update: (resource, params) => {
-    console.log("resource=====", resource);
+    // console.log("resource=====", resource);
     if (resource !== "discoveries" && resource !== "tools") {
       // fallback to the default implementation
       return dataProvider.update(resource, params);
@@ -10,11 +10,12 @@ const addUploadFeature = (dataProvider) => ({
     return uploadFile(params, "image", "avatar")
       .then((params) => dataProvider.update(resource, params))
       .catch((error) => {
+        console.error(error);
         throw new Error(error.message);
       });
   },
   create: (resource, params) => {
-    console.log("resource=====", resource);
+    // console.log("resource=====", resource);
     if (resource !== "discoveries" && resource !== "tools") {
       // fallback to the default implementation
       return dataProvider.create(resource, params);
@@ -23,6 +24,7 @@ const addUploadFeature = (dataProvider) => ({
     return uploadFile(params, "image", "avatar")
       .then((params) => dataProvider.create(resource, params))
       .catch((error) => {
+        console.error(error);
         throw new Error(error.message);
       });
   },
@@ -65,43 +67,48 @@ export const uploadFile = (params, field, name) => {
 
 export const uploadFiles = (params, field, name) => {
   return new Promise((resolve, reject) => {
-    const newPictures = params.data[name].filter(
+    const newPictures = params.data[name]?.filter(
       (p) => p.rawFile instanceof File
     );
-    const formerPictures = params.data[name].filter(
+    const formerPictures = params.data[name]?.filter(
       (p) => !(p.rawFile instanceof File)
     );
-    const formData = new FormData();
-    const token = localStorage.getItem("token");
-    newPictures.map((p) => {
-      formData.append(field, p.rawFile);
-    });
-    fetch("/api/v1/uploads/multi", {
-      method: "post",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((images) => {
-        const newUploadPictures = images.data.map((image) => {
-          return {
-            url: image.url,
-            title: image.title,
-          };
-        });
 
-        const tmp = {
-          ...params,
-          data: {
-            ...params.data,
-            [name]: [...formerPictures, ...newUploadPictures],
-          },
-        };
-        resolve(tmp);
+    if (newPictures) {
+      const formData = new FormData();
+      const token = localStorage.getItem("token");
+      newPictures?.map((p) => {
+        formData.append(field, p.rawFile);
+      });
+      fetch("/api/v1/uploads/multi", {
+        method: "post",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
       })
-      .catch((err) => reject(err));
+        .then((response) => response.json())
+        .then((images) => {
+          const newUploadPictures = images.data.map((image) => {
+            return {
+              src: image.src,
+              title: image.title,
+            };
+          });
+
+          const tmp = {
+            ...params,
+            data: {
+              ...params.data,
+              [name]: [...formerPictures, ...newUploadPictures],
+            },
+          };
+          resolve(tmp);
+        })
+        .catch((err) => reject(err));
+    } else {
+      resolve(params);
+    }
   });
 };
 

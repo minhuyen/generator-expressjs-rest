@@ -51,7 +51,7 @@ const requestOtpLogin = async email => {
   </html>`
   };
 
-  return sendEmail(optionsEmail);
+  return mailService.sendEmail(optionsEmail);
 };
 
 const handleCompareOtp = async (email, otpRequest) => {
