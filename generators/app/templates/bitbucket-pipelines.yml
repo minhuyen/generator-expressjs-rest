@@ -3,19 +3,74 @@
 #  This template allows you to validate your NodeJS code.
 #  The workflow allows running tests and code linting on the default branch.
 
-image: node:16
+image: node:18
+
+definitions:
+  services:
+    docker:
+      memory: 3072 # Memory in MB -  allocate 3GB (3072MB) of memory to docker service
+
+  caches:
+    backend-node:
+      key:
+        files:
+          - backend/package-lock.json
+      path: backend/node_modules
+    frontend-node:
+      key:
+        files:
+          - frontend/yarn.lock
+      path: frontend/node_modules
+
+  steps:
+    - step: &build-and-test
+        name: build and test
+        size: 2x
+        script:
+          - echo ${CI_REGISTRY_PASSWORD} | docker login $CI_REGISTRY --username $CI_REGISTRY_USERNAME --password-stdin
+          - export DOCKER_BUILDKIT=1
+          - IMAGE_NAME=$BITBUCKET_REPO_SLUG
+          - IMAGE=${CI_REGISTRY}/${IMAGE_NAME}
+          # - if [ $BITBUCKET_BRANCH != "master" ]; then IMAGE=${CI_REGISTRY}/${IMAGE_NAME}-staging; fi
+          # - if [ $BITBUCKET_PR_DESTINATION_BRANCH != "master" ]]; then IMAGE=${CI_REGISTRY}/${IMAGE_NAME}-staging; fi
+          - docker build --cache-from ${IMAGE}:latest --file Dockerfile.production --tag ${IMAGE_NAME} --build-arg BUILDKIT_INLINE_CACHE=1 .
+          - docker save ${IMAGE_NAME} --output "${IMAGE_NAME}.tar"
+        services:
+          - docker
+        artifacts:
+          - "*.tar"
+    - step: &push-image
+        name: Push Image
+        size: 2x
+        script:
+          - echo ${CI_REGISTRY_PASSWORD} | docker login $CI_REGISTRY --username $CI_REGISTRY_USERNAME --password-stdin
+          - IMAGE_NAME=$BITBUCKET_REPO_SLUG
+          - docker load --input "${IMAGE_NAME}.tar"
+          - VERSION="${BITBUCKET_COMMIT}-master"
+          - TAG_NAME="latest"
+          - if [ $BITBUCKET_BRANCH != "master" ] && [ $BITBUCKET_PR_DESTINATION_BRANCH != "master" ]; then TAG_NAME="staging"; fi
+          # - if [ $BITBUCKET_PR_DESTINATION_BRANCH != "master" ]; then TAG_NAME="staging"; fi
+          - IMAGE=${CI_REGISTRY}/${IMAGE_NAME}
+          - if [ $BITBUCKET_BRANCH != "master" ] && [ $BITBUCKET_PR_DESTINATION_BRANCH != "master" ]; then VERSION="${BITBUCKET_COMMIT}-staging"; fi
+          # - if [ $BITBUCKET_PR_DESTINATION_BRANCH != "master" ]; then VERSION="${BITBUCKET_COMMIT}-staging"; fi
+          - docker tag "${IMAGE_NAME}" "${IMAGE}:${VERSION}"
+          - docker push "${IMAGE}:${VERSION}"
+          - docker tag "${IMAGE_NAME}" "${IMAGE}:${TAG_NAME}"
+          - docker push "${IMAGE}:${TAG_NAME}"
+        services:
+          - docker
 
 pipelines:
   default:
     - parallel:
         - step:
             name: Code linting frontend
-            caches:
-              - node
             script:
               - cd frontend
               - yarn install
               - yarn run lint
+            caches:
+              - frontend-node
         - step:
             name: Code linting backend
             script:
@@ -23,20 +78,26 @@ pipelines:
               - npm install
               - npm run lint
             caches:
-              - node
+              - backend-node
   branches:
     develop:
+      - step: *build-and-test
+      - step: *push-image
       - step:
           name: Deploy to staging
           deployment: staging
-          # trigger: manual
           script:
-            - pipe: atlassian/ssh-run:0.4.2
+            - pipe: atlassian/ssh-run:0.8.0
               variables:
-                SSH_USER: $SSH_USER
-                SERVER: $SSH_SERVER
+                SSH_USER: $SSH_USER_DEV
+                SERVER: $SSH_SERVER_DEV
                 MODE: 'script'
-                COMMAND: './scripts/deploy.sh' # path to a script in your repository
+                COMMAND: './scripts/deploy.staging.sh' # path to a script in your repository
+                ENV_VARS: >-
+                  CI_REGISTRY_USERNAME=${CI_REGISTRY_USERNAME}
+                  CI_REGISTRY_PASSWORD=${CI_REGISTRY_PASSWORD}
+                  CI_REGISTRY=${CI_REGISTRY}
+                  CI_REGISTRY_IMAGE=${CI_REGISTRY}/${BITBUCKET_REPO_SLUG}
     master:
       - step:
           name: Security Scan
@@ -44,9 +105,46 @@ pipelines:
             # Run a security scan for sensitive data.
             # See more security tools at https://bitbucket.org/product/features/pipelines/integrations?&category=security
             - pipe: atlassian/git-secrets-scan:0.5.1
+      - step: *build-and-test
+      - step: *push-image
       - step:
           name: 'Deployment to Production'
           deployment: production
           trigger: 'manual'
           script:
-            - echo "Your deployment to production script goes here..."
+            - pipe: atlassian/ssh-run:0.8.0
+              variables:
+                SSH_USER: $SSH_USER
+                SERVER: $SSH_SERVER
+                MODE: 'script'
+                COMMAND: './scripts/deploy.sh' # path to a script in your repository
+                ENV_VARS: >-
+                  CI_REGISTRY_USERNAME=${CI_REGISTRY_USERNAME}
+                  CI_REGISTRY_PASSWORD=${CI_REGISTRY_PASSWORD}
+                  CI_REGISTRY=${CI_REGISTRY}
+                  CI_REGISTRY_IMAGE=${CI_REGISTRY}/${BITBUCKET_REPO_SLUG}
+  tags:
+    '*':
+      - step:
+          name: retag and repush image
+          script:
+            - VERSION="${BITBUCKET_COMMIT}-master"
+            # get the image that was built in the master branch
+            - export IMAGE=${CI_REGISTRY}/${BITBUCKET_REPO_SLUG}
+            - export IMAGE_NAME=${IMAGE}:${VERSION}
+            - export NEW_IMAGE_NAME=${IMAGE}:${BITBUCKET_TAG}
+            # authenticate with the Docker Hub registry
+            - echo ${CI_REGISTRY_PASSWORD} | docker login $CI_REGISTRY --username $CI_REGISTRY_USERNAME --password-stdin
+            # pull the image down
+            - docker pull ${IMAGE_NAME}
+            # retag the image using the git tag
+            - docker tag ${IMAGE_NAME} ${NEW_IMAGE_NAME}
+            # push the image back
+            - docker push ${NEW_IMAGE_NAME}
+            - export LATEST_IMAGE_NAME=${IMAGE}:latest
+            - docker tag ${IMAGE_NAME} ${LATEST_IMAGE_NAME}
+            # push the image back
+            - docker push ${NEW_IMAGE_NAME}
+          services:
+            - docker
+

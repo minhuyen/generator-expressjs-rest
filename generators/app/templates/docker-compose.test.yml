@@ -13,10 +13,11 @@ networks:
 services:
   backend:
     restart: always
+    # image: registry.astraler.com/<%=project_slug%>:staging
     container_name: <%=project_slug%>_node_test
     build:
       context: .
-      dockerfile: compose/node/Dockerfile_dev
+      dockerfile: compose/node/Dockerfile.local
     env_file:
       - .env
     volumes:

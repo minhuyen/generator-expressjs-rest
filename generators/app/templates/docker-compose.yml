@@ -16,7 +16,7 @@ services:
     container_name: <%=project_slug%>_node_local
     build:
       context: .
-      dockerfile: compose/node/Dockerfile_dev
+      dockerfile: compose/node/Dockerfile.local
     # command: nodemon --inspect=0.0.0.0:9229 --nolazy app.js
     ports:
       - "3000:3000"

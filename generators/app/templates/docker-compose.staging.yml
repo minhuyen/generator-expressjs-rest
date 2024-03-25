@@ -14,10 +14,11 @@ networks:
 services:
   backend:
     restart: always
-    container_name: <%=project_slug%>_node_stage
-    build:
-      context: .
-      dockerfile: compose/node/Dockerfile
+    image: registry.astraler.com/<%=project_slug%>:staging
+    container_name: <%=project_slug%>_node_staging
+    # build:
+    #   context: .
+    #   dockerfile: compose/node/Dockerfile.staging
     env_file:
       - .env
     volumes:
@@ -34,7 +35,7 @@ services:
   mongo:
     restart: always
     image: mongo:4.2
-    container_name: <%=project_slug%>_mongo_stage
+    container_name: <%=project_slug%>_mongo_staging
     env_file:
       - .env
     command: mongod --storageEngine wiredTiger
@@ -46,14 +47,14 @@ services:
 
   redis:
     image: redis:6.2.13-alpine
-    container_name: <%=project_slug%>_redis_local
+    container_name: <%=project_slug%>_redis_staging
     networks:
       - app-network
 
   nginx:
     restart: always
     build: ./compose/nginx
-    container_name: <%=project_slug%>_nginx_stage
+    container_name: <%=project_slug%>_nginx_staging
     depends_on:
       - backend
     ports:
