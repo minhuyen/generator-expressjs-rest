@@ -1,8 +1,7 @@
 import { isCelebrateError, Segments } from "celebrate";
-import httpStatus from "http-status";
 import { logger } from "../services";
 import Response from "./response";
-import { AppError } from "./error";
+import { NotFoundError } from "../core/error.response";
 
 // eslint-disable-next-line no-unused-vars
 export const errorHandle = (error, req, res, next) => {
@@ -35,39 +34,25 @@ export const errorHandle = (error, req, res, next) => {
         }))
       );
     }
-
     return Response.error(res, response);
-  } else if (error instanceof AppError) {
-    return Response.error(res, {
-      message: error.message,
-      code: error.code
-    });
   } else if (error.name === "CastError" && error.kind === "ObjectId") {
     return Response.error(res, {
       // code: error.name,
       message: "malformatted id"
     });
-  } else if (error.name === "ValidationError") {
-    return Response.error(res, {
-      message: error.message
-    });
-  } else if (error.name === "Error") {
-    return Response.error(res, {
-      message: error.message
-    });
-  } else if (error.name === "CustomError") {
-    return Response.error(res, error);
+  } else {
+    // default to 500 server error
+    // logger.error("%o", error);
+    return Response.error(
+      res,
+      {
+        message: error.message,
+        stack: process.env.NODE_ENV === "development" ? error.stack : null,
+        code: error.code
+      },
+      error.status
+    );
   }
-  // default to 500 server error
-  logger.error("%o", error);
-  return Response.error(
-    res,
-    {
-      message: error.message,
-      stack: error.stack
-    },
-    httpStatus.INTERNAL_SERVER_ERROR
-  );
 };
 
 export const logErrors = (err, req, res, next) => {
@@ -76,12 +61,6 @@ export const logErrors = (err, req, res, next) => {
 };
 
 export const notFoundHandle = (req, res, next) => {
-  return Response.error(
-    res,
-    {
-      code: "NotFound",
-      message: "Page Not Found"
-    },
-    404
-  );
+  const error = new NotFoundError();
+  next(error);
 };
