@@ -1,5 +1,6 @@
 import passport from "passport";
 import Response from "../helpers/response";
+import { UnAuthorizedError } from "../core/error.response";
 
 export default class AuthService {
   static getTokenFromHeaderOrQuerystring(req) {
@@ -25,14 +26,7 @@ export default class AuthService {
           return next(err);
         }
         if (!user) {
-          return Response.error(
-            res,
-            {
-              code: "Unauthorized",
-              message: "Invalid Token"
-            },
-            401
-          );
+          throw new UnAuthorizedError("Invalid Token");
         } else {
           req.logIn(user, function(err) {
             if (err) {
@@ -51,14 +45,8 @@ export default class AuthService {
         roles = [roles];
       }
       if (roles.length && !roles.includes(req.user.role)) {
-        // user's role is not authorized
-        return Response.error(
-          res,
-          {
-            message: "You are not authorized to access this page!",
-            code: "Unauthorized"
-          },
-          401
+        throw new UnAuthorizedError(
+          "You are not authorized to access this page!"
         );
       }
 
@@ -88,14 +76,7 @@ export const authLocal = (req, res, next) => {
       return next(err);
     }
     if (!user) {
-      return Response.error(
-        res,
-        {
-          code: "Unauthorized",
-          message: "Your email or password is incorrect"
-        },
-        401
-      );
+      throw new UnAuthorizedError("Your email or password is incorrect");
     }
     req.logIn(user, function(err) {
       if (err) {

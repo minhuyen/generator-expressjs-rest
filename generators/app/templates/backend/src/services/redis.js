@@ -8,8 +8,8 @@ client.on("connect", () => {
   logger.info("Connected to Redis");
 });
 
-client.on("error", function(error) {
-  logger.error(error);
+client.on("error", error => {
+  logger.error("Redis Client Error %o", error);
 });
 
 client.connect();
