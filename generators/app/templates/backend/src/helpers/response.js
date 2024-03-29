@@ -21,7 +21,7 @@ export default class Response {
   static error(res, error, status = 400) {
     res.status(status);
     return res.json({
-      status: "failed",
+      status: "error",
       error: {
         message: error.message,
         code: error.code,

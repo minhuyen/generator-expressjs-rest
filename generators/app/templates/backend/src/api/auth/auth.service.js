@@ -7,11 +7,13 @@ import { decodeToken, generateOtp, compareOtp } from "../../helpers/utils";
 import userService from "../users/users.service";
 import refreshTokenService from "../refreshTokens/refreshToken.service";
 import config from "../../config";
+import { BadRequestError } from "../../core/error.response";
+import { sendOtpByEmail } from "../../services/mailgun";
 
 const signup = async (data, ipAddress) => {
   const existingUser = await User.findOne({ email: data.email });
   if (existingUser) {
-    throw new Error("Email existing in system!");
+    throw new BadRequestError("Email existing in system!");
   }
   const user = await User.create(data);
   const token = generateToken(user);
@@ -37,28 +39,15 @@ const requestOtpLogin = async email => {
     await User.create({ email });
   }
 
-  const OTP = await generateOtp(email);
-
-  const optionsEmail = {
-    to: email,
-    subject: "Verify OTP Login For App",
-    html: `<html>
-    <body>
-      <h2>Verify OTP</h2>
-      <p>Use this OTP to reset your password. OTP is valid for 30 second</p>
-      <h3>${OTP}</h3>
-    </body>
-  </html>`
-  };
-
-  return mailService.sendEmail(optionsEmail);
+  const optCode = await generateOtp(email);
+  return sendOtpByEmail(email, optCode);
 };
 
 const handleCompareOtp = async (email, otpRequest) => {
   const isValidOtp = await compareOtp(email, otpRequest);
 
   if (!isValidOtp) {
-    throw new Error("Otp is invalid!");
+    throw new BadRequestError("Otp is invalid!");
   }
 
   const user = await User.findOne({ email });
@@ -156,7 +145,7 @@ const loginWithGoogle = async (id_token, access_token, ipAddress) => {
     const refreshToken = await generateRefreshToken(user, ipAddress);
     return { user, token, refreshToken: refreshToken.token };
   } catch (err) {
-    throw new Error("Invalid profile google");
+    throw new BadRequestError(err.message || "Invalid profile google");
   }
 };
 
@@ -174,7 +163,7 @@ const loginWithFacebook = async (facebookToken, ipAddress) => {
         { email: data.email }
       ]
     });
-    
+
     if (!user) {
       user = new User();
       user.services.facebook.id = data.id;
@@ -186,7 +175,7 @@ const loginWithFacebook = async (facebookToken, ipAddress) => {
     const refreshToken = await generateRefreshToken(user, ipAddress);
     return { user, token, refreshToken: refreshToken.token };
   } catch (err) {
-    throw new Error("Invalid profile facebook");
+    throw new BadRequestError(err.message || "Invalid profile facebook");
   }
 };
 
@@ -220,7 +209,7 @@ const refreshToken = async (token, ipAddress) => {
     await refreshToken.save();
     return { user, token: newToken, refreshToken: newRefreshToken.token };
   } else {
-    throw new Error("The refresh token is invalid!");
+    throw new BadRequestError("The refresh token is invalid!");
   }
 };
 

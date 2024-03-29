@@ -1,11 +1,7 @@
 import express from "express";
 import AuthService from "../../middlewares/auth";
 import { imageUpload, imagesUpload } from "../../services/storage";
-import {
-  upload,
-  deleteFile,
-  multiUpload
-} from "./upload.controller";
+import { upload, deleteFile, multiUpload } from "./upload.controller";
 
 const router = express.Router();
 
