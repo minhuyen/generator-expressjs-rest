@@ -2,13 +2,15 @@ import httpStatus from "http-status";
 import { logger } from "../../services";
 import Response from "../../helpers/response";
 import authService from "./auth.service";
+import { OK, CREATED } from "../../core/success.response";
 
 export const signup = async (req, res, next) => {
   try {
     const data = req.body;
     const ipAddress = req.ip;
     const result = await authService.signup(data, ipAddress);
-    return Response.success(res, result, httpStatus.CREATED);
+    return new CREATED({ data: result }).send(res);
+    // return Response.success(res, result, httpStatus.CREATED);
   } catch (exception) {
     next(exception);
   }
@@ -20,7 +22,8 @@ export const login = async (req, res) => {
   const result = await authService.login(user, ipAddress);
   setTokenCookie(res, result.refreshToken);
   // return the information including token as JSON
-  return Response.success(res, result, httpStatus.OK);
+  // return Response.success(res, result, httpStatus.OK);
+  return new OK({ data: result }).send(res);
 };
 
 export const requestOtpLogin = async (req, res) => {

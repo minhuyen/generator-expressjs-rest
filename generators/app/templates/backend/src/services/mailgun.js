@@ -63,3 +63,26 @@ export const sendEmail = async options => {
     console.log(error);
   }
 };
+
+export const sendOtpByEmail = async (to, optCode) => {
+  try {
+    const mailOptions = {
+      from: fromEmail,
+      to: to,
+      subject: "Your log in code for SnapCards",
+      html: `<html>
+      <body>
+        <p>Hello ${to}</p>
+        <p>Please log in your account with the below code:</p>
+        <h3>${optCode}</h3>
+        <p>The code is valid for 5 minutes.</p>
+        <p>SnapCards Team</p>
+      </body>
+    </html>`
+    };
+    const mg = MailgunConnect.getInstance();
+    return mg.messages.create(domain, mailOptions);
+  } catch (error) {
+    console.log(error);
+  }
+};
