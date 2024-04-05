@@ -1,7 +1,7 @@
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 
 export class AppError extends Error {
-  constructor(message, code) {
+  constructor(message, status) {
     // Calling parent constructor of base Error class.
     super(message);
 
@@ -14,7 +14,7 @@ export class AppError extends Error {
     // You can use any additional properties you want.
     // I'm going to use preferred HTTP status for this error types.
     // `500` is the default value if not specified.
-    this.code = code;
+    this.code = status;
   }
 }
 
