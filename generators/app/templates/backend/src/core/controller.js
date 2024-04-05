@@ -1,6 +1,6 @@
 import aqp from "api-query-params";
-import { CREATED, LIST } from "../../core/success.response";
-import { BadRequestError } from "../../core/error.response";
+import { CREATED, LIST } from "./success.response";
+import { BadRequestError } from "./error.response";
 
 class Controller {
   constructor(service, name) {
