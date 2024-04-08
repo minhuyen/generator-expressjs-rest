@@ -1,5 +1,5 @@
 import aqp from "api-query-params";
-import { CREATED, LIST } from "./success.response";
+import { CREATED, LIST, OK } from "./success.response";
 import { BadRequestError } from "./error.response";
 
 class Controller {
@@ -45,7 +45,7 @@ class Controller {
         data: docs,
         total: totalDocs,
         page: page,
-        total: totalPages,
+        pages: totalPages,
         limit: limit
       }).send(res);
     } catch (exception) {
