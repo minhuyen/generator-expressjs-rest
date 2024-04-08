@@ -1,5 +1,4 @@
 import httpStatus from "http-status";
-import multer from "multer";
 import axios from "axios";
 import Response from "../../helpers/response";
 import {
@@ -8,7 +7,6 @@ import {
   resizeImageS3,
   resize
 } from "./upload.service";
-import * as storage from "../../services/storage";
 
 export const upload = (req, res) => {
   let image = "";
@@ -40,76 +38,44 @@ export const multiUpload = (req, res) => {
 };
 
 export const uploadS3 = (req, res, next) => {
-  return storage.imageUploadS3(req, res, function(error) {
-    if (error instanceof multer.MulterError) {
-      return Response.error(res, {
-        code: error.code,
-        message: error.message
-      });
-    } else if (error) {
-      return Response.error(
-        res,
-        {
-          message: error.message
-        },
-        httpStatus.INTERNAL_SERVER_ERROR
-      );
-    }
-    try {
-      let image = "";
-      let originalname = "";
-      let key = "";
+  try {
+    let image = "";
+    let originalname = "";
+    let key = "";
 
-      if (req.file) {
-        console.log(req.file);
-        image = req.file.location;
-        originalname = req.file.originalname;
-        key = req.file.key;
-      }
-
-      return Response.success(
-        res,
-        {
-          url: image,
-          title: originalname,
-          key
-        },
-        httpStatus.CREATED
-      );
-    } catch (exception) {
-      next(exception);
+    if (req.file) {
+      console.log(req.file);
+      image = req.file.location;
+      originalname = req.file.originalname;
+      key = req.file.key;
     }
-  });
+
+    return Response.success(
+      res,
+      {
+        url: image,
+        title: originalname,
+        key
+      },
+      httpStatus.CREATED
+    );
+  } catch (exception) {
+    next(exception);
+  }
 };
 
 export const multiUploadS3 = (req, res, next) => {
-  return storage.imagesUploadS3(req, res, function(error) {
-    if (error instanceof multer.MulterError) {
-      return Response.error(res, {
-        code: error.code,
-        message: error.message
-      });
-    } else if (error) {
-      return Response.error(
-        res,
-        {
-          message: error.message
-        },
-        httpStatus.INTERNAL_SERVER_ERROR
-      );
-    }
-    try {
-      const images = req.files.map(file => {
-        return {
-          url: file.location,
-          title: file.originalname
-        };
-      });
-      Response.success(res, images, httpStatus.CREATED);
-    } catch (exception) {
-      next(exception);
-    }
-  });
+  try {
+    const images = req.files.map(file => {
+      return {
+        url: file.location,
+        title: file.originalname
+      };
+    });
+    Response.success(res, images, httpStatus.CREATED);
+  } catch (exception) {
+    next(exception);
+  }
 };
 
 export const resizeImage = async (req, res) => {
