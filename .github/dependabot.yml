@@ -11,7 +11,7 @@ updates:
     schedule:
       interval: "weekly"
   # Maintain dependencies for frontend
-  - package-ecosystem: "yarn"
+  - package-ecosystem: "npm"
     directory: "/generators/app/templates/frontend"
     schedule:
       interval: "weekly"
