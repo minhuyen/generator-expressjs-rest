@@ -73,7 +73,7 @@
     "swagger-ui-express": "^4.0.2",
     "util": "^0.12.5",
     "winston": "^3.8.2",
-    "winston-daily-rotate-file": "^4.5.5"
+    "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.4",
