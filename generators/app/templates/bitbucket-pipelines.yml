@@ -22,19 +22,30 @@ definitions:
           - frontend/yarn.lock
       path: frontend/node_modules
 
+  scripts:
+    - script: &build-and-save-script |-
+        echo ${CI_REGISTRY_PASSWORD} | docker login $CI_REGISTRY --username $CI_REGISTRY_USERNAME --password-stdin
+        export DOCKER_BUILDKIT=1
+        IMAGE_NAME=$BITBUCKET_REPO_SLUG
+        IMAGE=${CI_REGISTRY}/${IMAGE_NAME}
+        docker build --cache-from ${IMAGE}:${VERSION} --file compose/node/Dockerfile.production --tag ${IMAGE_NAME} --build-arg BUILDKIT_INLINE_CACHE=1 .
+        docker save ${IMAGE_NAME} --output "${IMAGE_NAME}.tar"
+    - script: &push-image-script |-
+        echo ${CI_REGISTRY_PASSWORD} | docker login $CI_REGISTRY --username $CI_REGISTRY_USERNAME --password-stdin
+        IMAGE_NAME=$BITBUCKET_REPO_SLUG
+        IMAGE=${CI_REGISTRY}/${IMAGE_NAME}
+        docker load --input "${IMAGE_NAME}.tar"
+        docker tag "${IMAGE_NAME}" "${IMAGE}:${VERSION}"
+        docker push "${IMAGE}:${VERSION}"
+        docker tag "${IMAGE_NAME}" "${IMAGE}:${TAG_NAME}"
+        docker push "${IMAGE}:${TAG_NAME}"
   steps:
     - step: &build-and-test
         name: build and test
         size: 2x
         script:
-          - echo ${CI_REGISTRY_PASSWORD} | docker login $CI_REGISTRY --username $CI_REGISTRY_USERNAME --password-stdin
-          - export DOCKER_BUILDKIT=1
-          - IMAGE_NAME=$BITBUCKET_REPO_SLUG
-          - IMAGE=${CI_REGISTRY}/${IMAGE_NAME}
-          # - if [ $BITBUCKET_BRANCH != "master" ]; then IMAGE=${CI_REGISTRY}/${IMAGE_NAME}-staging; fi
-          # - if [ $BITBUCKET_PR_DESTINATION_BRANCH != "master" ]]; then IMAGE=${CI_REGISTRY}/${IMAGE_NAME}-staging; fi
-          - docker build --cache-from ${IMAGE}:latest --file Dockerfile.production --tag ${IMAGE_NAME} --build-arg BUILDKIT_INLINE_CACHE=1 .
-          - docker save ${IMAGE_NAME} --output "${IMAGE_NAME}.tar"
+          - export VERSION=staging
+          - *build-and-save-script
         services:
           - docker
         artifacts:
@@ -43,20 +54,9 @@ definitions:
         name: Push Image
         size: 2x
         script:
-          - echo ${CI_REGISTRY_PASSWORD} | docker login $CI_REGISTRY --username $CI_REGISTRY_USERNAME --password-stdin
-          - IMAGE_NAME=$BITBUCKET_REPO_SLUG
-          - docker load --input "${IMAGE_NAME}.tar"
-          - VERSION="${BITBUCKET_COMMIT}-master"
-          - TAG_NAME="latest"
-          - if [ $BITBUCKET_BRANCH != "master" ] && [ $BITBUCKET_PR_DESTINATION_BRANCH != "master" ]; then TAG_NAME="staging"; fi
-          # - if [ $BITBUCKET_PR_DESTINATION_BRANCH != "master" ]; then TAG_NAME="staging"; fi
-          - IMAGE=${CI_REGISTRY}/${IMAGE_NAME}
-          - if [ $BITBUCKET_BRANCH != "master" ] && [ $BITBUCKET_PR_DESTINATION_BRANCH != "master" ]; then VERSION="${BITBUCKET_COMMIT}-staging"; fi
-          # - if [ $BITBUCKET_PR_DESTINATION_BRANCH != "master" ]; then VERSION="${BITBUCKET_COMMIT}-staging"; fi
-          - docker tag "${IMAGE_NAME}" "${IMAGE}:${VERSION}"
-          - docker push "${IMAGE}:${VERSION}"
-          - docker tag "${IMAGE_NAME}" "${IMAGE}:${TAG_NAME}"
-          - docker push "${IMAGE}:${TAG_NAME}"
+          - export VERSION="${BITBUCKET_COMMIT}-staging"
+          - export TAG_NAME="staging"
+          - *push-image-script
         services:
           - docker
 
@@ -79,6 +79,10 @@ pipelines:
               - npm run lint
             caches:
               - backend-node
+  # pull-requests:
+  #   '**': # this trigger will make the pipeline run for all Pull Requests
+  #     - step: *build-and-test
+  #     - step: *push-image
   branches:
     develop:
       - step: *build-and-test
@@ -98,15 +102,25 @@ pipelines:
                   CI_REGISTRY_PASSWORD=${CI_REGISTRY_PASSWORD}
                   CI_REGISTRY=${CI_REGISTRY}
                   CI_REGISTRY_IMAGE=${CI_REGISTRY}/${BITBUCKET_REPO_SLUG}
-    master:
+    '{release/**,hotfix/**,master}':
       - step:
           name: Security Scan
           script:
             # Run a security scan for sensitive data.
             # See more security tools at https://bitbucket.org/product/features/pipelines/integrations?&category=security
             - pipe: atlassian/git-secrets-scan:0.5.1
-      - step: *build-and-test
-      - step: *push-image
+      - step:
+          <<: *build-and-test
+          script:
+          - export VERSION=latest
+          - *build-and-save-script
+
+      - step:
+          <<: *push-image
+          script:
+          - export VERSION="${BITBUCKET_COMMIT}-master"
+          - export TAG_NAME="latest"
+          - *push-image-script
       - step:
           name: 'Deployment to Production'
           deployment: production
@@ -117,7 +131,7 @@ pipelines:
                 SSH_USER: $SSH_USER
                 SERVER: $SSH_SERVER
                 MODE: 'script'
-                COMMAND: './scripts/deploy.sh' # path to a script in your repository
+                COMMAND: './scripts/deploy.production.sh' # path to a script in your repository
                 ENV_VARS: >-
                   CI_REGISTRY_USERNAME=${CI_REGISTRY_USERNAME}
                   CI_REGISTRY_PASSWORD=${CI_REGISTRY_PASSWORD}
@@ -126,7 +140,7 @@ pipelines:
   tags:
     '*':
       - step:
-          name: retag and repush image
+          name: reTag and rePush image
           script:
             - VERSION="${BITBUCKET_COMMIT}-master"
             # get the image that was built in the master branch
@@ -137,7 +151,7 @@ pipelines:
             - echo ${CI_REGISTRY_PASSWORD} | docker login $CI_REGISTRY --username $CI_REGISTRY_USERNAME --password-stdin
             # pull the image down
             - docker pull ${IMAGE_NAME}
-            # retag the image using the git tag
+            # reTag the image using the git tag
             - docker tag ${IMAGE_NAME} ${NEW_IMAGE_NAME}
             # push the image back
             - docker push ${NEW_IMAGE_NAME}
