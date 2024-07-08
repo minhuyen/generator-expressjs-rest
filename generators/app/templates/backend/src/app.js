@@ -76,7 +76,7 @@ app.use(express.static(path.join(ROOT_FOLDER, "build"), { index: false }));
 app.use("/static", express.static(path.join(SRC_FOLDER, "public")));
 app.use("/media", express.static(path.join(ROOT_FOLDER, "uploads")));
 app.get("/", (req, res) =>
-  res.json({ message: "Welcome to snapcards-backend API!" })
+  res.json({ message: "Welcome to <%=project_slug%> API!" })
 );
 
 app.use("/api-docs", swagger());

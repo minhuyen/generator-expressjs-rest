@@ -1,5 +1,5 @@
 #!/bin/bash
-cd snap-boards-webapp
+cd <%=project_slug%>
 git pull
 # docker compose -f docker-compose.prod.yml build
 echo ${CI_REGISTRY_PASSWORD} | docker login $CI_REGISTRY --username $CI_REGISTRY_USERNAME --password-stdin
