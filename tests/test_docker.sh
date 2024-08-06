@@ -20,6 +20,6 @@ cd awesome-express-project
 cp .env.example .env
 
 # run the project's tests
-docker-compose -f docker-compose.test.yml build
-docker-compose -f docker-compose.test.yml run --rm backend npm run test
-docker-compose -f docker-compose.test.yml down
+docker compose -f docker-compose.test.yml build
+docker compose -f docker-compose.test.yml run --rm backend npm run test
+docker compose -f docker-compose.test.yml down
