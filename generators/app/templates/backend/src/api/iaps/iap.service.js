@@ -78,42 +78,72 @@ class IapService extends Service {
       expiresDate
     } = decodeTransaction;
 
-    let result = await this._model.findOne({
-      originalTransactionId,
-      platform: PLATFORM_TYPE.IOS,
-      environment
-    });
-    if (result) {
-      if (result.transactionIds.includes(transactionId) === false) {
-        result.transactionIds.push(transactionId);
-        Object.assign(result, decodeTransaction);
-      }
-      // Check if the new expiration date is greater than the old expiration date.
-      const currentExpiresDate = new Date(result.expiresDate);
-      const newExpiresDate = new Date(expiresDate);
-      result.expiresDate =
-        newExpiresDate > currentExpiresDate
-          ? newExpiresDate
-          : currentExpiresDate;
-      result.deviceId = deviceId;
-      result = await result.save();
-    } else {
-      result = await this._model.create({
-        user: userId,
-        platform: PLATFORM_TYPE.IOS,
-        deviceId,
-        transactionIds: [transactionId],
-        type: purchaseType,
-        purchaseType,
-        ...decodeTransaction
-      });
+    let result = null;
+
+    //#region LIFE TIME
+    if (purchaseType === PURCHASE_TYPE.LIFETIME) {
+      result = await this._model.findOneAndUpdate(
+        {
+          originalTransactionId,
+          platform: PLATFORM_TYPE.IOS,
+          environment
+        },
+        {
+          deviceId,
+          user: userId,
+          transactionIds: [transactionId],
+          type: PURCHASE_TYPE.LIFETIME,
+          purchaseType: PURCHASE_TYPE.LIFETIME,
+          ...decodeTransaction
+        },
+        {
+          upsert: true,
+          new: true
+        }
+      );
     }
+    //#endregion
+
+    //#region SUBS
+    if (purchaseType === PURCHASE_TYPE.SUBSCRIPTION) {
+      result = await this._model.findOne({
+        originalTransactionId,
+        platform: PLATFORM_TYPE.IOS,
+        environment
+      });
+      if (result) {
+        if (result.transactionIds.includes(transactionId) === false) {
+          result.transactionIds.push(transactionId);
+          Object.assign(result, decodeTransaction);
+        }
+        // Check if the new expiration date is greater than the old expiration date.
+        const currentExpiresDate = new Date(result.expiresDate);
+        const newExpiresDate = new Date(expiresDate);
+        result.expiresDate =
+          newExpiresDate > currentExpiresDate
+            ? newExpiresDate
+            : currentExpiresDate;
+        result.deviceId = deviceId;
+        result = await result.save();
+      } else {
+        result = await this._model.create({
+          user: userId,
+          platform: PLATFORM_TYPE.IOS,
+          deviceId,
+          transactionIds: [transactionId],
+          type: PURCHASE_TYPE.SUBSCRIPTION,
+          purchaseType: PURCHASE_TYPE.SUBSCRIPTION,
+          ...decodeTransaction
+        });
+      }
+    }
+    //#endregion
 
     return result;
   }
 
-  async handleIOSWebhook(data) {
-    const { signedPayload } = data;
+  async handleIOSWebhook(body) {
+    const { signedPayload } = body;
     const decodeNotification = await verifyReceiptHelper.verifyAndDecodeNotification(
       signedPayload
     );
@@ -130,12 +160,8 @@ class IapService extends Service {
         upsert: true
       }
     );
-    // Process notification to handle premium feature
-    await this.processIOSNotification(decodeNotification);
-    return;
-  }
 
-  async processIOSNotification(decodeNotification) {
+    // Process notification to handle premium feature
     console.log("===== WEBHOOK: NOTIFICATION IOS =====");
     console.log(decodeNotification);
 
@@ -219,8 +245,8 @@ class IapService extends Service {
 
       // Handling when expired
     }
-    return;
     //#endregion
+    return;
   }
 
   async verifyAndroidInAppReceipt(data, userId, deviceId) {
