@@ -87,4 +87,3 @@ export const compareOtp = async (email, otpRequest) => {
 
   return true;
 };
-
