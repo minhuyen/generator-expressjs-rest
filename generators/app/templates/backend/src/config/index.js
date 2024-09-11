@@ -38,6 +38,14 @@ export default {
     client_x509_cert_url: process.env.client_x509_cert_url
   },
 
+  apple: {
+    issuerId: process.env.APPLE_ISSUER_ID,
+    keyId: process.env.APPLE_KEY_ID,
+    bundleId: process.env.APPLE_BUNDLE_ID,
+    appAppleId: process.env.APP_APPLE_ID,
+    privateKeyFilePath: process.env.APPLE_PRIVATE_KEY_FILE_PATH
+  },
+
   aws: {
     accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,

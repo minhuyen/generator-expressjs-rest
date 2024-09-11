@@ -24,7 +24,7 @@ const IAPSchema = new Schema(
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required: true
+      required: false
     },
     deviceId: {
       type: String,
@@ -34,20 +34,60 @@ const IAPSchema = new Schema(
       type: String,
       required: true
     },
+    bundleId: {
+      type: String
+    },
+    subscriptionGroupIdentifier: {
+      type: String,
+      required: true
+    },
     environment: {
       type: String
     },
     originalTransactionId: {
       type: String
     },
-    transactionId: {
+    webOrderLineItemId: {
       type: String
     },
-    startDate: {
+    transactionIds: {
+      type: [String]
+    },
+    purchaseDate: {
       type: Date
     },
-    endDate: {
+    originalPurchaseDate: {
       type: Date
+    },
+    expiresDate: {
+      type: Date
+    },
+    quantity: {
+      type: Number
+    },
+    type: {
+      type: String
+    },
+    inAppOwnershipType: {
+      type: String
+    },
+    signedDate: {
+      type: Date
+    },
+    transactionReason: {
+      type: String
+    },
+    storefront: {
+      type: String
+    },
+    storefrontId: {
+      type: String
+    },
+    price: {
+      type: Number
+    },
+    currency: {
+      type: String
     },
     latestReceipt: {
       type: String
@@ -70,39 +110,15 @@ const IAPSchema = new Schema(
       type: String,
       enum: Object.values(STATUS_TYPE),
       default: STATUS_TYPE.NEW
+    },
+    reason: {
+      type: String
     }
   },
   {
     timestamps: true
   }
 );
-
-IAPSchema.pre("save", async function() {
-  console.log("=======IAP pre save=========");
-  if (this.isNew) {
-    const packageObj = await Packages.findOne({
-      productId: this.productId
-    }).lean();
-    if (packageObj) {
-      if (packageObj.packageType === PACKAGE_TYPE.PREPAID) {
-        await Users.findOneAndUpdate(
-          { _id: this.user },
-          { $inc: { credits: packageObj.credit } }
-        );
-      } else {
-        // let listConfigs = await Configs.findOne({ name: 'bonus_credit' })
-        // let bonus = listConfigs ? Number(listConfigs.value) : 0
-        // console.log("BONUS ", bonus)
-        await Users.findOneAndUpdate(
-          { _id: this.user },
-          {
-            isPremium: true
-          }
-        );
-      }
-    }
-  }
-});
 
 IAPSchema.plugin(mongoosePaginate);
 
