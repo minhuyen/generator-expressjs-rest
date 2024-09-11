@@ -7,12 +7,6 @@ import * as iapValidation from "./iap.validation";
 const router = express.Router();
 
 router.post(
-  "/",
-  [AuthService.required, AuthService.isAdmin()],
-  iapController.create
-);
-
-router.post(
   "/in-app/ios",
   [
     AuthService.optional,
@@ -57,6 +51,24 @@ router.post(
   "/subs/android",
   AuthService.optional,
   iapController.verifyAndroidSubReceipt
+);
+
+router.post(
+  "/webhook/ios",
+  AuthService.optional,
+  iapController.handleIOSWebhook
+);
+
+router.post(
+  "/webhook/android",
+  AuthService.optional,
+  iapController.handleAndroidWebhook
+);
+
+router.post(
+  "/",
+  [AuthService.required, AuthService.isAdmin()],
+  iapController.create
 );
 
 router.get(

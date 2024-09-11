@@ -39,7 +39,6 @@ export const requestOtpLoginValidationSchema = Joi.object({
     .required()
 });
 
-
 export const logoutValidationSchema = Joi.object({
   token: Joi.string().optional()
 });
