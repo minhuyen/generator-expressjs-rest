@@ -1,8 +1,17 @@
 import axios from "axios";
 import { google } from "googleapis";
 import config from "../config";
-import logger from "../services/logger";
 import { AppError } from "./error";
+import { readFileSync } from "fs";
+import {
+  AppStoreServerAPIClient,
+  Environment,
+  ReceiptUtility,
+  SignedDataVerifier,
+  Order,
+  ProductType,
+  APIException
+} from "@apple/app-store-server-library";
 
 const IOS_RECEIPT_STATUS = {
   "21000":
@@ -34,6 +43,184 @@ const auth = new google.auth.GoogleAuth({
   // keyFile: '/path/to/your-secret-key.json',
   scopes: ["https://www.googleapis.com/auth/androidpublisher"]
 });
+
+const issuerId = config.apple.issuerId;
+const keyId = config.apple.keyId;
+const bundleId = config.apple.bundleId;
+const filePath = config.apple.privateKeyFilePath;
+const encodedKey = readFileSync(filePath, {
+  encoding: "utf8"
+}); // Specific implementation may vary
+const environment =
+  process.env.NODE_ENV === "production"
+    ? Environment.PRODUCTION
+    : Environment.SANDBOX;
+
+// console.log("=environment===", environment);
+// console.log("=environment===", process.env.NODE_ENV);
+
+const enableOnlineChecks = true;
+const appAppleId = parseInt(config.apple.appAppleId, 10); // appAppleId is required when the environment is Production
+const certs = [
+  readFileSync("./certs/AppleIncRootCertificate.cer"),
+  readFileSync("./certs/AppleComputerRootCertificate.cer"),
+  readFileSync("./certs/AppleRootCA-G2.cer"),
+  readFileSync("./certs/AppleRootCA-G3.cer")
+];
+
+const client = new AppStoreServerAPIClient(
+  encodedKey,
+  keyId,
+  issuerId,
+  bundleId,
+  Environment.PRODUCTION
+);
+
+const clientSandbox = new AppStoreServerAPIClient(
+  encodedKey,
+  keyId,
+  issuerId,
+  bundleId,
+  Environment.SANDBOX
+);
+
+const verifier = new SignedDataVerifier(
+  certs,
+  enableOnlineChecks,
+  Environment.PRODUCTION,
+  bundleId,
+  appAppleId
+);
+
+const verifierSandbox = new SignedDataVerifier(
+  certs,
+  enableOnlineChecks,
+  Environment.SANDBOX,
+  bundleId,
+  appAppleId
+);
+
+//#region IOS
+export const extractTransactionIdFromAppReceipt = appReceipt => {
+  const receiptUtil = new ReceiptUtility();
+  const transactionId = receiptUtil.extractTransactionIdFromAppReceipt(
+    appReceipt
+  );
+  return transactionId;
+};
+
+export const extractTransactionIdFromTransactionReceipt = transactionReceipt => {
+  const receiptUtil = new ReceiptUtility();
+  const transactionId = receiptUtil.extractTransactionIdFromTransactionReceipt(
+    transactionReceipt
+  );
+  return transactionId;
+};
+
+export const sendTestNotification = async () => {
+  try {
+    await client.requestTestNotification();
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const getTransactionInfo = async transactionId => {
+  try {
+    const response = await client.getTransactionInfo(transactionId);
+    return response;
+  } catch (error) {
+    if (
+      error instanceof APIException &&
+      (error?.apiError === 4040010 || error?.httpStatusCode === 401)
+    ) {
+      const response = await clientSandbox.getTransactionInfo(transactionId);
+      return response;
+    }
+    throw error;
+  }
+};
+
+export const getTransactionHistory = async transactionId => {
+  const transactionHistoryRequest = {
+    sort: Order.DESCENDING,
+    revoked: false,
+    productTypes: [
+      // ProductType.AUTO_RENEWABLE,
+      ProductType.CONSUMABLE,
+      ProductType.NON_CONSUMABLE,
+      ProductType.NON_RENEWABLE
+    ]
+  };
+  let response = null;
+  let transactions = [];
+  do {
+    const revisionToken =
+      response !== null && response.revision !== null
+        ? response.revision
+        : null;
+    response = await client.getTransactionHistory(
+      transactionId,
+      revisionToken,
+      transactionHistoryRequest
+    );
+    if (response.signedTransactions) {
+      transactions = transactions.concat(response.signedTransactions);
+    }
+  } while (response.hasMore);
+  return transactions;
+};
+
+export const verifyAndDecodeTransaction = async signedTransactionInfo => {
+  try {
+    const decodedAppTransaction = await verifier.verifyAndDecodeTransaction(
+      signedTransactionInfo
+    );
+    return decodedAppTransaction;
+  } catch (error) {
+    if (error.status === 2 || error.status === 3) {
+      const decodedAppTransaction = await verifierSandbox.verifyAndDecodeTransaction(
+        signedTransactionInfo
+      );
+      return decodedAppTransaction;
+    }
+    throw error;
+  }
+};
+
+export const verifyAndDecodeNotification = async signedPayload => {
+  try {
+    const decodedNotification = await verifier.verifyAndDecodeNotification(
+      signedPayload
+    );
+    return decodedNotification;
+  } catch (error) {
+    if (error.status === 2 || error.status === 3) {
+      const decodedNotification = await verifierSandbox.verifyAndDecodeNotification(
+        signedPayload
+      );
+      return decodedNotification;
+    }
+    throw error;
+  }
+};
+
+export const verifyAndDecodeRenewalInfo = async signedRenewalInfo => {
+  try {
+    const decodedRenewalInfo = await verifier.verifyAndDecodeRenewalInfo(
+      signedRenewalInfo
+    );
+    return decodedRenewalInfo;
+  } catch (error) {
+    if (error.status === 2 || error.status === 3) {
+      const decodedRenewalInfo = await verifierSandbox.verifyAndDecodeRenewalInfo(
+        signedRenewalInfo
+      );
+      return decodedRenewalInfo;
+    }
+    throw error;
+  }
+};
 
 export const verifyIosReceipt = async data => {
   // logger.info("======verify_receipt_data========%o", data);
@@ -101,7 +288,9 @@ export const verifyIosInAppReceipt = async data => {
     throw new AppError(message, status);
   }
 };
+//#endregion
 
+//#region ANDROID
 export const verifyAndroidInAppReceipt = async data => {
   // console.log('=====verifyAndroidReceipt=====', data);
   const { packageName, productId, purchaseToken } = data;
@@ -145,3 +334,22 @@ export const verifyAndroidSubReceipt = async data => {
     throw new Error(error);
   }
 };
+
+export const getCustomerReviewAndroid = async (
+  packageName,
+  translationLanguage = "en"
+) => {
+  const authClient = await auth.getClient();
+  google.options({ auth: authClient });
+  let reviews = google.androidpublisher({ version: "v3" }).reviews;
+  try {
+    const reviewsResponse = await reviews.list({
+      packageName: packageName,
+      translationLanguage: translationLanguage
+    });
+    return reviewsResponse.data;
+  } catch (error) {
+    throw new AppError(error);
+  }
+};
+//#endregion
